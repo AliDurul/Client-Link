@@ -7,8 +7,8 @@ export const metadata = {
   description: "Contact description",
 };
 
-const ContactPage = () => {
-
+const ContactPage = () => { 
+  
   return (
     <div className={styles.container}>
       <div className={styles.imgContainer}>
