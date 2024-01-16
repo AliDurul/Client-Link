@@ -50,6 +50,7 @@ Next.js 14 full Stack Project using app router, server actions, MongoDB, Auth.js
 
 [Live Link](https://next-fullstack-app-umber.vercel.app/)
 
+![nextApp](https://github.com/AliDurul/MernStack_Blog-App/assets/80897590/bd2dc496-e806-4243-b82c-0582e57f9759)
 
 
 
