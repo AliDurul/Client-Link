@@ -1,2 +1,0 @@
-# TODO Project with Sequelize
-
