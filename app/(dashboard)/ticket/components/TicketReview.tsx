@@ -259,7 +259,7 @@ export default function TicketReview() {
                                 </div>
                             }
                         >
-                            <ul className="text-sm font-medium !min-w-[153px]">
+                            <ul className="text-sm font-medium min-w-[153px]!">
                                 {
                                     flagOp.map((op, i) => (
                                         <li key={i}>

@@ -78,7 +78,7 @@ export default function UserSideProfile({ sideProfileModal, setSideProfileModal,
                                                         <div>
                                                             <div className="flex items-center">
                                                                 <h3 className="text-xl font-bold text-gray-900 sm:text-2xl">{clientInfo?.first_name} {clientInfo?.last_name}</h3>
-                                                                {/* <span className="ml-2.5 inline-block h-2 w-2 flex-shrink-0 rounded-full bg-green-400">
+                                                                {/* <span className="ml-2.5 inline-block h-2 w-2 shrink-0 rounded-full bg-green-400">
                                                                     <span className="sr-only">Online</span>
                                                                 </span> */}
                                                             </div>
@@ -87,7 +87,7 @@ export default function UserSideProfile({ sideProfileModal, setSideProfileModal,
                                                         <div className="mt-5 flex flex-wrap space-y-3 sm:space-x-3 sm:space-y-0">
                                                             <Link href="/wp"
                                                                 type="button"
-                                                                className="inline-flex w-full flex-shrink-0 items-center justify-center rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:flex-1"
+                                                                className="inline-flex w-full shrink-0 items-center justify-center rounded-md bg-secondary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-secondary/85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:flex-1"
                                                             >
                                                                 {/* border-secondary bg-secondary text-white shadow-secondary/60; */}
                                                                 Message
@@ -160,7 +160,7 @@ export default function UserSideProfile({ sideProfileModal, setSideProfileModal,
                                         <div className="px-4 pb-5 pt-5 sm:px-0 sm:pt-0">
                                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
                                                 <div>
-                                                    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Bio</dt>
+                                                    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Bio</dt>
                                                     <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                                         <p>
                                                             Enim feugiat ut ipsum, neque ut. Tristique mi id elementum praesent. Gravida in tempus
@@ -171,31 +171,31 @@ export default function UserSideProfile({ sideProfileModal, setSideProfileModal,
                                                 </div>
                                                 <div className='flex'>
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Nationality</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Nationality</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{clientInfo?.country}</dd>
                                                     </div>
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">NRC</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">NRC</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{clientInfo?.id_number}</dd>
                                                     </div>
                                                 </div>
                                                 <div className='flex'>
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Finincial Institution</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Finincial Institution</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{clientInfo?.banks}</dd>
                                                     </div>
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Location</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Location</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{clientInfo?.location}</dd>
                                                     </div>
                                                 </div>
                                                 <div className="flex">
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Profession</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Profession</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">{clientInfo?.profession}</dd>
                                                     </div>
                                                     <div>
-                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">Birthday</dt>
+                                                        <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:shrink-0">Birthday</dt>
                                                         <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                                             <time dateTime={clientInfo?.dob}>{clientInfo?.dob}</time>
                                                         </dd>

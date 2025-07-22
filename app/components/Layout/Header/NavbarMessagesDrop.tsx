@@ -47,9 +47,9 @@ const NavbarMessagesDrop = () => {
      <MessagesIcon />
     }
    >
-    <ul className="w-[300px] !py-0 text-xs text-dark dark:text-white-dark sm:w-[375px]">
+    <ul className="w-[300px] py-0! text-xs text-dark dark:text-white-dark sm:w-[375px]">
      <li className="mb-5" onClick={(e) => e.stopPropagation()}>
-      <div className="relative !h-[68px] w-full overflow-hidden rounded-t-md p-5 text-white hover:!bg-transparent">
+      <div className="relative h-[68px]! w-full overflow-hidden rounded-t-md p-5 text-white hover:bg-transparent!">
        <div className="bg- absolute inset-0 h-full w-full bg-[url(/assets/images/menu-heade.jpg)] bg-cover bg-center bg-no-repeat"></div>
        <h4 className="relative z-10 text-lg font-semibold">Messages</h4>
       </div>
@@ -76,7 +76,7 @@ const NavbarMessagesDrop = () => {
         })}
        </li>
        <li className="mt-5 border-t border-white-light text-center dark:border-white/10">
-        <button type="button" className="group !h-[48px] justify-center !py-4 font-semibold text-primary dark:text-gray-400">
+        <button type="button" className="group h-[48px]! justify-center py-4! font-semibold text-primary dark:text-gray-400">
          <span className="group-hover:underline ltr:mr-1 rtl:ml-1">VIEW ALL ACTIVITIES</span>
          <ViewAllActivityIcon />
         </button>
@@ -84,7 +84,7 @@ const NavbarMessagesDrop = () => {
       </>
      ) : (
       <li className="mb-5" onClick={(e) => e.stopPropagation()}>
-       <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
+       <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:bg-transparent!">
         <div className="mx-auto mb-4 rounded-full text-white ring-4 ring-primary/30">
          <MessageNoDataAvaibleIcon />
         </div>

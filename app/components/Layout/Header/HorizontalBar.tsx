@@ -78,7 +78,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/apps/invoice/list">list</Link>
               </li>
@@ -241,7 +241,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/datatables/basic">basic</Link>
               </li>
@@ -355,7 +355,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/users/profile">profile</Link>
               </li>
@@ -392,7 +392,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/pages/error404" target="_blank">
                   404
@@ -417,7 +417,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/auth/cover-login" target="_blank">
                   login_cover
@@ -437,7 +437,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/auth/cover-register" target="_blank">
                   register_cover
@@ -457,7 +457,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/auth/cover-password-reset" target="_blank">
                   recover_id_cover
@@ -477,7 +477,7 @@ const HorizontalBar = () => {
                 <HorizontalDropIcon />
               </div>
             </button>
-            <ul className="absolute top-0 z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
+            <ul className="absolute top-0 z-10 hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow ltr:left-[95%] rtl:right-[95%] dark:bg-[#1b2e4b] dark:text-white-dark">
               <li>
                 <Link href="/auth/cover-lockscreen" target="_blank">
                   unlock_cover

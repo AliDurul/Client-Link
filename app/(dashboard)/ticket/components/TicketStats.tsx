@@ -49,7 +49,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-white-dark ">Active</div>
-                    <div className="text-3xl font-[900] text-sky-800 ">
+                    <div className="text-3xl font-black text-sky-800 ">
                         <CountUp start={0} end={stats.status_counts.Active} duration={7} />
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-gray-500 ">Pending</div>
-                    <div className="text-3xl font-[900] text-sky-800 ">
+                    <div className="text-3xl font-black text-sky-800 ">
                         <CountUp start={0} end={stats.status_counts.Pending} duration={7} />
                     </div>
                 </div>
@@ -77,7 +77,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-white-dark ">Resolved</div>
-                    <div className="text-3xl font-[900] text-sky-800 ">
+                    <div className="text-3xl font-black text-sky-800 ">
                         <CountUp start={0} end={stats.status_counts.Resolved} duration={7} />
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-gray-500 ">Escalated</div>
-                    <div className="text-3xl font-[900] text-sky-800  ">
+                    <div className="text-3xl font-black text-sky-800  ">
                         <CountUp start={0} end={stats.status_counts.Escalated} duration={7} />
                     </div>
                 </div>
@@ -105,7 +105,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-gray-500 ">Canceled</div>
-                    <div className="text-3xl font-[900] text-sky-800  ">
+                    <div className="text-3xl font-black text-sky-800  ">
                         <CountUp start={0} end={stats.status_counts.Cancelled} duration={7} />
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export default function TicketStats() {
                 </svg>
                 <div className=" flex justify-center flex-col items-center">
                     <div className="text-lg font-semibold text-gray-500 ">Total</div>
-                    <div className="text-3xl font-[900] text-sky-800  ">
+                    <div className="text-3xl font-black text-sky-800  ">
                         <CountUp start={0} end={stats.total_count} duration={7} />
                     </div>
                 </div>

@@ -159,7 +159,7 @@ const TaskListBody = ({ pagedTasks, filteredTasks, selectedTab, setSelectedTask,
                                 </td>
                                 <td className="w-1">
                                     <div className="flex w-max items-center justify-between">
-                                        <div className="flex-shrink-0 ltr:mr-2.5 rtl:ml-2.5">
+                                        <div className="shrink-0 ltr:mr-2.5 rtl:ml-2.5">
                                             {task.asign_agent.profile_pic && (
                                                 <Tippy content={`${task.asign_agent.first_name} ${task.asign_agent.last_name}`} theme="" >
 

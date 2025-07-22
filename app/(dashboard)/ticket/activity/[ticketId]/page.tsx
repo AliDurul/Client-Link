@@ -50,7 +50,7 @@ export default async function TicketActivityPage({ params }: { params: { ticketI
                             const isLast = i === arr.length - 1;
                             return (
                                 <div className="sm:flex" key={i}>
-                                    <div className={`relative mx-auto mb-5 sm:mb-0 ltr:sm:mr-8 rtl:sm:ml-8 z-[2] ${!isLast ? 'before:absolute before:top-12 before:left-1/2 before:-bottom-[15px] before:-translate-x-1/2 before:border-l-2 before:border-[#ebedf2] before:w-0 before:h-auto before:-z-[1] before:hidden sm:before:block' : ''} dark:before:border-[#191e3a] `}>
+                                    <div className={`relative mx-auto mb-5 sm:mb-0 ltr:sm:mr-8 rtl:sm:ml-8 z-2 ${!isLast ? 'before:absolute before:top-12 before:left-1/2 before:-bottom-[15px] before:-translate-x-1/2 before:border-l-2 before:border-[#ebedf2] before:w-0 before:h-auto before:-z-1 before:hidden sm:before:block' : ''} dark:before:border-[#191e3a] `}>
                                         <img src="/assets/images/profile-16.jpeg" alt="img" className="w-12 h-12 mx-auto rounded-full shadow-[0_4px_9px_0_rgba(31,45,61,0.31)]" />
                                     </div>
                                     <div className="flex-1">
@@ -90,7 +90,7 @@ export default async function TicketActivityPage({ params }: { params: { ticketI
                         <>
                             <p className="text-white-dark font-bold mb-5 text-base">Descalation</p>
                             <div className="sm:flex">
-                                <div className={`relative mx-auto mb-5 sm:mb-0 ltr:sm:mr-8 rtl:sm:ml-8 z-[2]  dark:before:border-[#191e3a] `}>
+                                <div className={`relative mx-auto mb-5 sm:mb-0 ltr:sm:mr-8 rtl:sm:ml-8 z-2  dark:before:border-[#191e3a] `}>
                                     <img src="/assets/images/profile-16.jpeg" alt="img" className="w-12 h-12 mx-auto rounded-full shadow-[0_4px_9px_0_rgba(31,45,61,0.31)]" />
                                 </div>
                                 <div className="flex-1">

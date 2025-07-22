@@ -31,7 +31,7 @@ const ProductTable = ({ filteredItems, editProduct, deleteProduct }: ProductTabl
                             <th>Price</th>
                             {
                                 userType === 'admin' && (
-                                    <th className="!text-center">Actions</th>
+                                    <th className="text-center!">Actions</th>
                                 )
                             }
                         </tr>

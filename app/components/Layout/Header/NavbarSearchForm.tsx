@@ -7,7 +7,7 @@ const NavbarSearchForm = () => {
 
 		<div className="sm:ltr:mr-auto sm:rtl:ml-auto">
 			<form
-				className={`${search && '!block'} absolute inset-x-0 top-1/2 z-10 mx-4 hidden -translate-y-1/2 sm:relative sm:top-0 sm:mx-0 sm:block sm:translate-y-0`}
+				className={`${search && 'block!'} absolute inset-x-0 top-1/2 z-10 mx-4 hidden -translate-y-1/2 sm:relative sm:top-0 sm:mx-0 sm:block sm:translate-y-0`}
 				onSubmit={() => setSearch(false)}
 			>
 				<div className="relative">

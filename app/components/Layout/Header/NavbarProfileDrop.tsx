@@ -33,7 +33,7 @@ const NavbarProfileDrop = () => {
           />
         }
       >
-        <ul className="w-[230px] !py-0 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
+        <ul className="w-[230px] py-0! font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
           <li>
             <div className="flex items-center px-4 py-4">
               <Image
@@ -81,7 +81,7 @@ const NavbarProfileDrop = () => {
             </Link>
           </li> */}
           <li className="border-t border-white-light dark:border-white-light/10 hover:bg-primary/10 hover:text-primary">
-            <button className="!py-3 !pl-4 text-danger flex"
+            <button className="py-3! pl-4! text-danger flex"
               onClick={() => signOut()}
             >
               <ProfileSigninIcon />

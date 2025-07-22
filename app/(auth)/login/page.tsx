@@ -13,7 +13,7 @@ const Login = () => {
       </div> */}
 
       {/* Client-Link */}
-      <div className="hidden min-h-screen w-1/2 flex-col  items-center justify-center bg-gradient-to-t from-[#ff1361bf] to-[#44107A] p-4 text-white dark:text-black lg:flex">
+      <div className="hidden min-h-screen w-1/2 flex-col  items-center justify-center bg-linear-to-t from-[#ff1361bf] to-[#44107A] p-4 text-white dark:text-black lg:flex">
         <div className="mx-auto mb-5 w-full">
           <Image
             src={ClientLinkLogo}

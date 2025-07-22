@@ -119,7 +119,7 @@ const TasklistMain = () => {
 
 
     return (
-        <div className="relative flex h-full gap-5 mt-4 sm:h-[calc(100vh_-_150px)]">
+        <div className="relative flex h-full gap-5 mt-4 sm:h-[calc(100vh-150px)]">
             {/* sidebar task */}
             <TaskSidebar
                 isShowTaskMenu={isShowTaskMenu}
@@ -129,7 +129,7 @@ const TasklistMain = () => {
                 tasks={tasks.results}
                 addEditTask={addEditTask}
             />
-            <div className={`overlay absolute z-[5] hidden h-full w-full rounded-md bg-black/60 ${isShowTaskMenu && '!block xl:!hidden'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div>
+            <div className={`overlay absolute z-5 hidden h-full w-full rounded-md bg-black/60 ${isShowTaskMenu && 'block! xl:hidden!'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div>
             <div className="panel h-full flex-1 overflow-auto p-0">
                 <div className="flex h-full flex-col">
                     <div className="flex w-full flex-col gap-4 p-4 sm:flex-row sm:items-center">
@@ -144,7 +144,7 @@ const TasklistMain = () => {
                             <div className="group relative flex-1">
                                 <input
                                     type="text"
-                                    className="peer form-input ltr:!pr-10 rtl:!pl-10"
+                                    className="peer form-input ltr:pr-10! rtl:pl-10!"
                                     placeholder="Search Task..."
                                     value={searchTask}
                                     onChange={(e) => setSearchTask(e.target.value)}

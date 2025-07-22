@@ -242,7 +242,7 @@ export default function TicketPreviewPage({ params }: { params: { ticketId: stri
                                 <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
                             ) : (
                                 <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black border-l-transparent! dark:border-white"></span>
                                 </div>
                             )}
                         </div>
@@ -365,7 +365,7 @@ export default function TicketPreviewPage({ params }: { params: { ticketId: stri
                                 <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
                             ) : (
                                 <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black border-l-transparent! dark:border-white"></span>
                                 </div>
                             )} */}
                         </div>

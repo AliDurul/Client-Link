@@ -135,9 +135,9 @@ const WpMain = ({ chatTitle, image, chatRooms }: WpMainProps) => {
     };
 
     return (
-        // sm:h-[calc(100vh_-_150px)]
-        <div className={`relative flex h-full gap-5 sm:h-[calc(100vh_-_150px)] sm:min-h-0 pt-5 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
-            <div className={`panel absolute z-10 hidden w-full max-w-xs flex-none space-y-4 overflow-hidden p-4 xl:relative xl:block xl:h-full ${isShowChatMenu ? '!block' : ''}`}>
+        // sm:h-[calc(100vh-150px)]
+        <div className={`relative flex h-full gap-5 sm:h-[calc(100vh-150px)] sm:min-h-0 pt-5 ${isShowChatMenu ? 'min-h-[999px]' : ''}`}>
+            <div className={`panel absolute z-10 hidden w-full max-w-xs flex-none space-y-4 overflow-hidden p-4 xl:relative xl:block xl:h-full ${isShowChatMenu ? 'block!' : ''}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <div className="flex-none">
@@ -152,7 +152,7 @@ const WpMain = ({ chatTitle, image, chatRooms }: WpMainProps) => {
                         <Dropdown
                             offset={[0, 5]}
                             placement={'bottom-end'}
-                            btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center hover:text-primary"
+                            btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full flex! justify-center items-center hover:text-primary"
                             button={
                                 <svg className="opacity-70" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
@@ -264,7 +264,7 @@ const WpMain = ({ chatTitle, image, chatRooms }: WpMainProps) => {
                                 </button>
                             )}
                         </Tab>
-                        {/* <Tab className="pointer-events-none -mb-[1px] block p-3.5 py-2 text-white-light outline-none dark:text-dark">Disabled</Tab> */}
+                        {/* <Tab className="pointer-events-none -mb-px block p-3.5 py-2 text-white-light outline-none dark:text-dark">Disabled</Tab> */}
                     </Tab.List>
                     <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
                     <Tab.Panels>
@@ -281,7 +281,7 @@ const WpMain = ({ chatTitle, image, chatRooms }: WpMainProps) => {
                 </Tab.Group>
 
             </div>
-            <div className={`absolute z-[5] hidden h-full w-full rounded-md bg-black/60 ${isShowChatMenu ? '!block xl:!hidden' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
+            <div className={`absolute z-5 hidden h-full w-full rounded-md bg-black/60 ${isShowChatMenu ? 'block! xl:hidden!' : ''}`} onClick={() => setIsShowChatMenu(!isShowChatMenu)}></div>
             <div className="panel flex-1 p-0">
                 {!isShowUserChat && (
                     <div className="relative flex h-full items-center justify-center p-4">
@@ -294,7 +294,7 @@ const WpMain = ({ chatTitle, image, chatRooms }: WpMainProps) => {
                         </button>
 
                         <div className="flex flex-col items-center justify-center py-8">
-                            <div className="mb-8 h-[calc(100vh_-_320px)] min-h-[120px] w-[280px] text-white dark:text-black md:w-[430px]">
+                            <div className="mb-8 h-[calc(100vh-320px)] min-h-[120px] w-[280px] text-white dark:text-black md:w-[430px]">
                                 <Image src={`/assets/images/${image}.png`} height={500} width={500} alt="Empty Chat" objectFit="contain" />
                             </div>
                             <p className="mx-auto flex max-w-[190px] justify-center rounded-md bg-white-dark/20 p-2 font-semibold">

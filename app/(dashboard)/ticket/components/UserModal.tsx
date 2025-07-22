@@ -50,7 +50,7 @@ export default function UserModal({ setUserModal, userModal, }: userModalProps) 
             </button>
             <Transition appear show={userModal} as={Fragment}>
                 <Dialog as="div" open={userModal} onClose={() => setUserModal(false)}>
-                    <div id="slidein_up_modal" className="fixed inset-0 bg-[black]/30 z-[999] overflow-y-auto">
+                    <div id="slidein_up_modal" className="fixed inset-0 bg-[black]/30 z-999 overflow-y-auto">
                         <div className="flex items-start justify-center min-h-screen px-4">
                             <Dialog.Panel className="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-32 text-black dark:text-white-dark animate__animated animate__slideInUp">
                                 <div className=" bg-[#fbfbfb] dark:bg-[#121c2c]  px-5 py-3">

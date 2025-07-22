@@ -366,7 +366,7 @@ export default function LeadModal() {
                                                                         values.probability && (
                                                                             <div className="w-full h-6 bg-[#ebedf2] dark:bg-dark/40 rounded-full">
                                                                                 <div
-                                                                                    className="grid place-items-center text-sm  text-white bg-gradient-to-r from-[#3cba92] to-[#0ba360] h-6 rounded-full "
+                                                                                    className="grid place-items-center text-sm  text-white bg-linear-to-r from-[#3cba92] to-[#0ba360] h-6 rounded-full "
                                                                                     style={{ width: `${values.probability}%` }}
                                                                                 >
                                                                                     % {values.probability}

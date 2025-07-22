@@ -35,7 +35,7 @@ const TicketEscForm = () => {
     }
 
     return (
-        // <div className={`panel  flex-shrink w-full h-full  md:w-3/12 ${isEscalation ? 'display' : 'hidden'}`}>
+        // <div className={`panel  shrink w-full h-full  md:w-3/12 ${isEscalation ? 'display' : 'hidden'}`}>
         <div className={`panel pb-2 sm:col-span-1 ${isEscalation ? 'display' : 'hidden'}`}>
             <div className="mb-4 flex items-start justify-between border-b border-white-light py-2 pt-0  dark:border-[#1b2e4b] dark:text-white-light">
                 <h5 className="text-lg font-semibold ">Escalation Form</h5>
@@ -111,7 +111,7 @@ const TicketEscForm = () => {
                     {/* <label htmlFor="phoneNo">Reason:</label> */}
                     <textarea rows={4} className="form-textarea resize-none" placeholder="Reason..." id="reason" required />
                 </div>
-                <button type="submit" className="btn btn-secondary ml-auto !mt-6">
+                <button type="submit" className="btn btn-secondary ml-auto mt-6!">
                     Escalate
                 </button>
             </form>

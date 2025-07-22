@@ -291,7 +291,7 @@ const InvoiceAction = () => {
                                         <tbody>
                                             {values.invoice_items.length <= 0 && (
                                                 <tr>
-                                                    <td colSpan={5} className="!text-center font-semibold">
+                                                    <td colSpan={5} className="text-center! font-semibold">
                                                         No Item Available
                                                     </td>
                                                 </tr>

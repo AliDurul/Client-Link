@@ -572,7 +572,7 @@ const DashboardMain = () => {
 
         <div className="pt-5">
             <div className="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
-                <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
+                <div className="panel bg-linear-to-r from-cyan-500 to-cyan-400">
                     <div className="flex justify-between">
                         <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Users Visit</div>
                         <div className="dropdown">
@@ -618,7 +618,7 @@ const DashboardMain = () => {
                 </div>
 
                 {/* Sessions */}
-                <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                <div className="panel bg-linear-to-r from-violet-500 to-violet-400">
                     <div className="flex justify-between">
                         <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Sessions</div>
                         <div className="dropdown">
@@ -664,7 +664,7 @@ const DashboardMain = () => {
                 </div>
 
                 {/*  Time On-Site */}
-                <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
+                <div className="panel bg-linear-to-r from-blue-500 to-blue-400">
                     <div className="flex justify-between">
                         <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Time On-Site</div>
                         <div className="dropdown">
@@ -710,7 +710,7 @@ const DashboardMain = () => {
                 </div>
 
                 {/* Bounce Rate */}
-                <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
+                <div className="panel bg-linear-to-r from-fuchsia-500 to-fuchsia-400">
                     <div className="flex justify-between">
                         <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Bounce Rate</div>
                         <div className="dropdown">
@@ -795,7 +795,7 @@ const DashboardMain = () => {
                                 <ReactApexChart series={revenueChart.series} options={revenueChart.options} type="area" height={325} width={'100%'} />
                             ) : (
                                 <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black border-l-transparent! dark:border-white"></span>
                                 </div>
                             )}
                         </div>
@@ -812,7 +812,7 @@ const DashboardMain = () => {
                                 <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
                             ) : (
                                 <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                    <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black border-l-transparent! dark:border-white"></span>
                                 </div>
                             )}
                         </div>
@@ -927,7 +927,7 @@ const DashboardMain = () => {
                     <div className="flex items-center justify-between">
                         <div className="h-5 w-full overflow-hidden rounded-full bg-dark-light p-1 shadow-3xl dark:bg-dark-light/10 dark:shadow-none">
                             <div
-                                className="relative h-full w-full rounded-full bg-gradient-to-r from-[#4361ee] to-[#805dca] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
+                                className="relative h-full w-full rounded-full bg-linear-to-r from-[#4361ee] to-[#805dca] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
                                 style={{ width: '65%' }}
                             ></div>
                         </div>
@@ -1189,7 +1189,7 @@ const DashboardMain = () => {
                                 <div>
                                     <div className="h-5 w-full overflow-hidden rounded-full bg-dark-light p-1 shadow-3xl dark:bg-dark-light/10 dark:shadow-none">
                                         <div
-                                            className="relative h-full w-full rounded-full bg-gradient-to-r from-[#009ffd] to-[#2a2a72] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
+                                            className="relative h-full w-full rounded-full bg-linear-to-r from-[#009ffd] to-[#2a2a72] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
                                             style={{ width: '65%' }}
                                         ></div>
                                     </div>
@@ -1217,7 +1217,7 @@ const DashboardMain = () => {
                                 <div>
                                     <div className="h-5 w-full overflow-hidden rounded-full bg-dark-light p-1 shadow-3xl dark:bg-dark-light/10 dark:shadow-none">
                                         <div
-                                            className="relative h-full w-full rounded-full bg-gradient-to-r from-[#a71d31] to-[#3f0d12] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
+                                            className="relative h-full w-full rounded-full bg-linear-to-r from-[#a71d31] to-[#3f0d12] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
                                             style={{ width: '40%' }}
                                         ></div>
                                     </div>
@@ -1251,7 +1251,7 @@ const DashboardMain = () => {
                                 <div>
                                     <div className="h-5 w-full overflow-hidden rounded-full bg-dark-light p-1 shadow-3xl dark:bg-dark-light/10 dark:shadow-none">
                                         <div
-                                            className="relative h-full w-full rounded-full bg-gradient-to-r from-[#fe5f75] to-[#fc9842] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
+                                            className="relative h-full w-full rounded-full bg-linear-to-r from-[#fe5f75] to-[#fc9842] before:absolute before:inset-y-0 before:m-auto before:h-2 before:w-2 before:rounded-full before:bg-white ltr:before:right-0.5 rtl:before:left-0.5"
                                             style={{ width: '25%' }}
                                         ></div>
                                     </div>

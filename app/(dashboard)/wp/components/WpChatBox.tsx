@@ -102,7 +102,7 @@ const WpChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBo
                     <div className="dropdown">
                         <Dropdown
                             placement={'bottom-start'}
-                            btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full !flex justify-center items-center"
+                            btnClassName="bg-[#f4f4f4] dark:bg-[#1b2e4b] hover:bg-primary-light w-8 h-8 rounded-full flex! justify-center items-center"
                             button={
                                 <svg className="rotate-90 opacity-70 hover:text-primary" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <circle cx="5" cy="12" r="2" stroke="currentColor" strokeWidth="1.5" />
@@ -207,7 +207,7 @@ const WpChatBox = ({ setIsShowChatMenu, isShowChatMenu, selectedUser, scrollToBo
             </div>
             <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
 
-            <PerfectScrollbar className="chat-conversation-box relative h-full sm:h-[calc(100vh_-_300px)]">
+            <PerfectScrollbar className="chat-conversation-box relative h-full sm:h-[calc(100vh-300px)]">
                 <div className="min-h-[400px] space-y-5 p-4 pb-[68px] sm:min-h-[300px] sm:pb-0">
                     <div className="m-6 mt-0 block">
                         <h4 className="relative border-b border-[#f4f4f4] text-center text-xs dark:border-gray-800">

@@ -53,7 +53,7 @@ const NavbarNotificationDrop = () => {
           </span>
         }
       >
-        <ul className="w-[300px] divide-y !py-0 text-dark dark:divide-white/10 dark:text-white-dark sm:w-[350px]">
+        <ul className="w-[300px] divide-y py-0! text-dark dark:divide-white/10 dark:text-white-dark sm:w-[350px]">
           <li onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-4 py-2 font-semibold">
               <h4 className="text-lg">Notification</h4>
@@ -101,7 +101,7 @@ const NavbarNotificationDrop = () => {
             </>
           ) : (
             <li onClick={(e) => e.stopPropagation()}>
-              <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:!bg-transparent">
+              <button type="button" className="!grid min-h-[200px] place-content-center text-lg hover:bg-transparent!">
                 <div className="mx-auto mb-4 rounded-full ring-4 ring-primary/30">
                   <NotificationNoDataAvaibleIcon />
                 </div>

@@ -16,8 +16,8 @@ const WpChatList = ({ filteredItems, selectUser, selectedUser }: WpChatListProps
     const { userInfo } = useCurrentUser()
     
     return (
-        <div className="!mt-0">
-            <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pr-3.5 sm:h-[calc(100vh_-_357px)]">
+        <div className="mt-0!">
+            <PerfectScrollbar className="chat-users relative -mr-3.5 h-full min-h-[100px] space-y-0.5 pr-3.5 sm:h-[calc(100vh-357px)]">
                 {filteredItems.map((chat: any) => {
                     const member = chat.members.filter((member: any) => member.id !== userInfo?.user_id);
                     return (
@@ -31,7 +31,7 @@ const WpChatList = ({ filteredItems, selectUser, selectedUser }: WpChatListProps
 
                                 <div className="flex-1">
                                     <div className="flex items-center">
-                                        <div className="relative flex-shrink-0">
+                                        <div className="relative shrink-0">
                                             <img src={`/assets/images/${member[0].profile_pic}`} className="h-12 w-12 rounded-full object-cover" alt="" />
                                             <div>
                                                 <div className="absolute bottom-0 ltr:right-0 rtl:left-0">

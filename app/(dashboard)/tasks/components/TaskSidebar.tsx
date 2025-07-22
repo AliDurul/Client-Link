@@ -21,7 +21,7 @@ const TaskSidebar = ({ isShowTaskMenu, selectedTab, setIsShowTaskMenu, setSelect
 
     return (
         <div
-            className={`panel absolute z-10 hidden h-full w-[240px] max-w-full flex-none space-y-4 p-4 ltr:rounded-r-none rtl:rounded-l-none xl:relative xl:block xl:h-auto ltr:xl:rounded-r-md rtl:xl:rounded-l-md ${isShowTaskMenu && '!block'
+            className={`panel absolute z-10 hidden h-full w-[240px] max-w-full flex-none space-y-4 p-4 ltr:rounded-r-none rtl:rounded-l-none xl:relative xl:block xl:h-auto ltr:xl:rounded-r-md rtl:xl:rounded-l-md ${isShowTaskMenu && 'block!'
                 }`}
         >
             <div className="flex h-full flex-col pb-16">
