@@ -1,11 +1,11 @@
 "use server";
 import { auth } from "@/auth";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL + '/';
+const BASE_URL = process.env.API_BASE_URL + '/';
 
 const authConfig = async () => {
   const session = await auth();
-  const accessToken = session?.accessToken;
+  const accessToken = session?.access;
 
   return {
     Authorization: `Bearer ${accessToken}`,
@@ -13,25 +13,6 @@ const authConfig = async () => {
   };
 };
 
-export const getAllTasks = async () => {
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}tasks/`, {
-      cache: "no-cache",
-      headers,
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      return data
-    } else {
-      throw new Error(data.message || "Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
 
 export const updateTask = async (taskData: any) => {
   const headers = await authConfig();

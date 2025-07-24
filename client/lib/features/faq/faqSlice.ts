@@ -1,7 +1,7 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import { Faq } from "@/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getAllFaqs } from "./faqAPI";
+import { getAllFaqs } from "./faqActions";
 import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
 
 interface DefaultFaqParams {

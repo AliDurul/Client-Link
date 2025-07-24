@@ -4,26 +4,39 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectFaq, selectFaqModal, setFaqModal } from '@/lib/features/faq/faqSlice';
-import { faqUpDelAction, } from '@/lib/features/faq/faqAPI';
+import { faqUpDelAction, } from '@/lib/features/faq/faqActions';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
+import InputBox from '../shared/InputBox';
 
+interface IinitialValues {
+    success: boolean;
+    message: string;
+    // errors?: {
+    //     question?: string[];
+    //     answer?: string[];
+    // };
+    // inputs: {
+    //     question: string;
+    //     answer: string;
+    // };
+}
 
-
+const initialState: IinitialValues = {
+    success: false,
+    message: '',
+    // inputs: { question: '', answer: '' }
+}
 export default function FaqModal() {
     const dispatch = useAppDispatch();
     const faqModal = useAppSelector(selectFaqModal)
     const faq = useAppSelector(selectFaq)
     const [initialValues, setinitialValues] = useState(faq)
-    const [state, action, isPending] = useActionState(faqUpDelAction, { success: false, message: '', });
+    const [state, action, isPending] = useActionState(faqUpDelAction, initialState);
 
     useEffect(() => {
         if (state?.message) {
             if (state.success) {
-                coloredToast("success", state.message, "bottom-start");
                 dispatch(setFaqModal(false));
-                // dispatch(fetchAllFaqAsync());
-            } else {
-                coloredToast("danger", state.message, "bottom-start");
             }
         }
     }, [state]);
@@ -74,7 +87,11 @@ export default function FaqModal() {
                                             placeholder="Enter Question"
                                             className="form-input"
                                             onChange={(e) => setinitialValues({ ...initialValues, question: e.target.value })}
-                                            value={initialValues.question} />
+                                            value={initialValues.question}
+                                        />
+                                        {
+                                            state?.errors?.question && <p className='text-red-500 pt-1 text-sm'>- {state.errors.question}</p>
+                                        }
                                     </div>
                                     <div className="mb-5">
                                         <label htmlFor="desc">Answer</label>
@@ -87,6 +104,9 @@ export default function FaqModal() {
                                             onChange={(e) => setinitialValues({ ...initialValues, answer: e.target.value })}
                                             value={initialValues.answer}
                                         ></textarea>
+                                        {
+                                            state?.errors?.answer && <p className='text-red-500 pt-1 text-sm'>- {state.errors.answer}</p>
+                                        }
                                     </div>
                                     <div className="mt-8 flex items-center justify-end">
                                         <button type="button" className="btn btn-outline-danger gap-2" onClick={() => dispatch(setFaqModal(false))}>

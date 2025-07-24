@@ -1,6 +1,5 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getAllTasks } from "./taskAPI";
 import { ApiResponse, Pagination, Task } from "@/types";
 import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
 
@@ -43,15 +42,15 @@ export const taskSlice = createAppSlice({
         }),
 
         // Async actions
-        fetchAllTasksAsync: create.asyncThunk(
-            async () => {
-                return createApiThunk(
-                    () => getAllTasks(),
-                    "Failed to fetch tasks"
-                );
-            },
-            createAsyncThunkConfig('tasks')
-        ),
+        // fetchAllTasksAsync: create.asyncThunk(
+        //     async () => {
+        //         return createApiThunk(
+        //             () => getAllTasks(),
+        //             "Failed to fetch tasks"
+        //         );
+        //     },
+        //     createAsyncThunkConfig('tasks')
+        // ),
     }),
     selectors: {
         selectTasks: (task) => task.tasks,
@@ -63,7 +62,7 @@ export const taskSlice = createAppSlice({
 });
 
 export const { 
-    fetchAllTasksAsync, 
+    // fetchAllTasksAsync, 
     setTask, 
     clearTask,
     updateTasks 

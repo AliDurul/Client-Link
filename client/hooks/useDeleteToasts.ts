@@ -26,20 +26,8 @@ const useDeleteToasts = () => {
 
       if (result.isConfirmed) {
         const res = await deletionFunction(id);
-        console.log('27 -', res);
 
-        if (res?.message) {
-          dispatch(updateAction(res.remainingData ?? []));
-          await Swal.fire({
-            title: "Deleted!",
-            text: res.message,
-            icon: "success",
-            customClass: {
-              container: "sweet-alerts"
-            },
-          });
-          return true;
-        } else {
+        if (res?.error) {
           await Swal.fire({
             title: "Error",
             text: res?.error,
@@ -50,6 +38,17 @@ const useDeleteToasts = () => {
           });
           return false;
         }
+
+        await Swal.fire({
+          title: "Deleted!",
+          text: res.message,
+          icon: "success",
+          customClass: {
+            container: "sweet-alerts"
+          },
+        });
+        return true;
+
       }
     } catch (error) {
       Swal.fire({

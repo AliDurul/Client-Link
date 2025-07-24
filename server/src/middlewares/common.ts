@@ -153,7 +153,7 @@ declare module "express-serve-static-core" {
         getModelList: <T extends Document>(
             Model: Model<T>,
             customFilter?: Record<string, any>,
-            populate?: string | null
+            populate?: string | [{ path: string; select?: string | string[] }] | null
         ) => Promise<T[]>;
         getModelListDetails: <T extends Document>(
             Model: Model<T>,

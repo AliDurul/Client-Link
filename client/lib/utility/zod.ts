@@ -8,4 +8,10 @@ export const credentialsSchema = z.object({
         .max(20, "Password must be no more than 20 characters long")
         .refine((val) => /[A-Z]/.test(val), "Password must include at least one uppercase letter")
         .refine((val) => /[a-z]/.test(val), "Password must include at least one lowercase letter")
+});
+
+
+export const faqSchema = z.object({
+    question: z.string().min(10, "Question is required and must be at least 10 characters long"),
+    answer: z.string().min(15, "Answer is required and must be at least 15 characters long"),
 })

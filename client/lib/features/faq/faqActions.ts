@@ -1,5 +1,7 @@
 "use server";
 import { auth } from "@/auth"
+import { faqSchema } from "@/lib/utility/zod";
+import { revalidateTag } from 'next/cache'
 import { Faq } from "@/types";
 
 const BASE_URL = process.env.API_BASE_URL + '/'
@@ -43,15 +45,13 @@ export const deleteFaq = async (id: any) => {
       headers,
     });
 
-    const data = await response.json();
 
-    if (response.status === 200) {
-      // Revalidate cache after successful creation
-      revalidateTag('faqs');
-      return { message: data.message, remainingData: data.data };
-    } else {
-      throw new Error(data.detail ?? "Something went wrong, Please try again!");
+    if (!response.ok) {
+      throw new Error("Something went wrong, Please try again!");
     }
+
+    revalidateTag('faqs');
+    return { message: "Successfully Deleted!" };
 
   } catch (error: any) {
     return { error: error.message };
@@ -62,9 +62,19 @@ export const deleteFaq = async (id: any) => {
 export const faqUpDelAction = async (_: unknown, payload: FormData) => {
   const headers = await authConfig();
   const id = payload.get('id') as string;
-  const question = payload.get('question') as string;
-  const answer = payload.get('answer') as string;
-  console.log(payload);
+
+  const rowData = {
+    question: payload.get('question') as string,
+    answer: payload.get('answer') as string
+  };
+
+  const result = faqSchema.safeParse(rowData);
+
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+    return { success: false, message: 'Fix the error in the form', inputs: rowData, errors };
+  }
+
 
   const url = id ? `${BASE_URL}faqs/${id}/` : `${BASE_URL}faqs/`;
   const method = id ? "PUT" : "POST";
@@ -73,19 +83,20 @@ export const faqUpDelAction = async (_: unknown, payload: FormData) => {
     const response = await fetch(url, {
       method,
       headers,
-      body: JSON.stringify({ question, answer }),
+      body: JSON.stringify(result.data),
     });
 
     const data = await response.json();
-    if (response.ok) {
-      // Revalidate cache after successful creation
-      revalidateTag('faqs');
-      return { message: "Successfully Updated!", success: true };
-    } else {
+    console.log(data);
+    if (!response.ok) {
       throw new Error(data.message || "Something went wrong, Please try again!");
     }
+
+    revalidateTag('faqs');
+    return { message: "Successfully Updated!", success: true };
+
   } catch (error: any) {
-    return { message: error.message, success: false };
+    return { message: error.message, success: false, inputs: result.data };
   }
 };
 
@@ -115,9 +126,3 @@ export const createFaq = async (FaqData: Faq) => {
 };
 
 
-import { revalidateTag } from 'next/cache'
-import { fa } from "zod/locales";
-export async function revalidateFaq() {
-  console.log('faqs revalite functions');
-  revalidateTag('faqs')
-} 

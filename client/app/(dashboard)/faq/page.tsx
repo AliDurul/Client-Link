@@ -3,17 +3,17 @@ import FaqList from '@/components/dashboard/FaqList'
 import FaqModal from '@/components/dashboard/FaqModal'
 import NoDataFound from '@/components/shared/NoDataFound'
 import TopPageNavigation from '@/components/shared/TopPageNavigation'
-import { getAllFaqs } from '@/lib/features/faq/faqAPI'
+import { getAllFaqs } from '@/lib/features/faq/faqActions'
+import { getAllData } from '@/lib/features/shared/actionUtils'
 import React from 'react'
 
 export default async function page() {
 
-    const faqs = await getAllFaqs();
-
+    const faqs = await getAllData({ url: 'faqs/' });
 
     return (
         <div>
-            <TopPageNavigation />
+            {/* <TopPageNavigation /> */}
 
             <div className="pt-5">
                 <div className='flex justify-between items-center max-w-[80%] mx-auto'>
