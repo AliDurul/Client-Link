@@ -1,4 +1,4 @@
-import { selectThemeConfig, toggleAnimation, toggleLayout, toggleMenu, toggleNavbar, toggleRTL, toggleSemidark, toggleTheme } from '@/lib/features/themeConfig/themeConfigSlice';
+import { selectThemeConfig, toggleAnimation, toggleLayout, toggleMenu, toggleNavbar, toggleRTL, toggleSemidark, toggleTheme } from '@/lib/features/theme/themeSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { useState } from 'react';
 // import { useDispatch, useAppSelector } from 'react-redux';

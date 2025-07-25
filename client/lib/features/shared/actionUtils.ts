@@ -26,6 +26,8 @@ interface GetAllDataParams {
 export const getAllData = async ({ url, searchQueries, customQuery, filterQueries }: GetAllDataParams) => {
     const headers = await authConfig();
 
+    // await new Promise(resolve => setTimeout(resolve, 3000));
+
     // Build query object
     const queryObject: Record<string, string> = {};
 
@@ -68,8 +70,8 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
         }
     );
 
-    console.log('Query Object:', queryObject);
-    console.log('Final URL:', finalUrl);
+    // console.log('Query Object:', queryObject);
+    // console.log('Final URL:', finalUrl);
 
     try {
         const response = await fetch(finalUrl, {

@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL + '/'
 
 const authConfig = async () => {
     const session = await auth();
-    const accessToken = session?.accessToken;
+    const accessToken = session?.access;
 
     return {
         Authorization: `Bearer ${accessToken}`,

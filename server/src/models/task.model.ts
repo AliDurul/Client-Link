@@ -28,7 +28,7 @@ const taskSchema: Schema<ITask> = new Schema({
     status: {
         type: String,
         default: 'Pending',
-        enum: ['Pending', 'In Progress', 'Completed', 'Cancelled']
+        enum: ['Pending', 'In-Progress', 'Completed', 'Cancelled']
     }
 }, {
     collection: 'Tasks',

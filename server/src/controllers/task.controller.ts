@@ -4,13 +4,103 @@ import Task, { ITask } from "../models/task.model";
 import { CustomError } from "../utils/common";
 
 
+export const getCountDetail = async (req: Request, res: Response): Promise<void> => {
+    const result = await Task.aggregate([
+        {
+            $facet: {
+                totalCount: [
+                    { $count: "count" }  // Count all documents
+                ],
+                statusCounts: [
+                    {
+                        $group: {
+                            _id: "$status",      // Group by status field
+                            count: { $sum: 1 }   // Count documents in each group
+                        }
+                    }
+                ],
+                priorityCounts: [
+                    {
+                        $group: {
+                            _id: "$priority",    // Group by priority field
+                            count: { $sum: 1 }   // Count documents in each group
+                        }
+                    }
+                ]
+            }
+        }
+    ]);
+
+    console.log("Raw aggregation result:", result);
+
+
+    const data = result[0];
+
+    // Format the response
+
+    const statusCounts = {
+        pending: 0,
+        'in-progress': 0,
+        completed: 0,
+        cancelled: 0,
+        all: data.totalCount[0]?.count || 0
+    };
+
+    const priorityCounts = {
+        high: 0,
+        medium: 0,
+        low: 0
+    };
+
+    // Map status counts
+    data.statusCounts.forEach((item: any) => {
+        switch (item._id) {
+            case 'Pending':
+                statusCounts.pending = item.count;
+                break;
+            case 'In-Progress':
+                statusCounts['in-progress'] = item.count;
+                break;
+            case 'Completed':
+                statusCounts.completed = item.count;
+                break;
+            case 'Cancelled':
+                statusCounts.cancelled = item.count;
+                break;
+        }
+    });
+
+    // Map priority counts
+    data.priorityCounts.forEach((item: any) => {
+        switch (item._id) {
+            case 'High':
+                priorityCounts.high = item.count;
+                break;
+            case 'Medium':
+                priorityCounts.medium = item.count;
+                break;
+            case 'Low':
+                priorityCounts.low = item.count;
+                break;
+        }
+    });
+
+    res.send({
+        success: true,
+        count: {
+            status: statusCounts,
+            priority: priorityCounts
+        }
+    });
+};
+
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
 
     const result = await res.getModelList(Task, {}, [{
         path: 'asign_agent',
         select: 'name email profile_pic first_name last_name phone_number'
     }])
-    
+
     res.send({
         success: true,
         details: await res.getModelListDetails(Task),

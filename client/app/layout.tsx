@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   description: "Client Link Login page",
 };
 
+export const experimental_ppr = true
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (

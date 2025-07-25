@@ -3,8 +3,21 @@ import { formUrlQuery, removeKeysFromQuery } from '@/lib/utility/functions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 
-export default function TaskHeaderBtns() {
+interface Pages {
+    previous: boolean;
+    current: number;
+    next: number;
+    total: number;
+}
 
+interface TaskDetails {
+    limit: number;
+    page: number;
+    totalRecords: number;
+    pages: Pages | false;
+}
+
+export default function TaskHeaderBtns({ details }: { details: TaskDetails }) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -17,6 +30,12 @@ export default function TaskHeaderBtns() {
             let newUrl = '';
 
             if (query) {
+                // Remove page when searching to start from page 1
+                newUrl = removeKeysFromQuery({
+                    params: searchParams.toString(),
+                    keysToRemove: ['page']
+                });
+
                 newUrl = formUrlQuery({
                     params: searchParams.toString(),
                     key: 'query',
@@ -25,11 +44,11 @@ export default function TaskHeaderBtns() {
             } else {
                 newUrl = removeKeysFromQuery({
                     params: searchParams.toString(),
-                    keysToRemove: ['query']
+                    keysToRemove: ['query', 'page']
                 });
             }
 
-            router.push(newUrl, { scroll: false });
+            router.replace(newUrl, { scroll: false });
         }, 500);
 
 
@@ -38,12 +57,61 @@ export default function TaskHeaderBtns() {
     }, [query, searchParams, router])
 
 
+    const getPaginationText = (details: TaskDetails | undefined) => {
+        if (!details || details.totalRecords === 0) {
+            return '0-0 of 0';
+        }
+
+        const startRecord = Math.max(1, (details.page - 1) * details.limit + 1);
+        const endRecord = Math.min(details.page * details.limit, details.totalRecords);
+
+        return `${startRecord}-${endRecord} of ${details.totalRecords}`;
+    };
+
+    // Type guard function
+    const hasValidPagination = (pages: Pages | boolean | undefined): pages is Pages => {
+        return pages !== undefined && pages !== false && typeof pages === 'object';
+    };
+
+    const handlePreviousPage = () => {
+        if (!hasValidPagination(details?.pages) || details.pages.current <= 1) {
+            return;
+        }
+
+        const newUrl = formUrlQuery({
+            params: searchParams.toString(),
+            key: 'page',
+            value: (details.pages.current - 1).toString()
+        });
+
+        router.replace(newUrl, { scroll: false });
+    };
+
+    const handleNextPage = () => {
+        if (!hasValidPagination(details?.pages) || details.pages.current >= details.pages.total) {
+            return;
+        }
+
+        const newUrl = formUrlQuery({
+            params: searchParams.toString(),
+            key: 'page',
+            value: (details.pages.current + 1).toString()
+        });
+
+        router.replace(newUrl, { scroll: false });
+    };
+
+    // Simplified button conditions
+    const isPreviousDisabled = !hasValidPagination(details?.pages) || details.pages.current <= 1;
+    const isNextDisabled = !hasValidPagination(details?.pages) || details.pages.current >= details.pages.total;
+
+
     return (
         <div className='flex w-full flex-col gap-4 p-4 sm:flex-row sm:items-center'>
             <div className="flex items-center ltr:mr-3 rtl:ml-3">
                 <button
                     type="button" className="block hover:text-primary ltr:mr-3 rtl:ml-3 xl:hidden"
-                    // onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}
+                // onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 7L4 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -58,7 +126,6 @@ export default function TaskHeaderBtns() {
                         placeholder="Search Task..."
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        // onKeyUp={() => searchTasks()}
                     />
                     <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,16 +135,16 @@ export default function TaskHeaderBtns() {
                     </div>
                 </div>
             </div>
-            {/* <div className="flex flex-1 items-center justify-center sm:flex-auto sm:justify-end">
-                <p className="ltr:mr-3 rtl:ml-3">{pager.startIndex + 1 + '-' + (pager.endIndex + 1) + ' of ' + filteredTasks.length}</p>
+
+            <div className="flex flex-1 items-center justify-center sm:flex-auto sm:justify-end">
+                <p className="ltr:mr-3 rtl:ml-3">
+                    {getPaginationText(details)}
+                </p>
                 <button
                     type="button"
-                    disabled={pager.currentPage === 1}
+                    disabled={isPreviousDisabled}
                     className="rounded-md bg-[#f4f4f4] p-1 enabled:hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60 ltr:mr-3 rtl:ml-3 dark:bg-white-dark/20 enabled:dark:hover:bg-white-dark/30"
-                    onClick={() => {
-                        pager.currentPage--;
-                        searchTasks(false);
-                    }}
+                    onClick={handlePreviousPage}
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ltr:rotate-180">
                         <path d="M9 5L15 12L9 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -85,18 +152,15 @@ export default function TaskHeaderBtns() {
                 </button>
                 <button
                     type="button"
-                    disabled={pager.currentPage === pager.totalPages}
+                    disabled={isNextDisabled}
                     className="rounded-md bg-[#f4f4f4] p-1 enabled:hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white-dark/20 enabled:dark:hover:bg-white-dark/30"
-                    onClick={() => {
-                        pager.currentPage++;
-                        searchTasks(false);
-                    }}
+                    onClick={handleNextPage}
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="rtl:rotate-180">
                         <path d="M9 5L15 12L9 19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </button>
-            </div> */}
-        </div>
+            </div>
+        </div >
     )
 }

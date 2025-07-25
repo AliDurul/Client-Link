@@ -52,14 +52,14 @@ export const forgetPasswordToast = async () => {
     inputPlaceholder: "Enter your email address",
     showCancelButton: true,
   });
+
   if (email) {
     // const res = await forgetPassword(email);
     const res = { message: 'Email Sent.' }
     if (res?.message) {
       MySwal.fire(`${res?.message} Check your emails please.`);
     } else {
-      // @ts-ignore
-      MySwal.fire(res?.error);
+      MySwal.fire(res?.message || "Something went wrong, Please try again!");
     }
   }
 };

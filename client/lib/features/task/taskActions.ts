@@ -100,6 +100,25 @@ export const createTask = async (taskData: any) => {
 };
 
 
+export const getCountDetail = async () => {
+  const headers = await authConfig();
 
+  try {
+    const response = await fetch(`${BASE_URL}tasks/count/`, {
+      headers,
+      next: { tags: ['task-count'] }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok && !data.success) throw new Error(data.message || "Something went wrong, Please try again!");
+
+    return data;
+
+  } catch (error: any) {
+    return { error: error.message };
+  }
+
+}
 
 

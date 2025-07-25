@@ -163,9 +163,9 @@ declare module "express-serve-static-core" {
             // search: Record<string, any>;
             // sort: Record<string, any>;
             // skip: number;
-            // limit: number;
+            limit: number;
             page: number;
-            totolRecords: number;
+            totalRecords: number;
             pages: false | {
                 previous: number | false;
                 current: number;
@@ -230,9 +230,9 @@ export const queryHandler: RequestHandler = (req, res, next) => {
         // search: Record<string, any>;
         // sort: Record<string, any>;
         // skip: number;
-        // limit: number;
+        limit: number;
         page: number;
-        totolRecords: number;
+        totalRecords: number;
         pages: false | {
             previous: number | false;
             current: number;
@@ -254,15 +254,15 @@ export const queryHandler: RequestHandler = (req, res, next) => {
             // search,
             // sort,
             // skip,
-            // limit,
-            page,
-            totolRecords: count,
+            limit,
+            page: page + 1, 
+            totalRecords: count,
             pages: count <= limit
                 ? false
                 : {
                     previous: page > 1 ? page - 1 : false,
-                    current: page,
-                    next: page < Math.ceil(count / limit) ? page + 1 : false,
+                    current: page + 1,
+                    next: page < Math.ceil(count / limit) ? page + 2 : false,
                     total: Math.ceil(count / limit),
                 },
         };
