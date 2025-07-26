@@ -20,14 +20,13 @@ interface GetAllDataParams {
     url: string;
     searchQueries?: Record<string, string | undefined>;
     filterQueries?: Record<string, string | undefined>;
-    customQuery?: Record<string, string | undefined>;
+    customQuery?: Record<string, string | undefined | number>;
 }
 
 export const getAllData = async ({ url, searchQueries, customQuery, filterQueries }: GetAllDataParams) => {
     const headers = await authConfig();
-
     // await new Promise(resolve => setTimeout(resolve, 3000));
-
+    // console.log('get all data called with url:', url);
     // Build query object
     const queryObject: Record<string, string> = {};
 

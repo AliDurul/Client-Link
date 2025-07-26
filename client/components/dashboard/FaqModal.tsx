@@ -4,7 +4,7 @@ import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/re
 import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectFaq, selectFaqModal, setFaqModal } from '@/lib/features/faq/faqSlice';
-import { faqUpDelAction, } from '@/lib/features/faq/faqActions';
+import { faqCrUpAction } from '@/lib/features/faq/faqActions';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
 import InputBox from '../shared/InputBox';
 
@@ -31,7 +31,7 @@ export default function FaqModal() {
     const faqModal = useAppSelector(selectFaqModal)
     const faq = useAppSelector(selectFaq)
     const [initialValues, setinitialValues] = useState(faq)
-    const [state, action, isPending] = useActionState(faqUpDelAction, initialState);
+    const [state, action, isPending] = useActionState(faqCrUpAction, initialState);
 
     useEffect(() => {
         if (state?.message) {

@@ -2,10 +2,13 @@
 
 import { CompletedIcon, HamburgerIcon, InboxIcon, InProgressIcon, PendingIcon, TrashIcon } from '@/icons/Task';
 import { getCountDetail } from '@/lib/features/task/taskActions';
+import { selectIsShowTaskMenu, setAddTaskModal, setIsShowTaskMenu } from '@/lib/features/task/taskSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utility/functions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import useSWR from 'swr'
 
 type StatusKey = 'all' | 'High' | 'In-Progress' | 'Pending' | 'Completed' | 'Cancelled';
 interface IStatusBtn {
@@ -21,32 +24,25 @@ const TaskSidebar = () => {
 
     const qStatus = searchParams.get('qs') || 'all';
     const qPriority = searchParams.get('qp') || '';
+    const isShowTaskMenu = useAppSelector(selectIsShowTaskMenu);
+    const dispatch = useAppDispatch();
 
-    const [countDetail, setCountDetail] = useState<Record<string, number>>({
+
+
+    const { data: countData, isLoading } = useSWR('task-counts', getCountDetail);
+
+
+    const countDetail = countData?.success ? countData.count.status : {
         all: 0,
-        High: 0,
         'In-Progress': 0,
         Pending: 0,
         Completed: 0,
         Cancelled: 0
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [isShowTaskMenu, setIsShowTaskMenu] = useState(false);
+    };
 
-    useEffect(() => {
-        const fetchFn = async () => {
-            setIsLoading(true);
-            const res = await getCountDetail();
-            if (res.success) {
-                setCountDetail(res.count.status);
-            }
-            setIsLoading(false);
-        };
-        fetchFn();
-    }, [])
 
     const addEditTask = () => {
-        setIsShowTaskMenu(false);
+        dispatch(setAddTaskModal(true));
     };
 
 
@@ -93,7 +89,7 @@ const TaskSidebar = () => {
 
 
     const tabChanged = () => {
-        setIsShowTaskMenu(false);
+        dispatch(setIsShowTaskMenu(false));
     };
 
     // Status buttons configuration

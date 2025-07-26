@@ -1,4 +1,6 @@
 'use client';
+import { selectIsShowTaskMenu, setIsShowTaskMenu } from '@/lib/features/task/taskSlice';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utility/functions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
@@ -19,42 +21,54 @@ interface TaskDetails {
 
 export default function TaskHeaderBtns({ details }: { details: TaskDetails }) {
     const router = useRouter();
+    const isShowTaskMenu = useAppSelector(selectIsShowTaskMenu);
     const searchParams = useSearchParams();
+    const dispatch = useAppDispatch();
 
     const [query, setQuery] = useState('');
 
+    // Initialize query state from URL params
     useEffect(() => {
+        const urlQuery = searchParams.get('query') || '';
+        setQuery(urlQuery);
+    }, []); // Only run on mount
 
+
+    useEffect(() => {
         const delayBounceFn = setTimeout(() => {
-
             let newUrl = '';
 
             if (query) {
                 // Remove page when searching to start from page 1
-                newUrl = removeKeysFromQuery({
+                const paramsWithoutPage = removeKeysFromQuery({
                     params: searchParams.toString(),
                     keysToRemove: ['page']
                 });
 
                 newUrl = formUrlQuery({
-                    params: searchParams.toString(),
+                    params: paramsWithoutPage,
                     key: 'query',
                     value: query
                 });
             } else {
-                newUrl = removeKeysFromQuery({
-                    params: searchParams.toString(),
-                    keysToRemove: ['query', 'page']
-                });
+                // Only remove query and page if query is actually empty
+                // and there was a query in the URL before
+                if (searchParams.get('query')) {
+                    newUrl = removeKeysFromQuery({
+                        params: searchParams.toString(),
+                        keysToRemove: ['query', 'page']
+                    });
+                } else {
+                    return; // Don't update URL if there's no query to remove
+                }
             }
 
             router.replace(newUrl, { scroll: false });
         }, 500);
 
+        return () => clearTimeout(delayBounceFn);
 
-        return () => clearTimeout(delayBounceFn)
-
-    }, [query, searchParams, router])
+    }, [query]); // Only depend on query changes, not searchParams
 
 
     const getPaginationText = (details: TaskDetails | undefined) => {
@@ -105,13 +119,12 @@ export default function TaskHeaderBtns({ details }: { details: TaskDetails }) {
     const isPreviousDisabled = !hasValidPagination(details?.pages) || details.pages.current <= 1;
     const isNextDisabled = !hasValidPagination(details?.pages) || details.pages.current >= details.pages.total;
 
-
     return (
         <div className='flex w-full flex-col gap-4 p-4 sm:flex-row sm:items-center'>
             <div className="flex items-center ltr:mr-3 rtl:ml-3">
                 <button
                     type="button" className="block hover:text-primary ltr:mr-3 rtl:ml-3 xl:hidden"
-                // onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}
+                    onClick={() => dispatch(setIsShowTaskMenu(!isShowTaskMenu))}
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 7L4 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />

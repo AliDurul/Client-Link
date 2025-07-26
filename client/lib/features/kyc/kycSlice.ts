@@ -1,5 +1,5 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { getAllKycs } from "./kycAPI";
+import { getAllKycs } from "./kycActions";
 import { ApiResponse, Kyc, Pagination } from "@/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";

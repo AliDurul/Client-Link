@@ -34,6 +34,7 @@ export default async function TaskMain({ searchParams }: { searchParams: Promise
                     <div className="flex h-full min-h-[400px] items-center justify-center text-lg font-semibold sm:min-h-[300px]">No data available</div>
                 )}
             </div>
+
         </div>
     )
 }

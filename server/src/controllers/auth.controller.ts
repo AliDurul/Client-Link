@@ -47,7 +47,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const refresh = async (req: Request, res: Response): Promise<void> => {
-console.log('refresh calisit');
+    console.log('refresh calisit');
     const refreshToken: string | undefined = req.body?.refresh
 
     if (!refreshToken) throw new CustomError('Please enter token.refresh', 401, true);

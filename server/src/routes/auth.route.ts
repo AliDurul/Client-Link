@@ -7,7 +7,7 @@ const router = Router();
 
 // Base route: /api/v1/auth
 
-router.post('/register', isValidated(registerUserSchema), register);
+router.post('/register',  register);
 router.post('/login', isValidated(loginUserSchema), login);
 router.post('/refresh', refresh);
 router.all('/logout', logout);

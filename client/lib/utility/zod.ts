@@ -15,3 +15,10 @@ export const faqSchema = z.object({
     question: z.string().min(10, "Question is required and must be at least 10 characters long"),
     answer: z.string().min(15, "Answer is required and must be at least 15 characters long"),
 })
+
+export const taskSchema = z.object({
+    title: z.string().min(3, "Title is required").max(100, "Title must be no more than 100 characters long"),
+    description: z.string().min(10, "Description is required").max(500, "Description must be no more than 500 characters long"),
+    asign_agent: z.string().min(1, "Assign agent is required"),
+    priority: z.enum(['Low', 'Medium', 'High']).optional(),
+});

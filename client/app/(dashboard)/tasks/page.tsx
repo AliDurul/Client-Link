@@ -1,3 +1,4 @@
+import TaskAddEditModal from '@/components/dashboard/TaskAddEditModal';
 import TaskMain from '@/components/dashboard/TaskMain';
 import TaskSidebar from '@/components/dashboard/TaskSideBar';
 import TopPageNavigation from '@/components/shared/TopPageNavigation'
@@ -20,7 +21,6 @@ export default async function page({ searchParams }: HomePageParams) {
                     <TaskMain searchParams={searchParams} />
                 </Suspense>
 
-                {/* <TaskAddEditModal addTaskModal={addTaskModal} setAddTaskModal={setAddTaskModal} setParams={setParams} params={params} /> */}
 
                 {/* <SelectedTaskModal setViewTaskModal={setViewTaskModal} viewTaskModal={viewTaskModal} selectedTask={selectedTask} /> */}
             </div>

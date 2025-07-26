@@ -59,7 +59,7 @@ export const deleteFaq = async (id: any) => {
 };
 
 
-export const faqUpDelAction = async (_: unknown, payload: FormData) => {
+export const faqCrUpAction = async (_: unknown, payload: FormData) => {
   const headers = await authConfig();
   const id = payload.get('id') as string;
 
@@ -74,7 +74,6 @@ export const faqUpDelAction = async (_: unknown, payload: FormData) => {
     const errors = result.error.flatten().fieldErrors;
     return { success: false, message: 'Fix the error in the form', inputs: rowData, errors };
   }
-
 
   const url = id ? `${BASE_URL}faqs/${id}/` : `${BASE_URL}faqs/`;
   const method = id ? "PUT" : "POST";

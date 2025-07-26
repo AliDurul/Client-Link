@@ -7,7 +7,7 @@ import { themeSlice } from "./features/theme/themeSlice";
 // import { kycSlice } from "./features/kyc/kycSlice";
 // import { productSlice } from "./features/products/productSlice";
 import { faqSlice } from "./features/faq/faqSlice";
-// import { taskSlice } from "./features/task/taskSlice";
+import { taskSlice } from "./features/task/taskSlice";
 // import { chatSlice } from "./features/chat/chatSlice";
 // import { leadSlice } from "./features/leads/leadSlice";
 // import { coparateSlice } from "./features/coparate/coparateSlice";
@@ -20,7 +20,7 @@ const rootReducer = combineSlices(
     // kycSlice,
     // productSlice,
     faqSlice,
-    // taskSlice,
+    taskSlice,
     // chatSlice,
     // leadSlice,
     // coparateSlice

@@ -31,8 +31,6 @@ export const getCountDetail = async (req: Request, res: Response): Promise<void>
         }
     ]);
 
-    console.log("Raw aggregation result:", result);
-
 
     const data = result[0];
 

@@ -14,7 +14,7 @@ export const experimental_ppr = true
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <StoreProvider>
         <body className={`${inter.className} font-nunito`}>{children}</body>
       </StoreProvider>

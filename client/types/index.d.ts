@@ -1,3 +1,37 @@
+/* -------------------------- Shared -------------------------- */
+
+/* Pagination */
+export type Pagination<T> = {
+  success: boolean;
+  details: {
+    limit: number;
+    page: number;
+    totalRecords: number;
+    pages: {
+      previous: boolean;
+      current: number;
+      next: number;
+      total: number;
+    } | false;
+  };
+  results: T[];
+}
+
+export interface ApiResponse extends Pagination<any> {
+  error?: any;
+}
+
+export interface IUseActionInitVal {
+  success: boolean;
+  message: string;
+  // errors?: Record<string, string[]>;
+  // inputs?: Record<string, string>;
+}
+
+
+
+/* -------------------------- Pages -------------------------- */
+
 /* Authorization */
 export interface Login {
   email: string;
@@ -10,17 +44,10 @@ export interface Register {
   password: string;
 }
 
-/* Pagination */
-export type Pagination<T> = {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[]
-}
 
-export interface ApiResponse extends Pagination<any> {
-  error?: any;
-}
+
+
+
 
 /* TIKCET */
 export interface Ticket {
@@ -136,7 +163,7 @@ export interface Category {
 
 /* KYC */
 export interface Kyc {
-  id: number;
+  _id: number;
   user_type: string;
   email: string;
   first_name: string;
@@ -314,6 +341,7 @@ export interface Folder {
   totalItemCount: number,
   isHidden: boolean
 }
+
 
 /* TASK */
 export interface Task {

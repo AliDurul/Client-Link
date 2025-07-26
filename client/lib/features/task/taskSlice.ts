@@ -8,17 +8,30 @@ export interface TaskSliceState {
     status: "idle" | "loading" | "failed";
     error: string | null;
     task: Task | null;
+    isShowTaskMenu: boolean;
+    addTaskModal: boolean;
 }
 
 const initialState: TaskSliceState = {
     tasks: {
-        count: 0,
-        next: null,
-        previous: null,
+        success: true,
+        details: {
+            limit: 0,
+            page: 1,
+            totalRecords: 0,
+            pages: {
+                previous: false,
+                current: 0,
+                next: 0,
+                total: 0
+            }
+        },
         results: []
     },
     status: "idle",
     error: null,
+    isShowTaskMenu: false,
+    addTaskModal: false,
     task: null
 };
 
@@ -33,6 +46,15 @@ export const taskSlice = createAppSlice({
         }),
         clearTask: create.reducer((state) => {
             state.task = null;
+        }),
+        // Component management
+        setIsShowTaskMenu: create.reducer((state, action: PayloadAction<boolean>) => {
+            state.status = 'idle';
+            state.isShowTaskMenu = action.payload;
+        }),
+        setAddTaskModal: create.reducer((state, action: PayloadAction<boolean>) => {
+            state.status = 'idle';
+            state.addTaskModal = action.payload;
         }),
 
         // Collection management
@@ -58,20 +80,26 @@ export const taskSlice = createAppSlice({
         selectTaskError: (task) => task.error,
         selectTask: (task) => task.task,
         selectTaskState: (task) => task,
+        selectIsShowTaskMenu: (task) => task.isShowTaskMenu,
+        selectAddTaskModal: (task) => task.addTaskModal
     }
 });
 
-export const { 
+export const {
     // fetchAllTasksAsync, 
-    setTask, 
+    setIsShowTaskMenu,
+    setAddTaskModal,
+    setTask,
     clearTask,
-    updateTasks 
+    updateTasks
 } = taskSlice.actions;
 
-export const { 
-    selectTasks, 
-    selectTaskStatus, 
+export const {
+    selectTasks,
+    selectTaskStatus,
     selectTaskError,
     selectTask,
-    selectTaskState
+    selectTaskState,
+    selectIsShowTaskMenu,
+    selectAddTaskModal
 } = taskSlice.selectors;
