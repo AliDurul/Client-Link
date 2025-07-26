@@ -22,7 +22,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         to: user.email,
         subject: 'Verify your email',
         tempFn: verificationEmailTemp,
-        data: { verificationCode: user.verificationToken }
+        data: { verificationCode: user.verification_token }
     });
 
     res.status(201).send({
@@ -34,13 +34,13 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body as TLoginUser;
 
-    const user = await User.findOne<IUser>({ email, password });
+    const user = await User.findOne({ email, password });
 
     if (!user) throw new CustomError('Invalid email or password', 401, true);
 
     // if (!user.isVerified) throw new CustomError('Email not verified', 403, true);
 
-    user.lastLogin = new Date();
+    user.last_login = new Date();
     await user.save();
 
     res.status(200).send(setToken(user));
@@ -71,13 +71,13 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
 
     const { verificationToken } = req.body as TVerifyEmail;
 
-    const user = await User.findOne<IUser>({ verificationToken, verificationTokenExpiresAt: { $gt: new Date() } });
+    const user = await User.findOne({ verificationToken, verificationTokenExpiresAt: { $gt: new Date() } });
 
     if (!user) throw new CustomError('Invalid or expired verification token', 400);
 
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpiresAt = undefined;
+    user.is_verified = true;
+    user.verification_token = undefined;
+    user.verification_token_expires_at = undefined;
     await user.save();
 
     sendMail({
@@ -95,15 +95,15 @@ export const verifyEmail = async (req: Request, res: Response): Promise<void> =>
 export const forgetPassword = async (req: Request, res: Response): Promise<void> => {
     const { email } = req.body as TForgetPass;
 
-    const user = await User.findOne<IUser>({ email });
+    const user = await User.findOne({ email });
 
     if (!user) throw new CustomError('User not found', 404, true);
 
-    if (!user.isVerified) throw new CustomError('User email is not verified. Please verify your email.', 403, true);
+    if (!user.is_verified) throw new CustomError('User email is not verified. Please verify your email.', 403, true);
 
-    user.resetPassToken = crypto.randomBytes(20).toString('hex');
+    user.reset_pass_token = crypto.randomBytes(20).toString('hex');
 
-    user.resetPassExpiresAt = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours later
+    user.reset_pass_expires_at = new Date(Date.now() + 2 * 60 * 60 * 1000); // 2 hours later
 
     await user.save();
 
@@ -111,7 +111,7 @@ export const forgetPassword = async (req: Request, res: Response): Promise<void>
         to: user.email,
         subject: 'Reset your password',
         tempFn: passResetReqTemp,
-        data: { resetURL: ENV.frontendUrl + '/reset-password/' + user.resetPassToken }
+        data: { resetURL: ENV.frontendUrl + '/reset-password/' + user.reset_pass_token }
     });
 
     res.status(200).send({
@@ -124,13 +124,13 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
     const { resetPassToken } = req.params;
     const { password } = req.body as TResetPass;
 
-    const user = await User.findOne<IUser>({ resetPassToken, resetPassExpiresAt: { $gt: new Date() } });
+    const user = await User.findOne({ resetPassToken, resetPassExpiresAt: { $gt: new Date() } });
 
     if (!user) throw new CustomError('Invalid or expired reset token', 400);
 
     user.password = password;
-    user.resetPassToken = undefined;
-    user.resetPassExpiresAt = undefined;
+    user.reset_pass_token = undefined;
+    user.reset_pass_expires_at = undefined;
     await user.save();
 
     await sendMail({

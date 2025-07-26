@@ -66,10 +66,9 @@ export function setToken(user: IUser, isRefresh: boolean = false): TokenResult {
         phone: user.phone_number || null,
         first_name: user.first_name || '',
         last_name: user.last_name || '',
-        dob: user.dob || null,
         profile_pic: user.profile_pic || null,
-        user_type: user.user_type || '',
-        isVerified: user.isVerified,
+        user_type: user.role || '',
+        isVerified: user.is_verified || false,
     }
 
     return {

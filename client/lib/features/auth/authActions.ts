@@ -69,23 +69,26 @@ export const authCredentials = async (_: unknown, payload: FormData) => {
 /* Net-Auth FUtility Functions */
 
 export const fetchWithErrorHandling = async (url: string, body: object) => {
-
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-        cache: 'no-store',
-    });
-    const data = await res.json();
-    // console.log('backend res', data);
-    if (!res.ok || !data.success) throw new CustomError(data.message || 'Custom Message: Authentication failed');
-    return data;
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+            cache: 'no-store',
+        });
+        const data = await res.json();
+        // console.log('backend res', data);
+        if (!res.ok || !data.success) throw new CustomError(data.message || 'Custom Message: Authentication failed');
+        return data;
+    } catch (error) {
+        throw new CustomError(error instanceof Error ? error.message : 'Network or server error occurred');
+    }
 };
 
 export const refreshAccessToken = async (token: JWT) => {
     try {
         const newTokens = await fetchWithErrorHandling(`${API_BASE_URL}/auth/refresh`, { refresh: token.refresh });
-
+        console.log("Token refreshed successfully");
         return {
             ...token,
             access: newTokens.access,
@@ -93,7 +96,7 @@ export const refreshAccessToken = async (token: JWT) => {
             refresh: newTokens.refresh || token.refresh,
         };
     } catch (error: unknown) {
-        console.error("Error: refreshing access token", (error as Error).message);
+        console.error("refreshing access token:", (error as Error).message);
         return { ...token, error: "RefreshTokenError" };
     }
 };

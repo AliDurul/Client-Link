@@ -1,130 +1,139 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { passwordEncrypt } from "../utils/common";
 
-const userSchema: Schema<IUser> = new Schema({
+export const USER_ROLES = {
+  ADMIN: 'admin',
+  MANAGER: 'manager',
+  EMPLOYEE: 'employee',
+  AGENT: 'agent',
+  MODERATOR: 'moderator'
+} as const;
 
-  password: {
-    type: String,
-    required: true,
-    set: passwordEncrypt,
-  },
+const userSchema: Schema<IUser> = new Schema({
   email: {
     type: String,
     required: true,
     unique: true,
-    match: /^\S+@\S+\.\S+$/,
+    lowercase: true,
+    index: true,
+    trim: true,
+    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email address'],
   },
-  lastLogin: {
+  password: {
+    type: String,
+    required: true,
+    set: passwordEncrypt,
+    select: false,
+  },
+  first_name: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: [50, 'First name cannot exceed 50 characters'],
+  },
+  last_name: {
+    type: String,
+    required: true,
+    trim: true,
+    maxlength: [50, 'Last name cannot exceed 50 characters'],
+  },
+  phone_number: {
+    type: String,
+    trim: true,
+    match: [/^\+?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'],
+  },
+  role: {
+    type: String,
+    enum: Object.values(USER_ROLES),
+    default: USER_ROLES.AGENT,
+  },
+  department: {
+    type: String,
+    trim: true,
+  },
+  employee_id: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
+  },
+  status: {
+    type: String,
+    enum: ['active', 'inactive', 'suspended'],
+    default: 'active',
+  },
+  last_login: {
     type: Date,
-    default: Date.now,
   },
-  isVerified: {
+  is_verified: {
     type: Boolean,
     default: false,
   },
-  resetPassToken: String,
-  resetPassExpiresAt: Date,
-  verificationToken: {
+  reset_pass_token: {
     type: String,
-    default: () => Math.floor(100000 + Math.random() * 900000).toString()  // 6 digit code
+    select: false,
   },
-  verificationTokenExpiresAt: {
+  reset_pass_expires_at: {
+    type: Date,
+    select: false,
+  },
+  verification_token: {
+    type: String,
+    default: () => Math.floor(100000 + Math.random() * 900000).toString(),
+    select: false,
+  },
+  verification_token_expires_at: {
     type: Date,
     default: () => new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours later
+    select: false,
   },
-  // KYC fields
-  user_type: String,
-  first_name: String,
-  last_name: String,
-  phone_number: String,
-  dob: String,
-  id_type: String,
-  id_number: String,
-  country: String,
-  location: String,
-  id_front: String,
-  id_back: String,
-  profession: String,
-  father_name: String,
-  mother_name: String,
-  witness_name: String,
-  witness_relation: String,
-  user_age: String,
-  gender: String,
-  marital_status: String,
-  religion: String,
-  medication: {
-    type: Boolean,
-    default: false,
+  profile_pic: {
+    type: String,
+    trim: true,
   },
-  medication_type: String,
-  childrens: {
-    type: Number,
-    default: 0,
-  },
-  boys: {
-    type: Number,
-    default: 0,
-  },
-  girls: {
-    type: Number,
-    default: 0,
-  },
-  banks: String,
-  doc: String,
   date_joined: {
     type: Date,
     default: Date.now,
   },
-  profile_pic: String
+  permissions: [{
+    type: String,
+    trim: true,
+  }],
 }, {
   collection: 'users',
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
+userSchema.virtual('full_name').get(function () {
+  return `${this.first_name} ${this.last_name}`.trim();
+});
 
 const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 export default User;
 
+
 export interface IUser extends Document {
-  password: string;
   email: string;
-  lastLogin?: Date;
-  isVerified: boolean;
-  resetPassToken?: string;
-  resetPassExpiresAt?: Date;
-  verificationToken: string;
-  verificationTokenExpiresAt: Date;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone_number?: string;
+  role: 'admin' | 'manager' | 'employee' | 'moderator' | 'agent';
+  department?: string;
+  employee_id: string;
+  status: 'active' | 'inactive' | 'suspended';
+  last_login?: Date;
+  is_verified: boolean;
+  reset_pass_token?: string;
+  reset_pass_expires_at?: Date;
+  verification_token?: string;
+  verification_token_expires_at?: Date;
+  profile_pic?: string;
+  date_joined: Date;
+  permissions?: string[];
   createdAt?: Date;
   updatedAt?: Date;
-  // KYC fields
-  user_type?: string;
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
-  dob?: string;
-  id_type?: string;
-  id_number?: string;
-  country?: string;
-  location?: string;
-  id_front?: string;
-  id_back?: string;
-  profession?: string;
-  father_name?: string;
-  mother_name?: string;
-  witness_name?: string;
-  witness_relation?: string;
-  user_age?: string;
-  gender?: string;
-  marital_status?: string;
-  religion?: string;
-  medication?: boolean;
-  medication_type?: string;
-  childrens?: number;
-  boys?: number;
-  girls?: number;
-  banks?: string;
-  doc?: string;
-  date_joined?: Date;
-  profile_pic?: string;
+  full_name?: string;
 }

@@ -8,10 +8,10 @@ import { jwtDecode } from "jwt-decode";
 const API_BASE_URL = process.env.API_BASE_URL;
 
 class SignInError extends Error {
-    constructor(message: string, public code: string = "signin_error") {
-        super(message);
-        this.name = "SignInError";
-    }
+  constructor(message: string, public code: string = "signin_error") {
+    super(message);
+    this.name = "SignInError";
+  }
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -61,15 +61,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (!token.refresh) throw new TypeError("Missing refresh_token");
 
-      return refreshAccessToken(token);
+      const res = await refreshAccessToken(token);
+
+      if (res.error === "RefreshTokenError") {
+        return null;
+      }
+
+      return res;
     },
 
     async session({ session, token }) {
 
-      // if (token.error === "RefreshTokenError") {
-      //     console.log("Token refresh failed. Logging out user...");
-      //     return { ...session, error: 'RefreshTokenError' };
-      // };
 
       if (token.access) {
         const { access, refresh, userInfo, error } = token as JWT;
