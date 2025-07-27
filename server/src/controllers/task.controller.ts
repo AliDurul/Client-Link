@@ -95,7 +95,7 @@ export const getCountDetail = async (req: Request, res: Response): Promise<void>
 export const getTasks = async (req: Request, res: Response): Promise<void> => {
 
     const result = await res.getModelList(Task, {}, [{
-        path: 'asign_agent',
+        path: 'assigned_agent',
         select: 'name email profile_pic first_name last_name phone_number'
     }])
 

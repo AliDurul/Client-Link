@@ -30,7 +30,7 @@ export const coloredToast = (color: string, msg: string, position: SweetAlertPos
     toast: true,
     position,
     showConfirmButton: false,
-    timer: openEmail ? 20000 : 5000,
+    timer: openEmail ? 20000 : 3000,
     showCloseButton: false,
     customClass: {
       popup: `color-${color}`,

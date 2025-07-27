@@ -26,13 +26,11 @@ export default async function TaskMain({ searchParams }: { searchParams: Promise
             <div className="flex h-full flex-col">
                 <TaskHeaderBtns details={tasks.details} />
                 <div className="h-px w-full border-b border-white-light dark:border-[#1b2e4b]"></div>
-                {tasks.result.length ? (
-                    <div className="table-responsive min-h-[400px] grow overflow-y-auto sm:min-h-[300px]">
-                        <TaskTable tasks={tasks.result} />
-                    </div>
-                ) : (
-                    <div className="flex h-full min-h-[400px] items-center justify-center text-lg font-semibold sm:min-h-[300px]">No data available</div>
-                )}
+
+                <div className="table-responsive min-h-[400px] grow overflow-y-auto sm:min-h-[300px]">
+                    <TaskTable tasks={tasks.result} />
+                </div>
+
             </div>
 
         </div>

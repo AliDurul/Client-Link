@@ -65,7 +65,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        nunito: ['Nunito', 'sans-serif'],
+        nunito: ['var(--font-nunito)', 'sans-serif'],
       },
       spacing: {
         4.5: '18px',

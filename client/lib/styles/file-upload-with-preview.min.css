@@ -44,7 +44,7 @@
 
 .custom-file-container__custom-file__custom-file-input {
     box-sizing: border-box;
-    /* min-width: 14rem; */
+    min-width: 14rem;
     max-width: 100%;
     height: calc(2.25rem + 4px);
     margin: 0;

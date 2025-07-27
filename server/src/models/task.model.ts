@@ -11,7 +11,7 @@ const taskSchema: Schema<ITask> = new Schema({
         type: String,
         required: true,
     },
-    asign_agent: {
+    assigned_agent: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -31,7 +31,7 @@ const taskSchema: Schema<ITask> = new Schema({
         enum: ['Pending', 'In-Progress', 'Completed', 'Cancelled']
     }
 }, {
-    collection: 'Tasks',
+    collection: 'tasks',
     timestamps: true
 });
 
@@ -41,7 +41,7 @@ export default Task;
 export interface ITask extends Document {
     id: number;
     title: string;
-    asign_agent: AsignAgent;
+    assigned_agent: AsignAgent;
     description: string;
     priority: string;
     status: string;

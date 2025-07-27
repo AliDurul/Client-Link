@@ -58,7 +58,7 @@ export const themeSlice = createAppSlice({
         }),
         toggleMenu: create.reducer((state, action: PayloadAction<string>) => {
             action.payload = action.payload || state.menu; // vertical, collapsible-vertical, horizontal
-            state.sidebar = false; // reset sidebar state
+            state.sidebar = false; 
             localStorage.setItem('menu', action.payload);
             state.menu = action.payload;
         }),

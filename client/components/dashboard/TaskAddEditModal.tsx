@@ -4,18 +4,12 @@ import { Dialog, DialogBackdrop, DialogPanel, Transition } from '@headlessui/rea
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import Select, { SingleValue } from 'react-select';
 import { taskCrUpAction } from '@/lib/features/task/taskActions';
-import { selectAddTaskModal, setAddTaskModal } from '@/lib/features/task/taskSlice';
+import { selectAddTaskModal, selectTask, setAddTaskModal } from '@/lib/features/task/taskSlice';
 import FormErrMsg from '../shared/FormErrMsg';
 import useSWR from 'swr';
 import { getAllData } from '@/lib/features/shared/actionUtils';
-import dynamic from 'next/dynamic';
+import { mutate } from 'swr';
 
-
-interface User {
-    _id: string;
-    first_name: string;
-    last_name: string;
-}
 
 interface AgentOption {
     label: string;
@@ -23,23 +17,11 @@ interface AgentOption {
 }
 
 interface TaskParams {
-    _id?: string;
+    _id?: number | undefined;
     title: string;
-    asign_agent: string;
+    assigned_agent: number | string;
     priority: string;
     description: string;
-}
-
-interface ActionState {
-    success?: boolean;
-    message?: string;
-    errors?: {
-        title?: string[];
-        asign_agent?: string[];
-        priority?: string[];
-        description?: string[];
-    };
-    inputs?: Partial<TaskParams>;
 }
 
 const PRIORITY_OPTIONS = [
@@ -53,23 +35,23 @@ const TaskAddEditModal = () => {
 
     const [state, action, isPending] = useActionState(taskCrUpAction, null);
     const addTaskModal = useAppSelector(selectAddTaskModal);
+    const task = useAppSelector(selectTask)
     const dispatch = useAppDispatch();
     const [agentOptions, setAgentOptions] = useState<AgentOption[]>([]);
 
     const [params, setParams] = useState<TaskParams>({
-        _id: undefined,
-        title: '',
-        asign_agent: '',
-        priority: '',
-        description: '',
+        _id: task?._id || undefined,
+        title: task?.title || '',
+        assigned_agent: task?.assigned_agent ? task.assigned_agent._id : '',
+        priority: task?.priority || '',
+        description: task?.description || '',
     });
 
-    const { data: usersData, isLoading: usersLoading } = useSWR('users',
-        () => getAllData({ url: 'users/' }), {
+    const { data: usersData, isLoading: usersLoading } = useSWR('users', () => getAllData({ url: 'users/', filterQueries: { role: 'agent' } }), {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         onSuccess: (data) => {
-            setAgentOptions(data?.result.map((user: any) => ({ label: user.first_name + " " + user.last_name, value: user._id })) || []);
+            setAgentOptions(data?.result.map((user: any) => ({ label: user.full_name, value: user._id })) || []);
         }
     });
 
@@ -82,12 +64,14 @@ const TaskAddEditModal = () => {
         }
 
         if (state?.success) {
+            mutate('task-counts');
+
             const timer = setTimeout(() => {
                 dispatch(setAddTaskModal(false));
                 setParams({
                     _id: undefined,
                     title: '',
-                    asign_agent: '',
+                    assigned_agent: '',
                     priority: '',
                     description: '',
                 });
@@ -106,7 +90,7 @@ const TaskAddEditModal = () => {
     const handleAgentChange = (selectedOption: SingleValue<AgentOption>) => {
         setParams(prev => ({
             ...prev,
-            asign_agent: selectedOption?.value || ''
+            assigned_agent: selectedOption?.value || ''
         }));
     };
 
@@ -115,13 +99,13 @@ const TaskAddEditModal = () => {
         setParams({
             _id: undefined,
             title: '',
-            asign_agent: '',
+            assigned_agent: '',
             priority: '',
             description: '',
         });
     };
 
-    const selectedAgent = agentOptions.find(option => option.value === params.asign_agent);
+    const selectedAgent = agentOptions.find(option => option.value === params.assigned_agent);
 
     return (
         <Dialog as="div" open={addTaskModal} onClose={() => dispatch(setAddTaskModal(false))} className="relative z-50">
@@ -177,7 +161,7 @@ const TaskAddEditModal = () => {
                                     }
                                 </div>
                                 <div className="mb-5">
-                                    <label htmlFor="asign_agent">Assignee</label>
+                                    <label htmlFor="assigned_agent">Assignee</label>
                                     {
                                         usersLoading ? (
                                             <div className="flex items-center justify-center h-10">
@@ -194,14 +178,14 @@ const TaskAddEditModal = () => {
                                             />
                                             <input
                                                 type="hidden"
-                                                name="asign_agent"
-                                                value={params.asign_agent}
+                                                name="assigned_agent"
+                                                value={params.assigned_agent}
                                             />
                                         </>
                                     }
 
                                     {
-                                        state?.errors?.asign_agent && <FormErrMsg error={state.errors.asign_agent} />
+                                        state?.errors?.assigned_agent && <FormErrMsg error={state.errors.assigned_agent} />
                                     }
                                 </div>
                                 <div className="mb-5">

@@ -2,6 +2,7 @@
 import { auth } from "@/auth";
 import { taskSchema } from "@/lib/utility/zod";
 import { revalidateTag } from "next/cache";
+import { success } from "zod";
 
 const BASE_URL = process.env.API_BASE_URL + '/';
 
@@ -14,10 +15,10 @@ interface ApiResponse<T = any> {
 }
 
 interface TaskData {
-  id?: string;
+  _id?: string;
   title: string;
   description: string;
-  asign_agent: string;
+  assigned_agent: string;
   priority: string;
 }
 
@@ -34,7 +35,7 @@ const getAuthHeaders = async () => {
   };
 };
 
-const handleApiResponse = async <T>(response: Response): Promise<T> => {
+const handleApiResponse = async <T>(response: Response) => {
   const data = await response.json();
 
   if (!response.ok) {
@@ -45,36 +46,36 @@ const handleApiResponse = async <T>(response: Response): Promise<T> => {
 };
 
 
-export const updateTask = async (taskData: TaskData) => {
+export const updateTask = async (taskData: TaskData | { status: string, _id: number }) => {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${BASE_URL}task/${taskData.id}/`, {
+    const response = await fetch(`${BASE_URL}tasks/${taskData._id}/`, {
       method: "PUT",
       headers,
       body: JSON.stringify(taskData),
     });
 
+    revalidateTag('tasks');
     return await handleApiResponse(response);
   } catch (error: any) {
-    return { error: error.message };
+    return { message: error.message, success: false };
   }
 };
 
 export const deleteTask = async (id: number) => {
   try {
     const headers = await getAuthHeaders();
-    const response = await fetch(`${BASE_URL}task/${id}/`, {
+    const response = await fetch(`${BASE_URL}tasks/${id}/`, {
       method: "DELETE",
       headers,
     });
 
-    const data = await handleApiResponse<{ message: string; data: any[] }>(response);
-    return {
-      message: data.message,
-      remainingData: data.data?.reverse() || []
-    };
+    if (response.status !== 204) throw new Error("Something went wrong while deleting the task");
+
+    revalidateTag('tasks');
+    return { success: true, message: "Task deleted successfully" };
   } catch (error: any) {
-    return { error: error.message };
+    return { success: false, message: error.message };
   }
 };
 
@@ -97,7 +98,7 @@ export const taskCrUpAction = async (_: unknown, payload: FormData) => {
     const rowData = {
       title: payload.get('title') as string,
       description: payload.get('description') as string,
-      asign_agent: payload.get('asign_agent') as string,
+      assigned_agent: payload.get('assigned_agent') as string,
       priority: payload.get('priority') as string
     };
 
@@ -152,9 +153,10 @@ export const getCountDetail = async () => {
       next: { tags: ['task-count'] }
     });
 
-    return await handleApiResponse(response);
+    const data = await handleApiResponse(response);
+    return { success: true, ...data };
   } catch (error: any) {
-    return { error: error.message };
+    return { success: false, error: error.message };
   }
 };
 

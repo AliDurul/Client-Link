@@ -61,30 +61,30 @@ export interface Ticket {
   email_id: string | null;
   priority: string;
   flag: string;
-  cat: number | { id: number; title: string; };
-  assigned_agent: { id: string; first_name: string; last_name: string; email: string, phone_number: string, profile_pic: string };
+  cat: number | { _id: number; title: string; };
+  assigned_agent: { _id: string; first_name: string; last_name: string; email: string, phone_number: string, profile_pic: string };
   escalation: null | EscalationForm;
   timestamp: string;
   last_updated: string | null;
 }
 
 export interface EscalationForm {
-  id: number;
+  _id: number;
   escalated_at: Date;
-  raised_by: number | { id: number; first_name: string; last_name: string; email: string; phone_number: string };
+  raised_by: number | { _id: number; first_name: string; last_name: string; email: string; phone_number: string };
   reason: string;
 }
 
-export interface TicketClientPhoneNumber { first_name: string, last_name: string, id: number, phone_number: string }
+export interface TicketClientPhoneNumber { first_name: string, last_name: string, _id: number, phone_number: string }
 
 export interface TicketComments {
-  id: string;
+  _id: string;
   title: string;
   comments: Comment[];
 }
 
 export interface Comment {
-  id: number;
+  _id: number;
   user: User;
   ticket: string;
   // title: string;
@@ -114,7 +114,7 @@ export interface StatusCounts {
 
 /* INVOICE */
 export interface Invoice {
-  id: number;
+  _id: number;
   staff: InvoiceCustomer;
   customer: InvoiceCustomer;
   invoice_items: InvoiceItem[];
@@ -132,7 +132,7 @@ export interface Invoice {
 }
 
 export interface InvoiceCustomer {
-  id: number;
+  _id: number;
   first_name: string;
   last_name: string;
   email: string;
@@ -141,21 +141,21 @@ export interface InvoiceCustomer {
 }
 
 export interface InvoiceItem {
-  id: number;
+  _id: number;
   product: InvoiceItemProduct;
   quantity: number;
   discounts: number;
 }
 
 export interface InvoiceItemProduct {
-  id: number;
+  _id: number;
   name: string;
   price: number;
 }
 
 
 export interface Category {
-  id?: number,
+  _id?: number,
   title: string,
   description: string,
 }
@@ -198,7 +198,7 @@ export interface Kyc {
 
 /* COPARATE */
 export interface Coparate {
-  id: number;
+  _id: number;
   name: string;
   courier: string;
   email: string;
@@ -212,7 +212,7 @@ export interface Coparate {
 
 /* PRODUCT */
 export interface Product {
-  id: number;
+  _id: number;
   thumb: string;
   name: string;
   description: string;
@@ -227,7 +227,7 @@ export interface Product {
 }
 
 export interface ProductCategory {
-  id: number;
+  _id: number;
   cover: string;
   title: string;
   timestamp: Date;
@@ -235,14 +235,14 @@ export interface ProductCategory {
 }
 
 export interface ProductDefaultParams {
-  id?: number | null;
+  _id?: number | null;
   name: string;
   description: string;
   price: number | string;
 }
 
 export interface Author {
-  id: number;
+  _id: number;
   first_name: string;
   last_name: string;
   phone_number: null;
@@ -266,7 +266,7 @@ export interface Faq {
 /* EMAIL */
 export interface Email {
   "@odata.etag": string;
-  id: string;
+  _id: string;
   type: string;
   createdDateTime: string;
   lastModifiedDateTime: string;
@@ -333,7 +333,7 @@ interface Body {
 }
 
 export interface Folder {
-  id: string,
+  _id: string,
   displayName: string,
   parentFolderId: string,
   childFolderCount: number,
@@ -345,9 +345,9 @@ export interface Folder {
 
 /* TASK */
 export interface Task {
-  id: number;
+  _id: number;
   title: string;
-  asign_agent: AsignAgent;
+  assigned_agent: AsignAgent;
   description: string;
   priority: string;
   status: string;
@@ -355,7 +355,7 @@ export interface Task {
 }
 
 export interface AsignAgent {
-  id: number;
+  _id: number;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -365,7 +365,7 @@ export interface AsignAgent {
 
 /* CHAT START */
 export interface Chat {
-  id: number;
+  _id: number;
   chat_name: string;
   chat_picture: null | string
   is_group_chat: boolean;
@@ -385,7 +385,7 @@ export interface ChatDetail {
 }
 
 export interface ChatUser {
-  id: number;
+  _id: number;
   first_name: string;
   last_name: string;
   phone_number: null;
@@ -394,13 +394,13 @@ export interface ChatUser {
 }
 
 export interface LetestMessage {
-  id: number;
+  _id: number;
   content: string;
   created_at: Date;
 }
 
 export interface GroupAdmin {
-  id: number;
+  _id: number;
   first_name: string;
   last_name: string;
   phone_number: null | string;
@@ -409,7 +409,7 @@ export interface GroupAdmin {
 }
 
 export interface Message {
-  id: number;
+  _id: number;
   content: string;
   chat: number;
   sender: number,
@@ -419,7 +419,7 @@ export interface Message {
 }
 
 export interface MessageNotification {
-  id: number;
+  _id: number;
   content: string;
   senderId: number;
   chatId: number;
@@ -433,7 +433,7 @@ export interface MessageNotification {
 }
 
 export interface MsgSender {
-  id: number;
+  _id: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -444,7 +444,7 @@ export interface MsgSender {
 
 /* Leads */
 export interface ILead {
-  id?: number;
+  _id?: number;
   source: null | string;
   owner: null | string;
   name: null | string;

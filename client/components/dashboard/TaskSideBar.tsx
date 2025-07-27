@@ -35,7 +35,7 @@ const TaskSidebar = () => {
     const countDetail = countData?.success ? countData.count.status : {
         all: 0,
         'In-Progress': 0,
-        Pending: 0,
+        Pending: 0, 
         Completed: 0,
         Cancelled: 0
     };

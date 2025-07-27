@@ -64,42 +64,10 @@
 }
 
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Audio */
-.custom-audio {
-    width: 100%;
-    background: transparent;
-}
-
-.custom-audio::-webkit-media-controls-panel,
-/* .custom-audio::-webkit-media-controls-play-button, */
-.custom-audio::-webkit-media-controls-timeline,
-/* .custom-audio::-webkit-media-controls-volume-control-container, */
-/* .custom-audio::-webkit-media-controls-mute-button, */
-.custom-audio::-webkit-media-controls-current-time-display,
-.custom-audio::-webkit-media-controls-time-remaining-display,
-.custom-audio::-webkit-media-controls-fullscreen-button,
-/* .custom-audio::-webkit-media-controls-rewind-button, */
-.custom-audio::-webkit-media-controls-return-to-realtime-button {
-    @apply bg-gray-200; 
-    /* color: #000; Change color as needed */
-}
-
-/* Firefox */
-.custom-audio::-moz-range-track {
-    background: transparent;
-}
-
-/* General styling */
-.custom-audio {
-    border: none;
-    outline: none;
-}
-
-/* Audio */
 
 @layer components {
     html {
@@ -116,7 +84,7 @@
 
     /* Panel */
     .panel {
-        @apply relative rounded-2xl bg-white p-5 shadow dark:bg-black;
+        @apply relative rounded-md bg-white p-5 shadow dark:bg-black;
     }
     /* Navbar */
     .navbar-sticky header,
@@ -141,16 +109,12 @@
     }
     .sidebar .nav-item > button.active,
     .sidebar .nav-item > a.active {
-        @apply bg-[#000]/[0.08] text-primary dark:bg-[#181f32] dark:text-primary-light;
-    }
-    .sidebar .nav-item > a.active svg,
-    .sidebar .nav-item > button.active svg {
-        @apply !text-primary;
+        @apply bg-[#000]/[0.08] text-black dark:bg-[#181f32] dark:text-white-dark;
     }
 
     .sidebar .nav-item > button.active > div > span,
     .sidebar .nav-item > a.active > div > span {
-        @apply dark:!text-primary text-primary;
+        @apply dark:!text-white-dark;
     }
 
     .sidebar ul.sub-menu li button,
@@ -336,9 +300,6 @@
     .btn-outline-primary {
         @apply border-primary text-primary shadow-none hover:bg-primary hover:text-white;
     }
-    .btn-outline-uba {
-        @apply border-[#BE0A04] text-[#BE0A04] shadow-none hover:bg-[#BE0A04] hover:text-white;
-    }
 
     .btn-secondary {
         @apply border-secondary bg-secondary text-white shadow-secondary/60;
@@ -385,7 +346,7 @@
 
     /* Badge */
     .badge {
-        @apply relative my-1 rounded border border-transparent px-1.5 py-0.5  text-xs font-semibold text-white;
+        @apply relative my-1 rounded border border-transparent px-2 py-0.5 text-xs font-semibold text-white;
     }
     .badge-outline-primary {
         @apply border-primary text-primary hover:bg-primary-light dark:hover:bg-primary dark:hover:text-white-light;
@@ -551,7 +512,7 @@
     }
     .dropdown ul li > a,
     .dropdown ul li > button {
-        @apply flex items-center px-4 py-2 hover:bg-[#ECECEC] hover:text-[#D41709];
+        @apply flex items-center px-4 py-2 hover:bg-primary/10 hover:text-primary;
     }
     .dropdown ul li > button {
         @apply w-full;

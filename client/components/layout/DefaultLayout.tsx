@@ -11,7 +11,6 @@ import Portals from './Portals';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const pathname = usePathname()
-    // const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
     const themeConfig = useAppSelector(selectThemeConfig)
     const [animation, setAnimation] = useState(themeConfig.animation);

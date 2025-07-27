@@ -35,10 +35,10 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                 {
                     type === 'password' && (
                         isPassVisible ? (<EyeSlashIcon
-                            className=" absolute size-6 top-1.5 right-2 cursor-pointer"
+                            className=" absolute text-gray-500 size-5 top-[8px] right-2 cursor-pointer"
                             onClick={() => setIsPassVisible(false)}
                         />) : (<EyeIcon
-                            className=" absolute size-6 top-1.5 right-2 cursor-pointer"
+                            className=" absolute text-gray-500 size-5 top-[8px] right-2 cursor-pointer"
                             onClick={() => setIsPassVisible(true)}
                         />)
                     )

@@ -60,7 +60,7 @@ const Header = () => {
 						<NavbarThemeToggle />
 						<NavbarMessagesDrop />
 						<NavbarNotificationDrop />
-						{/* <NavbarProfileDrop /> */}
+						<NavbarProfileDrop />
 					</div>
 				</div>
 

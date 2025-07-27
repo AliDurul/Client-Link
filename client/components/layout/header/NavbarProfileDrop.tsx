@@ -4,6 +4,7 @@ import Dropdown from "../Dropdown";
 import Image from "next/image";
 import Link from "next/link";
 import {
+  ProfileLockScreen,
   ProfileMailBoxIcon,
   ProfileSigninIcon,
   UserProfileIcon,
@@ -28,7 +29,7 @@ const NavbarProfileDrop = () => {
             width={32}
             height={32}
             className="rounded-full object-cover saturate-50 group-hover:saturate-100"
-            src={userInfo?.payload?.profile_pic ? `${IMG_URL}${userInfo?.payload.profile_pic}` : '/assets/images/profile-pic.png'}
+            src={userInfo?.profile_pic ? `${userInfo?.profile_pic}` : '/assets/images/profile-pic.png'}
             alt="userProfile"
           />
         }
@@ -40,12 +41,12 @@ const NavbarProfileDrop = () => {
                 width={40}
                 height={40}
                 className=" rounded-md object-cover"
-                src={userInfo?.payload.profile_pic ? `${IMG_URL}${userInfo?.payload.profile_pic}` : '/assets/images/profile-pic.png'}
+                src={userInfo?.profile_pic ? `${userInfo?.profile_pic}` : '/assets/images/profile-pic.png'}
                 alt="userProfile"
               />
               <div className="ltr:pl-4 rtl:pr-4">
                 <h4 className="text-base">
-                  {userInfo?.payload?.first_name}{" "}{userInfo?.payload?.last_name}
+                  {userInfo?.first_name}{" "}{userInfo?.last_name}
                   {/* <span className="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">
                     Admin
                   </span> */}
@@ -54,7 +55,7 @@ const NavbarProfileDrop = () => {
                   type="button"
                   className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
                 >
-                  {userInfo?.payload?.email}
+                  {userInfo?.email}
                 </button>
               </div>
             </div>
@@ -71,15 +72,15 @@ const NavbarProfileDrop = () => {
               Mailbox
             </Link>
           </li> */}
-          {/* <li>
+          <li>
             <Link
-              href="/auth/boxed-lockscreen"
+              href="/login"
               className="dark:hover:text-white"
             >
               <ProfileLockScreen />
-              Lock Screen
+              login page 
             </Link>
-          </li> */}
+          </li>
           <li className="border-t border-white-light dark:border-white-light/10 hover:bg-primary/10 hover:text-primary">
             <button className="!py-3 !pl-4 text-danger flex"
               onClick={() => signOut()}

@@ -4,6 +4,10 @@ const nextConfig: NextConfig = {
   // experimental: {
   //   ppr: 'incremental',
   // },
+
+  images: {
+    remotePatterns: [new URL('https://t3.ftcdn.net/**')],
+  },
   typescript: {
     ignoreBuildErrors: true
   },
