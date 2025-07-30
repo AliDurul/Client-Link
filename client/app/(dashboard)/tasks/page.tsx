@@ -13,7 +13,9 @@ export default async function page({ searchParams }: HomePageParams) {
             <TopPageNavigation />
 
             <div className="relative flex h-full gap-5 mt-4 sm:h-[calc(100vh-160px)]">
-                <TaskSidebar />
+                <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
+                    <TaskSidebar />
+                </Suspense>
 
                 {/* <div className={`overlay absolute z-[5] hidden h-full w-full rounded-md bg-black/60 ${isShowTaskMenu && '!block xl:!hidden'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div> */}
 

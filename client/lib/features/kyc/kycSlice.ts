@@ -2,7 +2,7 @@ import { createAppSlice } from "@/lib/createAppSlice";
 import { getAllKycs } from "./kycActions";
 import { ApiResponse, Kyc, Pagination } from "@/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
+import { createApiThunk, createAsyncThunkConfig, sharedInitialState } from "../shared/sliceUtils";
 
 
 export interface KycSliceState {
@@ -10,21 +10,16 @@ export interface KycSliceState {
     kyc: Kyc | null;
     status: "idle" | "loading" | "failed";
     error: string | null;
-    value: string;
+    type: 'list' | 'grid';
     activeUsers: any[];
 }
 
 const initialState: KycSliceState = {
-    kycs: {
-        count: 0,
-        next: null,
-        previous: null,
-        results: []
-    },
+    kycs: sharedInitialState,
     status: "idle",
     error: null,
     kyc: null,
-    value: 'list',
+    type: 'list',
     activeUsers: []
 };
 
@@ -48,9 +43,9 @@ export const kycSlice = createAppSlice({
         }),
 
         // UI state management
-        setValue: reducer((state, action: PayloadAction<string>) => {
+        setType: reducer((state, action: PayloadAction<'list' | 'grid'>) => {
             state.status = 'idle';
-            state.value = action.payload;
+            state.type = action.payload;
         }),
         setActiveUsers: reducer((state, action: PayloadAction<any[]>) => {
             state.activeUsers = action.payload;
@@ -71,7 +66,7 @@ export const kycSlice = createAppSlice({
     selectors: {
         selectKycs: (kyc) => kyc.kycs,
         selectKyc: (kyc) => kyc.kyc,
-        selectValue: (kyc) => kyc.value,
+        selectType: (kyc) => kyc.type,
         selectKycState: (kyc) => kyc,
         selectKycStatus: (kyc) => kyc.status,
         selectKycError: (kyc) => kyc.error,
@@ -84,12 +79,12 @@ export const {
     updateKycs,
     setKyc,
     clearKyc,
-    setValue,
+    setType,
     setActiveUsers
 } = kycSlice.actions;
 
 export const {
-    selectValue,
+    selectType,
     selectKycs,
     selectKycState,
     selectKyc,

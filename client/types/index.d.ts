@@ -10,7 +10,7 @@ export type Pagination<T> = {
     pages: {
       previous: boolean;
       current: number;
-      next: number;
+      next: number | boolean;
       total: number;
     } | false;
   };

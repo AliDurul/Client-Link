@@ -1,7 +1,7 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { ApiResponse, Pagination, Task } from "@/types";
-import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
+import { createApiThunk, createAsyncThunkConfig, sharedInitialState } from "../shared/sliceUtils";
 
 export interface TaskSliceState {
     tasks: Pagination<Task>;
@@ -13,21 +13,7 @@ export interface TaskSliceState {
 }
 
 const initialState: TaskSliceState = {
-    tasks: {
-        success: true,
-        details: {
-            limit: 0,
-            page: 1,
-            totalRecords: 0,
-            pages: {
-                previous: false,
-                current: 0,
-                next: 0,
-                total: 0
-            }
-        },
-        results: []
-    },
+    tasks: sharedInitialState,
     status: "idle",
     error: null,
     isShowTaskMenu: false,

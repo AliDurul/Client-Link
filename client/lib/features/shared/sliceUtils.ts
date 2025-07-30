@@ -1,3 +1,4 @@
+import { Pagination } from "@/types";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 // async thunk configuration factory
@@ -38,3 +39,18 @@ export const createApiThunk = async <TResponse>(
     }
 };
 
+export const sharedInitialState: Pagination<any> = {
+    success: false,
+    details: {
+        limit: 0,
+        page: 1,
+        totalRecords: 0,
+        pages: {
+            previous: false,
+            current: 0,
+            next: 0,
+            total: 0
+        }
+    },
+    results: []
+}
