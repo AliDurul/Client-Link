@@ -2,10 +2,10 @@ import TaskAddEditModal from '@/components/dashboard/TaskAddEditModal';
 import TaskMain from '@/components/dashboard/TaskMain';
 import TaskSidebar from '@/components/dashboard/TaskSideBar';
 import TopPageNavigation from '@/components/shared/TopPageNavigation'
+import { PageSearchParams } from '@/types';
 import React, { Suspense } from 'react'
 
-type HomePageParams = { searchParams: Promise<{ [key: string]: string | undefined }> }
-export default async function page({ searchParams }: HomePageParams) {
+export default async function page({ searchParams }: PageSearchParams) {
 
 
     return (
@@ -17,15 +17,14 @@ export default async function page({ searchParams }: HomePageParams) {
                     <TaskSidebar />
                 </Suspense>
 
-                {/* <div className={`overlay absolute z-[5] hidden h-full w-full rounded-md bg-black/60 ${isShowTaskMenu && '!block xl:!hidden'}`} onClick={() => setIsShowTaskMenu(!isShowTaskMenu)}></div> */}
 
                 <Suspense fallback={<div className="flex h-full items-center justify-center  text-lg font-semibold w-full">Loading...</div>}>
                     <TaskMain searchParams={searchParams} />
                 </Suspense>
 
 
-                {/* <SelectedTaskModal setViewTaskModal={setViewTaskModal} viewTaskModal={viewTaskModal} selectedTask={selectedTask} /> */}
             </div>
+
 
         </>
     )

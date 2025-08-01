@@ -14,7 +14,7 @@ export type Pagination<T> = {
       total: number;
     } | false;
   };
-  results: T[];
+  result: T[];
 }
 
 export interface ApiResponse extends Pagination<any> {
@@ -27,6 +27,8 @@ export interface IUseActionInitVal {
   // errors?: Record<string, string[]>;
   // inputs?: Record<string, string>;
 }
+
+export type PageSearchParams = { searchParams: Promise<{ [key: string]: string | undefined }> }
 
 
 
@@ -164,36 +166,45 @@ export interface Category {
 /* KYC */
 export interface Kyc {
   _id: number;
-  user_type: string;
-  email: string;
+  customer_id: string;
   first_name: string;
   last_name: string;
+  full_name: string;
+  email?: string;
   phone_number: string;
-  dob: string;
-  id_type: string;
-  id_number: string;
-  country: string;
-  location: string;
-  id_front: string | null;
-  id_back: string | null;
-  profession: string;
-  father_name: string;
-  mother_name: string;
-  witness_name: string;
-  witness_relation: string;
-  user_age: string;
-  gender: string;
-  marital_status: string;
-  religion: string;
-  medication: boolean;
-  medication_type: string;
-  childrens: number;
-  boys: number;
-  girls: number;
-  banks: string;
-  doc: string | null;
-  date_joined: string;
-  profile_pic: string | null
+  dob?: Date;
+  gender?: 'male' | 'female' | 'other';
+  address: {
+    street?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    zipCode?: string;
+  };
+  id_type?: 'passport' | 'national_id' | 'driving_license' | 'other';
+  id_number?: string;
+  id_front?: string;
+  id_back?: string;
+  profession?: string;
+  marital_status?: 'single' | 'married' | 'divorced' | 'widowed' | 'other';
+  religion?: string;
+  father_name?: string;
+  mother_name?: string;
+  witness_name?: string;
+  witness_relation?: string;
+  medication?: boolean;
+  medication_type?: string;
+  number_of_children?: number;
+  boys?: number;
+  girls?: number;
+  bank_details?: string;
+  documents?: string[];
+  profile_pic?: string;
+  status: 'active' | 'inactive' | 'blacklisted';
+  notes?: string;
+  assigned_agent?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 /* COPARATE */

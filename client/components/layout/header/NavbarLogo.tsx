@@ -10,12 +10,8 @@ const NavbarLogo = () => {
         <div className="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
             <Link href="/" className="flex shrink-0 items-center">
 
-                {/* One-life */}
-                {/* <Image width={100} height={50} className="inline ltr:-ml-1 rtl:-mr-1" src="/assets/images/onelife-logo.png" alt="logo" /> */}
-                {/* <span className="hidden align-middle text-base  font-semibold  transition-all duration-300 ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light md:inline">Own every moment</span> */}
 
-                {/* Client-link */}
-                <Image width={100} height={50} className="inline ltr:-ml-1 rtl:-mr-1" src="/assets/images/client-link.png" alt="logo" />
+                <Image width={100} height={50} className="inline ltr:-ml-1 rtl:-mr-1" src="/assets/images/logo.png" alt="logo" />
 
             </Link>
             <button

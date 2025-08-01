@@ -5,8 +5,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 const customerSchema: Schema<ICustomer> = new Schema({
     customer_id: {
         type: String,
-        required: true,
-        unique: true,
+        // required: true,
         trim: true,
     },
     first_name: {
@@ -149,7 +148,7 @@ const customerSchema: Schema<ICustomer> = new Schema({
     toObject: { virtuals: true }
 });
 
-customerSchema.virtual('fullName').get(function () {
+customerSchema.virtual('full_name').get(function () {
     return `${this.first_name} ${this.last_name}`.trim();
 });
 

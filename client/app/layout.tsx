@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
 import { StoreProvider } from "./StoreProvider";
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import "./globals.css";
 import { SessionToast } from "@/components/auth/SessionToast";
+import { Suspense } from "react";
+// import 'react-perfect-scrollbar/dist/css/styles.css';
+import "./globals.css";
+
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -20,10 +22,13 @@ export const experimental_ppr = true
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
+
       <StoreProvider>
         <body className={`${nunito.variable} font-nunito`}>
           {children}
-          <SessionToast />
+          <Suspense >
+            <SessionToast />
+          </Suspense>
         </body>
       </StoreProvider>
     </html>

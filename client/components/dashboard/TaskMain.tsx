@@ -2,12 +2,13 @@ import React, { Suspense } from 'react'
 import TaskHeaderBtns from './TaskHeaderBtns';
 import TaskTable from './TaskTable';
 import { getAllData } from '@/lib/features/shared/actionUtils';
+import { PageSearchParams } from '@/types';
 
-export default async function TaskMain({ searchParams }: { searchParams: Promise<{ [key: string]: string | undefined }> }) {
+export default async function TaskMain({ searchParams }: PageSearchParams) {
 
 
     const params = await searchParams;
-    const query = params.query || '';
+    const query = params.q || '';
     const page = params.page || '1';
     const status = params.qs || '';
     const priority = params.qp || '';

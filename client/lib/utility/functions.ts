@@ -1,24 +1,41 @@
-export const formatDate = (date: any, showTime: boolean = false) => {
-    if (date) {
-        const today = new Date(date);
-        const dd = String(today.getDate()).padStart(2, '0');
-        const mm = String(today.getMonth()); //January is 0!
-        const yyyy = today.getFullYear();
-        const monthNames: any = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+// caching session data
+import { auth } from "@/auth";
+import { cache } from "react";
 
-        let formattedDate = `${dd} ${monthNames[parseInt(mm)]}, ${yyyy}`;
+export const cachedAuth = cache(auth);
+
+// Better implementation with proper date handling
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
+
+export const formatDate = (date: Date | string | number | null, showTime: boolean = false): string => {
+    if (!date) return '';
+
+    try {
+        const dateObj = new Date(date);
+
+        // Check for invalid date
+        if (isNaN(dateObj.getTime())) return '';
+
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = MONTH_NAMES[dateObj.getMonth()];
+        const year = dateObj.getFullYear();
+
+        let formattedDate = `${day} ${month}, ${year}`;
 
         if (showTime) {
-            const hh = String(today.getHours()).padStart(2, '0');
-            const min = String(today.getMinutes()).padStart(2, '0');
-            const ss = String(today.getSeconds()).padStart(2, '0');
-            formattedDate += ` ${hh}:${min}:${ss}`;
+            const hours = dateObj.getHours().toString().padStart(2, '0');
+            const minutes = dateObj.getMinutes().toString().padStart(2, '0');
+            const seconds = dateObj.getSeconds().toString().padStart(2, '0');
+            formattedDate += ` ${hours}:${minutes}:${seconds}`;
         }
 
-        return formattedDate
+        return formattedDate;
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return '';
     }
-    return '';
 };
+
 
 export const truncateText = (text: string, charLimit: number) => {
     if (text.length <= charLimit) {

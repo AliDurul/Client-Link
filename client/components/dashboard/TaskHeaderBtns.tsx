@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utility/functions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import SearchInput from '../shared/SearchInput';
 
 interface Pages {
     previous: boolean;
@@ -24,51 +25,6 @@ export default function TaskHeaderBtns({ details }: { details: TaskDetails }) {
     const isShowTaskMenu = useAppSelector(selectIsShowTaskMenu);
     const searchParams = useSearchParams();
     const dispatch = useAppDispatch();
-
-    const [query, setQuery] = useState('');
-
-    // Initialize query state from URL params
-    useEffect(() => {
-        const urlQuery = searchParams.get('query') || '';
-        setQuery(urlQuery);
-    }, []); // Only run on mount
-
-
-    useEffect(() => {
-        const delayBounceFn = setTimeout(() => {
-            let newUrl = '';
-
-            if (query) {
-                // Remove page when searching to start from page 1
-                const paramsWithoutPage = removeKeysFromQuery({
-                    params: searchParams.toString(),
-                    keysToRemove: ['page']
-                });
-
-                newUrl = formUrlQuery({
-                    params: paramsWithoutPage,
-                    key: 'query',
-                    value: query
-                });
-            } else {
-                // Only remove query and page if query is actually empty
-                // and there was a query in the URL before
-                if (searchParams.get('query')) {
-                    newUrl = removeKeysFromQuery({
-                        params: searchParams.toString(),
-                        keysToRemove: ['query', 'page']
-                    });
-                } else {
-                    return; // Don't update URL if there's no query to remove
-                }
-            }
-
-            router.replace(newUrl, { scroll: false });
-        }, 500);
-
-        return () => clearTimeout(delayBounceFn);
-
-    }, [query]); // Only depend on query changes, not searchParams
 
 
     const getPaginationText = (details: TaskDetails | undefined) => {
@@ -133,13 +89,7 @@ export default function TaskHeaderBtns({ details }: { details: TaskDetails }) {
                     </svg>
                 </button>
                 <div className="group relative flex-1">
-                    <input
-                        type="text"
-                        className="peer form-input ltr:!pr-10 rtl:!pl-10"
-                        placeholder="Search Task..."
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                    />
+                    <SearchInput className='peer' />
                     <div className="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" strokeWidth="1.5" opacity="0.5"></circle>

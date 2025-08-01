@@ -11,10 +11,12 @@
   "dependencies": {
     "@headlessui/react": "^2.2.5",
     "@heroicons/react": "^2.2.0",
+    "@mantine/core": "5.10.5",
     "@reduxjs/toolkit": "^2.8.2",
     "@tippyjs/react": "^4.2.6",
+    "clsx": "^2.1.1",
     "jwt-decode": "^4.0.0",
-    "mantine-datatable": "^8.2.0",
+    "mantine-datatable": "1.7.35",
     "next": "15.4.2",
     "next-auth": "5.0.0-beta.29",
     "query-string": "^9.2.2",
