@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utility/functions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
-import SearchInput from '../shared/SearchInput';
+import SearchInput from '../../shared/SearchInput';
 
 interface Pages {
     previous: boolean;

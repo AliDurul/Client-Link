@@ -6,7 +6,6 @@ export const useUrlParams = () => {
     const searchParams = useSearchParams();
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Add debouncing for better performance with rapid updates
     const updateUrlParams = useCallback((updates: Record<string, string | null>, options: { debounce?: number; replace?: boolean } = {}) => {
         const { debounce = 0, replace = false } = options;
 
@@ -14,7 +13,6 @@ export const useUrlParams = () => {
             try {
                 const urlParams = new URLSearchParams(searchParams.toString());
 
-                // Apply all updates in a single operation
                 Object.entries(updates).forEach(([key, value]) => {
                     if (value === null || value === '') {
                         urlParams.delete(key);

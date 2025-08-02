@@ -39,7 +39,7 @@ export const kycSlice = createAppSlice({
         // Collection management
         updateKycs: reducer((state, action: PayloadAction<Kyc[]>) => {
             state.status = 'idle';
-            state.kycs.results = action.payload;
+            state.kycs.result = action.payload;
         }),
 
         // UI state management

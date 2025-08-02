@@ -5,21 +5,24 @@ import React, { useState } from 'react'
 
 type TInputField = {
     name: string;
-    type: 'text' | 'email' | 'password';
+    type: 'text' | 'email' | 'password' | 'date' | 'number' | 'tel';
     placeholder: string;
     id?: string;
-    value?: string;
+    value?: string | number;
     icon?: string;
     errors?: any;
     disabled?: boolean;
     className?: string;
+    label?: string;
 };
 
-export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className }: TInputField) {
+export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className = '', label }: TInputField) {
     const [isPassVisible, setIsPassVisible] = useState(false);
     return (
         <div >
             <div className='relative'>
+                {label && <label htmlFor={id} className='pl-2'>{label}</label>}
+
                 <input
                     name={name}
                     type={isPassVisible ? 'text' : type}
@@ -27,11 +30,10 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                     defaultValue={value}
                     id={id}
                     disabled={disabled}
-                    className={`form-input  placeholder:text-gray-400 ${errors ? 'border-red-500' : ''}`}
+                    className={`form-input  placeholder:text-gray-400 ${errors ? 'border-red-500' : ''} ${className}`}
                 />
 
-
-                {/* <i className={`fi input-icon ${icon}`} /> */}
+                {icon && (<i className={`fi input-icon ${icon}`} />)}
                 {
                     type === 'password' && (
                         isPassVisible ? (<EyeSlashIcon

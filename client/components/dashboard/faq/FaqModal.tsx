@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectFaq, selectFaqModal, setFaqModal } from '@/lib/features/faq/faqSlice';
 import { faqCrUpAction } from '@/lib/features/faq/faqActions';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
-import InputBox from '../shared/InputBox';
+import InputBox from '../../shared/InputBox';
 
 interface IinitialValues {
     success: boolean;

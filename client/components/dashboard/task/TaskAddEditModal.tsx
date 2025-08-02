@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import Select, { SingleValue } from 'react-select';
 import { taskCrUpAction } from '@/lib/features/task/taskActions';
 import { selectAddTaskModal, selectTask, setAddTaskModal } from '@/lib/features/task/taskSlice';
-import FormErrMsg from '../shared/FormErrMsg';
+import FormErrMsg from '../../shared/FormErrMsg';
 import useSWR from 'swr';
 import { getAllData } from '@/lib/features/shared/actionUtils';
 import { mutate } from 'swr';

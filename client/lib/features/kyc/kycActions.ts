@@ -1,7 +1,8 @@
 "use server";
 import { auth } from "@/auth"
+import { Kyc } from "@/types";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL + '/';
+const BASE_URL = process.env.API_BASE_URL + '/';
 
 const authConfig = async () => {
   const session = await auth();
@@ -26,24 +27,24 @@ const authConfigFormData = async () => {
 export const getAllKycs = async (type?: string, page?: string, pageSize?: string, search?: string) => {
   const headers = await authConfig();
   let url = `${BASE_URL}users/`;
-  
+
   const params = new URLSearchParams();
   if (type) params.append("user_type", type);
   if (page) params.append("page", page);
   if (pageSize) params.append("page_size", pageSize);
   if (search) params.append("search", search)
-    
-    if (params.toString()) url += `?${params.toString()}`;
-    
-    
-    try {
-      const response = await fetch(url, {
-        headers,
-      });
-      
-      const data = await response.json();
-      
-      
+
+  if (params.toString()) url += `?${params.toString()}`;
+
+
+  try {
+    const response = await fetch(url, {
+      headers,
+    });
+
+    const data = await response.json();
+
+
     if (response.ok) {
       return data;
     } else {
@@ -54,23 +55,25 @@ export const getAllKycs = async (type?: string, page?: string, pageSize?: string
   }
 };
 
-export const readKyc = async (id: number | null) => {
+export const readKyc = async (id: string | null): Promise<{ result?: Kyc, success: boolean, message?: string }> => {
+
+  await new Promise(resolve => setTimeout(resolve, 2000));
+
   const headers = await authConfig();
   try {
-    const response = await fetch(`${BASE_URL}user/${id}/`, {
+    const response = await fetch(`${BASE_URL}customers/${id}/`, {
       headers,
-      cache: 'no-store',
     });
 
     const data = await response.json();
-
+    console.log(data);
     if (response.ok) {
       return data;
     } else {
       throw new Error(data.error || "Something went wrong, Please try again!");
     }
   } catch (error: any) {
-    return { error: error.message };
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
   }
 };
 

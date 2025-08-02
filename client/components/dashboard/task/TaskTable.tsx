@@ -6,15 +6,15 @@ import Tippy from '@tippyjs/react';
 // import 'tippy.js/dist/tippy.css';
 import { mutate } from 'swr';
 
-import Dropdown from '../layout/Dropdown';
+import Dropdown from '../../layout/Dropdown';
 import { deleteTask, updateTask } from '@/lib/features/task/taskActions';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
 import { Task } from '@/types';
 import { formatDate } from '@/lib/utility/functions';
 import { useSearchParams } from 'next/navigation';
-import TaskAddEditModal from './TaskAddEditModal';
 import Image from 'next/image';
 import SelectedTaskModal from './SelectedTaskModal';
+import TaskAddEditModal from './TaskAddEditModal';
 
 
 

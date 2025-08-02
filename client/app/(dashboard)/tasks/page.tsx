@@ -1,6 +1,6 @@
-import TaskAddEditModal from '@/components/dashboard/TaskAddEditModal';
-import TaskMain from '@/components/dashboard/TaskMain';
-import TaskSidebar from '@/components/dashboard/TaskSideBar';
+import TaskAddEditModal from '@/components/dashboard/task/TaskAddEditModal';
+import TaskMain from '@/components/dashboard/task/TaskMain';
+import TaskSidebar from '@/components/dashboard/task/TaskSideBar';
 import TopPageNavigation from '@/components/shared/TopPageNavigation'
 import { PageSearchParams } from '@/types';
 import React, { Suspense } from 'react'

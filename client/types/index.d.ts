@@ -30,7 +30,7 @@ export interface IUseActionInitVal {
 
 export type PageSearchParams = { searchParams: Promise<{ [key: string]: string | undefined }> }
 
-
+export type PageParams = { params: Promise<{ [key: string]: string }> }
 
 /* -------------------------- Pages -------------------------- */
 
@@ -172,6 +172,7 @@ export interface Kyc {
   full_name: string;
   email?: string;
   phone_number: string;
+  nationality?: string;
   dob?: Date;
   gender?: 'male' | 'female' | 'other';
   address: {
@@ -179,7 +180,7 @@ export interface Kyc {
     city?: string;
     state?: string;
     country?: string;
-    zipCode?: string;
+    zip_code?: string;
   };
   id_type?: 'passport' | 'national_id' | 'driving_license' | 'other';
   id_number?: string;
@@ -197,7 +198,7 @@ export interface Kyc {
   number_of_children?: number;
   boys?: number;
   girls?: number;
-  bank_details?: string;
+  finincial_institution?: string;
   documents?: string[];
   profile_pic?: string;
   status: 'active' | 'inactive' | 'blacklisted';

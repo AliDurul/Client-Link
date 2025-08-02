@@ -33,6 +33,10 @@ const customerSchema: Schema<ICustomer> = new Schema({
         index: true,
         match: [/^\+?[\d\s\-\(\)]+$/, 'Please enter a valid phone number'],
     },
+    nationality: {
+        type: String,
+        trim: true,
+    },
     dob: {
         type: Date,
     },
@@ -46,7 +50,7 @@ const customerSchema: Schema<ICustomer> = new Schema({
         city: String,
         state: String,
         country: String,
-        zipCode: String,
+        zip_code: String,
     },
     id_type: {
         type: String,
@@ -116,7 +120,7 @@ const customerSchema: Schema<ICustomer> = new Schema({
         default: 0,
         min: [0, 'Number of girls cannot be negative'],
     },
-    bank_details: {
+    finincial_institution: {
         type: String,
         trim: true,
     },
@@ -168,16 +172,18 @@ export interface ICustomer extends Document {
     customer_id: string;
     first_name: string;
     last_name: string;
+    full_name?: string;
     email?: string;
     phone_number: string;
     dob?: Date;
+    nationality?: string;
     gender?: 'male' | 'female' | 'other';
     address: {
         street?: string;
         city?: string;
         state?: string;
         country?: string;
-        zipCode?: string;
+        zip_code?: string;
     };
     id_type?: 'passport' | 'national_id' | 'driving_license' | 'other';
     id_number?: string;
@@ -195,7 +201,7 @@ export interface ICustomer extends Document {
     number_of_children?: number;
     boys?: number;
     girls?: number;
-    bank_details?: string;
+    finincial_institution?: string;
     documents?: string[];
     profile_pic?: string;
     status: 'active' | 'inactive' | 'blacklisted';
@@ -203,5 +209,4 @@ export interface ICustomer extends Document {
     assigned_agent?: mongoose.Types.ObjectId;
     createdAt?: Date;
     updatedAt?: Date;
-    fullName?: string;
 }

@@ -1,22 +1,20 @@
 'use client';
-import { formatDate, formUrlQuery } from '@/lib/utility/functions';
+import { formatDate } from '@/lib/utility/functions';
 import { Kyc, Pagination } from '@/types';
 import { LuMousePointerClick } from "react-icons/lu";
-// import { DataTable, type DataTableColumn, type DataTableProps, type DataTableSortStatus } from 'mantine-datatable';
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
-import { use, useCallback, useMemo, useState } from 'react';
-import { useAppSelector } from '@/lib/hooks';
+import { use, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectIsDarkMode } from '@/lib/features/theme/themeSlice';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { DataTable, DataTableColumn, DataTableProps, DataTableSortStatus } from 'mantine-datatable';
+import { useRouter } from 'next/navigation';
+import type { DataTableColumn, DataTableProps, DataTableSortStatus } from 'mantine-datatable';
+import { DataTable } from 'mantine-datatable';
 import SearchInput from '@/components/shared/SearchInput';
 import { useUrlParams } from '@/hooks/useUrlParams';
+import { setKyc } from '@/lib/features/kyc/kycSlice';
 
-
-
-// Move outside component to prevent recreation
 const PAGE_SIZES = [10, 20, 30, 50, 100]
 
 const DEFAULT_SORT_STATUS: DataTableSortStatus = {
@@ -31,23 +29,21 @@ interface KycMainProps {
 export default function KycMain({ customerPromise, }: KycMainProps) {
   const currentUser = useCurrentUser();
   const { updateUrlParams, getParam } = useUrlParams();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const isDark = useAppSelector(selectIsDarkMode);
 
 
+
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>(DEFAULT_SORT_STATUS);
   const [selectedRecords, setSelectedRecords] = useState<Kyc[]>([]);
-
+  const page = getParam('p', '1');
+  const pl = getParam('pl', '20');
 
   const customers = use(customerPromise);
 
 
-  // URL parameters with memoization
-  const page = getParam('p', '1');
-  const pl = getParam('pl', '20');
-
-
-  // Event handlers with useCallback
+  // Event handlers
   const handleSortStatusChange = (status: DataTableSortStatus) => {
     setSortStatus(status);
     updateUrlParams({
@@ -58,20 +54,21 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
   }
 
   const handlePageChange = (newPage: number) => {
-    updateUrlParams({ page: newPage.toString() });
+    updateUrlParams({ p: newPage.toString() });
   }
 
   const handlePageSizeChange = (newPageSize: number) => {
     updateUrlParams({
       pl: newPageSize.toString(),
-      page: '1'
+      p: '1'
     });
   }
 
 
   // Action handlers
-  const handlePreview = (recordId: string, record: Kyc) => {
-    router.push(`/kyc/action?s=r&userId=${recordId}`);
+  const handlePreview = (record: Kyc) => {
+    router.push(`/kyc/action?s=r&id=${record._id}`);
+    dispatch(setKyc(record));
   }
 
   const handleEdit = (recordId: string, record: Kyc) => {
@@ -89,12 +86,12 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
     <div className="mx-auto flex w-max items-center gap-4">
       <button
         className="flex hover:text-primary"
-      // onClick={() => { router.push(`/kyc/action?s=r&userId=${kyc.id}`), dispatch(updateKycState(kyc)) }}
+        onClick={(e) => { e.stopPropagation(); handlePreview(record); }}
       >
         <PreviewIcon />
       </button>
       {
-        currentUser?.userInfo?.role === 'admin' && (
+        currentUser?.userInfo?.role !== 'admin' && (
           <>
             <button
               // onClick={() => { router.push(`/kyc/action?s=e&userId=${kyc.id}`), dispatch(updateKycState(kyc)) }}
@@ -125,7 +122,7 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
         <p >
           {full_name}, phone number is {phone_number} and assigned agent is {assigned_agent}.
           <br />
-          His office address is {address.street}, {address.city}, {address.state}.
+          His office address is {address?.street}, {address?.city}, {address?.state}.
         </p>
       </div>
     ),
@@ -133,7 +130,8 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
 
   const columns: DataTableProps<Kyc>['columns'] = [
     {
-      accessor: 'name',
+      accessor: 'first_name',
+      title: 'Full Name',
       sortable: true,
       render: ({ full_name }) => `${full_name}`,
     },
@@ -170,7 +168,17 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
   return (
 
     <div className="pl-1 datatables pagination-padding">
-      <div className='flex justify-end items-center gap-4 mb-2'>
+      <div className='flex justify-between items-center md:flex-row md:items-center mb-3'>
+        <div className="flex flex-wrap items-center justify-around gap-2 pl-3">
+          {
+            selectedRecords.length >= 1 &&
+            <button type="button" className="btn btn-danger gap-2" >
+              <DeleteIcon />
+              Delete
+            </button>
+          }
+          {/* <TicketModal ticketModal={ticketModal} setTicketModal={setTicketModal} /> */}
+        </div>
         {/* <Flatpickr
           options={{
             mode: 'range',

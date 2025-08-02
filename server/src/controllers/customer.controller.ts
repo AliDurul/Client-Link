@@ -26,6 +26,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
 export const getCustomerById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
+    console.log('get customer by id:', id);
 
     const result = await Customer.findById(id);
 
