@@ -22,3 +22,34 @@ export const taskSchema = z.object({
     assigned_agent: z.string().min(1, "Assign agent is required"),
     priority: z.enum(['Low', 'Medium', 'High']).optional(),
 });
+
+
+export const customerSchema = z.object({
+    first_name: z.string().min(1, "First name is required"),
+    last_name: z.string().min(1, "Last name is required"),
+    profession: z.string().optional(),
+    dob: z.string().min(1, "Date of birth is required"), // or z.date() if you convert to Date
+    email: z.string().email("Invalid email address"),
+    phone_number: z.string().min(1, "Phone number is required"),
+    gender: z.string().min(1, "Gender is required"),
+    id_type: z.string().min(1, "ID type is required"),
+    id_number: z.string().min(1, "ID number is required"),
+    religion: z.string().min(1, "Religion is required"),
+    marital_status: z.string().min(1, "Marital status is required"),
+    boys: z.union([z.string(), z.number()]).optional(),
+    girls: z.union([z.string(), z.number()]).optional(),
+    street: z.string().min(1, "Street is required"),
+    city: z.string().min(1, "City is required"),
+    state: z.string().optional(),
+    country: z.string().optional(),
+    zip_code: z.string().optional(),
+    father_name: z.string().optional(),
+    mother_name: z.string().optional(),
+    witness_name: z.string().optional(),
+    witness_relation: z.string().optional(),
+    nationality: z.string().min(1, "Nationality is required"),
+    finincial_institution: z.string().optional(),
+    medication: z.boolean(),
+    medication_type: z.string().optional(),
+    profile_pic: z.any().optional(), // file/image, adjust as needed
+});

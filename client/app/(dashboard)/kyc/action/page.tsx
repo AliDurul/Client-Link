@@ -11,6 +11,7 @@ export default async function page({ searchParams }: PageSearchParams) {
     const params = await searchParams;
 
     const userId = (params.id || '');
+    const readOnly = params.s === 'r';
 
     const kycPromise = readKyc(userId)
 
@@ -20,7 +21,7 @@ export default async function page({ searchParams }: PageSearchParams) {
             <TopPageNavigation />
 
             <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
-                <KycForm kycPromise={kycPromise} />
+                <KycForm kycPromise={kycPromise} readOnly={readOnly} />
             </Suspense>
 
 

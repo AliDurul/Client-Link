@@ -8,17 +8,43 @@ import { useAppSelector } from '@/lib/hooks';
 import Image from 'next/image';
 import MaskedInput from 'react-text-mask';
 import Select from 'react-select';
-import { use } from 'react';
+import { use, useActionState } from 'react';
 import { Kyc } from '@/types';
+import { updateKyc } from '@/lib/features/kyc/kycActions';
 
 
 interface CustomStyles {
     control: (provided: any) => any;
 }
 
-export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?: Kyc | undefined; success: boolean; message?: string | undefined; }> }) {
+interface IinitialValues {
+    success: boolean;
+    message: string;
+}
 
-    const { result: kyc, success, message } = use(kycPromise);
+const initialState: IinitialValues = {
+    success: false,
+    message: '',
+    // inputs: { question: '', answer: '' }
+}
+
+interface KycFormProps {
+    kycPromise: Promise<{ result?: Kyc; success: boolean; message?: string }>;
+    readOnly: boolean;
+}
+
+export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
+
+    let kyc: Kyc | undefined = undefined;
+    let success = true;
+    let message = '';
+
+    if (readOnly && kycPromise) {
+        const kycResult = use(kycPromise);
+        kyc = kycResult.result;
+        success = kycResult.success;
+        message = kycResult.message || '';
+    }
 
     // if (!success) {
     //     return (
@@ -31,65 +57,69 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
     //     );
     // };
 
-    
+    const customStyles: CustomStyles = { control: (provided) => ({ ...provided, backgroundColor: readOnly ? 'white' : provided.backgroundColor, }) };
 
-    const { getParam } = useUrlParams();
 
-    const readOnly = getParam('s', 'r') === 'r';
+    const [state, action, isPending] = useActionState(updateKyc, initialState);
 
-    const customStyles: CustomStyles = {
-        control: (provided) => ({
-            ...provided,
-            backgroundColor: readOnly ? 'white' : provided.backgroundColor,
-        })
-    };
 
-    const initialValues = {
-        _id: kyc?._id || 0,
-        customer_id: kyc?.customer_id || '',
-        first_name: kyc?.first_name || '',
-        last_name: kyc?.last_name || '',
-        full_name: kyc?.full_name || '',
-        email: kyc?.email || '',
-        phone_number: kyc?.phone_number || '',
-        dob: kyc?.dob ? new Date(kyc.dob) : undefined,
-        nationality: kyc?.nationality || '',
-        gender: kyc?.gender || '',
+    // If kyc is empty, use state.inputs as the source for initialValues
+    const initialValues = kyc ? {
+        _id: kyc._id || 0,
+        customer_id: kyc.customer_id || '',
+        first_name: kyc.first_name || '',
+        last_name: kyc.last_name || '',
+        full_name: kyc.full_name || '',
+        email: kyc.email || '',
+        phone_number: kyc.phone_number || '',
+        dob: kyc.dob ? new Date(kyc.dob) : undefined,
+        nationality: kyc.nationality || '',
+        gender: kyc.gender || '',
         address: {
-            street: kyc?.address?.street || '',
-            city: kyc?.address?.city || '',
-            state: kyc?.address?.state || '',
-            country: kyc?.address?.country || '',
-            zip_code: kyc?.address?.zip_code || '',
+            street: kyc.address?.street || '',
+            city: kyc.address?.city || '',
+            state: kyc.address?.state || '',
+            country: kyc.address?.country || '',
+            zip_code: kyc.address?.zip_code || '',
         },
-        id_type: kyc?.id_type || '',
-        id_number: kyc?.id_number || '',
-        id_front: kyc?.id_front || '',
-        id_back: kyc?.id_back || '',
-        profession: kyc?.profession || '',
-        marital_status: kyc?.marital_status || '',
-        religion: kyc?.religion || '',
-        father_name: kyc?.father_name || '',
-        mother_name: kyc?.mother_name || '',
-        witness_name: kyc?.witness_name || '',
-        witness_relation: kyc?.witness_relation || '',
-        medication: typeof kyc?.medication === 'boolean' ? kyc.medication : false,
-        medication_type: kyc?.medication_type || '',
-        number_of_children: typeof kyc?.number_of_children === 'number' ? kyc.number_of_children : 0,
-        boys: typeof kyc?.boys === 'number' ? kyc.boys : 0,
-        girls: typeof kyc?.girls === 'number' ? kyc.girls : 0,
-        finincial_institution: kyc?.finincial_institution || '',
-        documents: Array.isArray(kyc?.documents) ? kyc.documents : [],
-        profile_pic: kyc?.profile_pic || '',
-        status: kyc?.status || 'active',
-        notes: kyc?.notes || '',
-        assigned_agent: typeof kyc?.assigned_agent === 'number' ? kyc.assigned_agent : undefined,
-        createdAt: kyc?.createdAt ? new Date(kyc.createdAt) : undefined,
-        updatedAt: kyc?.updatedAt ? new Date(kyc.updatedAt) : undefined,
+        id_type: kyc.id_type || '',
+        id_number: kyc.id_number || '',
+        id_front: kyc.id_front || '',
+        id_back: kyc.id_back || '',
+        profession: kyc.profession || '',
+        marital_status: kyc.marital_status || '',
+        religion: kyc.religion || '',
+        father_name: kyc.father_name || '',
+        mother_name: kyc.mother_name || '',
+        witness_name: kyc.witness_name || '',
+        witness_relation: kyc.witness_relation || '',
+        medication: typeof kyc.medication === 'boolean' ? kyc.medication : false,
+        medication_type: kyc.medication_type || '',
+        number_of_children: typeof kyc.number_of_children === 'number' ? kyc.number_of_children : 0,
+        boys: typeof kyc.boys === 'number' ? kyc.boys : 0,
+        girls: typeof kyc.girls === 'number' ? kyc.girls : 0,
+        finincial_institution: kyc.finincial_institution || '',
+        documents: Array.isArray(kyc.documents) ? kyc.documents : [],
+        profile_pic: kyc.profile_pic || '',
+        status: kyc.status || 'active',
+        notes: kyc.notes || '',
+        assigned_agent: typeof kyc.assigned_agent === 'number' ? kyc.assigned_agent : undefined,
+        createdAt: kyc.createdAt ? new Date(kyc.createdAt) : undefined,
+        updatedAt: kyc.updatedAt ? new Date(kyc.updatedAt) : undefined,
+    } : {
+        ...state?.inputs,
+        street: state?.inputs?.street || '',
+        city: state?.inputs?.city || '',
+        state: state?.inputs?.state || '',
+        country: state?.inputs?.country || '',
+        zip_code: state?.inputs?.zip_code || '',
     };
+
+    console.log(state.errors);
 
     return (
-        <form className="my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
+        <form action={action} className="my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
+            <input type="text" hidden name='_id' />
             <div className="panel">
                 <div className="flex items-center justify-between">
                     <h5 className="text-lg font-semibold dark:text-white-light">Profile</h5>
@@ -156,6 +186,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label="First Name"
                                 value={initialValues.first_name}
+                                errors={state?.errors?.first_name}
                             />
                         </li>
                         <li >
@@ -167,6 +198,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label="Last Name"
                                 value={initialValues.last_name}
+                                errors={state?.errors?.last_name}
                             />
                         </li>
                         <li className="flex items-center gap-2  ">
@@ -207,7 +239,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 placeholder="Enter Profession"
                                 disabled={readOnly}
                                 value={initialValues.profession}
-
+                                errors={state?.errors?.profession}
                             />
                         </li>
                         <li className="flex items-center gap-2">
@@ -227,7 +259,8 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 type="date"
                                 placeholder="Enter DOB / yyyy-mm-dd"
                                 disabled={readOnly}
-                                value={initialValues.dob ? initialValues.dob.toISOString().split('T')[0] : ''}
+                                value={initialValues.dob ? initialValues.dob.toString().split('T')[0] : ''}
+                                errors={state?.errors?.dob}
                             />
                         </li>
                         <li className="flex items-center gap-2">
@@ -252,6 +285,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 placeholder="Enter Email"
                                 disabled={readOnly}
                                 value={initialValues.email}
+                                errors={state?.errors?.email}
                             />
                         </li>
                         <li className="flex items-center gap-2">
@@ -278,6 +312,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 mask={maskConfig.phone_number.mask}
                                 value={initialValues.phone_number}
                             />
+                            {state?.errors?.phone_number && (<p className="mt-1 text-sm text-red-600">{state.errors.phone_number}</p>)}
                         </li>
                     </ul>
                 </div>
@@ -290,7 +325,11 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                     <div className="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                         <div>
                             <label htmlFor="Gender">Gender</label>
-                            <Select placeholder="Select Gender" options={genderOp} id='Gender'
+                            <Select
+                                placeholder="Select Gender"
+                                options={genderOp}
+                                id='Gender'
+                                name='gender'
                                 value={genderOp.find(option => option.value === initialValues.gender)}
                                 // onChange={option => setFieldValue('gender', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -299,24 +338,16 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 menuIsOpen={readOnly ? false : undefined}
                                 required
                             />
+                            {state?.errors?.gender && (<p className="mt-1 text-sm text-red-600">{state.errors.gender}</p>)}
                         </div>
-                        {/* <div>
-                            <InputBox
-                                name='user_age'
-                                id="user_age"
-                                type="number"
-                                placeholder="Enter Age"
-                                disabled={readOnly}
-                                label="Age"
-                                value={initialValues.user_age}
-                            />
-                        </div> */}
+
                         <div>
                             <label htmlFor="id_type">Id Type </label>
                             <Select
                                 placeholder="Select Id Type"
                                 options={idTypeOp}
                                 id='id_type'
+                                name='id_type'
                                 value={idTypeOp.find(option => option.value === initialValues.id_type)}
                                 // onChange={option => setFieldValue('id_type', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -325,10 +356,11 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 menuIsOpen={readOnly ? false : undefined}
                                 required
                             />
+                            {state?.errors?.id_type && (<p className="mt-1 text-sm text-red-600">{state.errors.id_type}</p>)}
                         </div>
                         <div>
                             <label htmlFor="id_number">Nrc No</label>
-                            <MaskedInput
+                            {/* <MaskedInput
                                 id="id_number"
                                 name="id_number"
                                 type="text"
@@ -340,7 +372,8 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 keepCharPositions={true}
                                 value={initialValues.id_number}
                                 mask={getMaskForIdType(initialValues.id_type)?.mask}
-                            />
+                            /> */}
+                            {state?.errors?.id_number && (<p className="mt-1 text-sm text-red-600">{state.errors.id_number}</p>)}
                         </div>
                         <div>
                             <label htmlFor="Religion">Religion</label>
@@ -348,6 +381,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 placeholder="Select Religion"
                                 options={religionOp}
                                 id='Religion'
+                                name='religion'
                                 value={religionOp.find(option => option.value === initialValues.religion)}
                                 // onChange={option => setFieldValue('religion', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -355,12 +389,15 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
                             />
+                            {state?.errors?.religion && (<p className="mt-1 text-sm text-red-600">{state.errors.religion}</p>)}
                         </div>
                         <div>
-                            <label htmlFor="matrial_status">Marital Status</label>
+                            <label htmlFor="marital_status">Marital Status</label>
                             <Select
                                 placeholder="Select status of marital"
                                 options={maritalOp}
+                                id='marital_status'
+                                name='marital_status'
                                 value={maritalOp.find(option => option.value === initialValues.marital_status)}
                                 // onChange={option => setFieldValue('marital_status', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -368,10 +405,9 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
                             />
+                            {state?.errors?.marital_status && (<p className="mt-1 text-sm text-red-600">{state.errors.marital_status}</p>)}
                         </div>
                         <div>
-                            {/* <label htmlFor="boys">Boys</label> */}
-                            {/* <Field name='boys' id="boys" type="number" className="form-input" disabled={readOnly} required /> */}
                             <InputBox
                                 name='boys'
                                 id="boys"
@@ -380,11 +416,10 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 label="Boys Count"
                                 disabled={readOnly}
                                 value={initialValues.boys}
+                                errors={state?.errors?.boys}
                             />
                         </div>
                         <div>
-                            {/* <label htmlFor="girls">Girls</label> */}
-                            {/* <Field name='girls' id="girls" type="number" className="form-input" disabled={readOnly} required /> */}
                             <InputBox
                                 name='girls'
                                 id="girls"
@@ -393,67 +428,71 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 label="Girls Count"
                                 disabled={readOnly}
                                 value={initialValues.girls}
+                                errors={state?.errors?.girls}
                             />
                         </div>
                         <div>
                             <InputBox
-                                name='address.street'
-                                id="address.street"
+                                name='street'
+                                id="street"
                                 type="text"
                                 placeholder="Enter Street Address"
                                 label="Street Address"
                                 disabled={readOnly}
-                                value={initialValues.address.street}
+                                value={initialValues.address?.street}
+                                errors={state?.errors?.street }
                             />
                         </div>
                         <div>
                             <InputBox
-                                name='address.city'
-                                id="address.city"
+                                name='city'
+                                id="city"
                                 type="text"
                                 placeholder="Enter City"
                                 label="City"
                                 disabled={readOnly}
-                                value={initialValues.address.city}
+                                value={initialValues.address?.city}
+                                errors={state?.errors?.city }
                             />
                         </div>
                         <div>
                             <InputBox
-                                name='address.state'
-                                id="address.state"
+                                name='state'
+                                id="state"
                                 type="text"
                                 placeholder="Enter State"
                                 label="State"
                                 disabled={readOnly}
-                                value={initialValues.address.state}
+                                value={initialValues.address?.state}
+                                errors={state?.errors?.state }
                             />
                         </div>
                         <div>
                             <InputBox
-                                name='address.country'
-                                id="address.country"
+                                name='country'
+                                id="country"
                                 type="text"
                                 placeholder="Enter Country"
                                 label="Country"
                                 disabled={readOnly}
-                                value={initialValues.address.country}
+                                value={initialValues.address?.country}
+                                errors={state?.errors?.country}
                             />
                         </div>
                         <div>
                             <InputBox
-                                name='address.zipCode'
-                                id="address.zipCode"
+                                name='zip_code'
+                                id="zip_code"
                                 type="text"
                                 placeholder="Enter Zip Code"
                                 label="Zip Code"
                                 disabled={readOnly}
-                                value={initialValues.address.zip_code}
+                                value={initialValues.address?.zip_code}
+                                errors={state?.errors?.zip_code }
                             />
                         </div>
 
                         <div>
-                            {/* <label htmlFor="father_name">Father Name</label> */}
-                            {/* <Field name='father_name' id="father_name" type="text" placeholder="Enter Father Name" className="form-input" disabled={readOnly} required /> */}
                             <InputBox
                                 name='father_name'
                                 id="father_name"
@@ -462,11 +501,10 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label="Father Name"
                                 value={initialValues.father_name}
+                                errors={state?.errors?.father_name}
                             />
                         </div>
                         <div>
-                            {/* <label htmlFor="mother_name">Mother Name</label> */}
-                            {/* <Field name='mother_name' id="mother_name" type="text" placeholder="Enter Mother Name" className="form-input" disabled={readOnly} required /> */}
                             <InputBox
                                 name='mother_name'
                                 id="mother_name"
@@ -475,11 +513,10 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label="Mother Name"
                                 value={initialValues.mother_name}
+                                errors={state?.errors?.mother_name}
                             />
                         </div>
                         <div>
-                            {/* <label htmlFor="witness_name">Witness Name</label> */}
-                            {/* <Field name='witness_name' id="witness_name" type="text" placeholder="Enter Witness Name" className="form-input" disabled={readOnly} required /> */}
                             <InputBox
                                 name='witness_name'
                                 id="witness_name"
@@ -488,6 +525,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label="Witness Name"
                                 value={initialValues.witness_name}
+                                errors={state?.errors?.witness_name}
                             />
                         </div>
                         <div>
@@ -495,6 +533,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                             <Select
                                 placeholder="Select witness relation"
                                 options={relationOp} id='witness_relation'
+                                name='witness_relation'
                                 value={relationOp.find(option => option.value === initialValues.witness_relation)}
                                 // onChange={option => setFieldValue('witness_relation', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -502,11 +541,13 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
                             />
+                            {state?.errors?.witness_relation && (<p className="mt-1 text-sm text-red-600">{state.errors.witness_relation}</p>)}
                         </div>
                         <div>
                             <label htmlFor="nationality">Nationality</label>
                             <Select placeholder="Select Nationality"
                                 options={nationalityOp} id='nationality'
+                                name='nationality'
                                 value={nationalityOp.find(option => option.value === initialValues.nationality)}
                                 onChange={option => console.log(option)}
                                 isDisabled={readOnly}
@@ -514,12 +555,14 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 menuIsOpen={readOnly ? false : undefined}
                                 required
                             />
+                            {state?.errors?.nationality && (<p className="mt-1 text-sm text-red-600">{state.errors.nationality}</p>)}
                         </div>
                         <div>
                             <label htmlFor="banks">Finincial Institution</label>
                             <Select
                                 placeholder="Select Finincial Institution"
                                 options={bankOp} id='banks'
+                                name='finincial_institution'
                                 value={bankOp.find(option => option.value === initialValues.finincial_institution)}
                                 // onChange={option => setFieldValue('finincial_institution', option ? option.value : '')}
                                 onChange={option => console.log(option)}
@@ -527,6 +570,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
                             />
+                            {state?.errors?.finincial_institution && (<p className="mt-1 text-sm text-red-600">{state.errors.finincial_institution}</p>)}
                         </div>
 
                         {initialValues.medication && <div>
@@ -540,12 +584,13 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                 disabled={readOnly}
                                 label='Medication Type'
                                 value={initialValues.medication_type}
+                                errors={state?.errors?.medication_type}
                             />
 
                         </div>}
                         <div className=''>
                             <label htmlFor="id_type">Medication</label>
-                            <div className="flex gap-3">
+                            {/* <div className="flex gap-3">
                                 <label className="inline-flex">
                                     <input
                                         type="radio"
@@ -571,7 +616,7 @@ export default function KycForm({ kycPromise }: { kycPromise: Promise<{ result?:
                                     />
                                     <span className="peer-checked:text-secondary">No</span>
                                 </label>
-                            </div>
+                            </div> */}
                         </div>
 
                         {

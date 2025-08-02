@@ -8,7 +8,7 @@ type TInputField = {
     type: 'text' | 'email' | 'password' | 'date' | 'number' | 'tel';
     placeholder: string;
     id?: string;
-    value?: string | number;
+    value?: string | null | undefined | number;
     icon?: string;
     errors?: any;
     disabled?: boolean;
@@ -17,6 +17,7 @@ type TInputField = {
 };
 
 export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className = '', label }: TInputField) {
+    console.log('errors', errors);
     const [isPassVisible, setIsPassVisible] = useState(false);
     return (
         <div >
@@ -27,7 +28,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                     name={name}
                     type={isPassVisible ? 'text' : type}
                     placeholder={placeholder}
-                    defaultValue={value}
+                    defaultValue={value ?? undefined}
                     id={id}
                     disabled={disabled}
                     className={`form-input  placeholder:text-gray-400 ${errors ? 'border-red-500' : ''} ${className}`}
