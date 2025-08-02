@@ -28,7 +28,7 @@ export const customerSchema = z.object({
     first_name: z.string().min(1, "First name is required"),
     last_name: z.string().min(1, "Last name is required"),
     profession: z.string().optional(),
-    dob: z.string().min(1, "Date of birth is required"), // or z.date() if you convert to Date
+    dob: z.string().min(1, "Date of birth is required"), 
     email: z.string().email("Invalid email address"),
     phone_number: z.string().min(1, "Phone number is required"),
     gender: z.string().min(1, "Gender is required"),
@@ -39,7 +39,7 @@ export const customerSchema = z.object({
     boys: z.union([z.string(), z.number()]).optional(),
     girls: z.union([z.string(), z.number()]).optional(),
     street: z.string().min(1, "Street is required"),
-    city: z.string().min(1, "City is required"),
+    city: z.string().optional(),
     state: z.string().optional(),
     country: z.string().optional(),
     zip_code: z.string().optional(),
@@ -50,6 +50,6 @@ export const customerSchema = z.object({
     nationality: z.string().min(1, "Nationality is required"),
     finincial_institution: z.string().optional(),
     medication: z.boolean(),
-    medication_type: z.string().optional(),
+    medication_type: z.string().optional().nullable(),
     profile_pic: z.any().optional(), // file/image, adjust as needed
 });

@@ -14,13 +14,13 @@ import { initializeData } from "./seeders/user-seed";
 //* Required packages  & configs & middewares
 const app = express();
 
-app.use(helmet());
-app.use(cors());
+app.use(express.urlencoded());
 app.use(express.json());
 app.set('query parser', 'extended');
-app.use(express.urlencoded({ extended: true }));
-app.use(logger());
 app.use(queryHandler);
+app.use(helmet());
+app.use(cors());
+app.use(logger());
 app.use('/api/v1', rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes in milliseconds
   max: 100,

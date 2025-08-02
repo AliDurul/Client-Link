@@ -8,9 +8,10 @@ import { useAppSelector } from '@/lib/hooks';
 import Image from 'next/image';
 import MaskedInput from 'react-text-mask';
 import Select from 'react-select';
-import { use, useActionState } from 'react';
+import { use, useActionState, useState } from 'react';
 import { Kyc } from '@/types';
 import { updateKyc } from '@/lib/features/kyc/kycActions';
+import { init } from 'next/dist/compiled/webpack/webpack';
 
 
 interface CustomStyles {
@@ -108,14 +109,19 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
         updatedAt: kyc.updatedAt ? new Date(kyc.updatedAt) : undefined,
     } : {
         ...state?.inputs,
-        street: state?.inputs?.street || '',
-        city: state?.inputs?.city || '',
-        state: state?.inputs?.state || '',
-        country: state?.inputs?.country || '',
-        zip_code: state?.inputs?.zip_code || '',
+        address: {
+            street: state?.inputs?.street || '',
+            city: state?.inputs?.city || '',
+            state: state?.inputs?.state || '',
+            country: state?.inputs?.country || '',
+            zip_code: state?.inputs?.zip_code || '',
+        },
     };
 
-    console.log(state.errors);
+    console.log(state);
+
+    const [idType, setIdType] = useState(initialValues.id_type || '');
+
 
     return (
         <form action={action} className="my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
@@ -236,6 +242,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 name='profession'
                                 id="profession"
                                 type="text"
+                                className='flex-1'
                                 placeholder="Enter Profession"
                                 disabled={readOnly}
                                 value={initialValues.profession}
@@ -348,9 +355,9 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 options={idTypeOp}
                                 id='id_type'
                                 name='id_type'
-                                value={idTypeOp.find(option => option.value === initialValues.id_type)}
+                                value={idTypeOp.find(option => option.value === idType)}
                                 // onChange={option => setFieldValue('id_type', option ? option.value : '')}
-                                onChange={option => console.log(option)}
+                                onChange={option => setIdType(option ? option.value : '')}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -359,20 +366,17 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                             {state?.errors?.id_type && (<p className="mt-1 text-sm text-red-600">{state.errors.id_type}</p>)}
                         </div>
                         <div>
-                            <label htmlFor="id_number">Nrc No</label>
-                            {/* <MaskedInput
+                            <label htmlFor="id_number">{idType.charAt(0).toUpperCase() + idType.slice(1)} Number</label>
+                            <MaskedInput
                                 id="id_number"
                                 name="id_number"
-                                type="text"
-                                disabled={readOnly}
-                                placeholder={getMaskForIdType(initialValues.id_type)?.placeholder}
-                                className={`form-input `}
-                                required
-                                guide={true}
+                                type='text'
                                 keepCharPositions={true}
+                                className='form-input'
                                 value={initialValues.id_number}
-                                mask={getMaskForIdType(initialValues.id_type)?.mask}
-                            /> */}
+                                mask={getMaskForIdType(idType)?.mask}
+                                placeholder={getMaskForIdType(idType)?.placeholder}
+                            />
                             {state?.errors?.id_number && (<p className="mt-1 text-sm text-red-600">{state.errors.id_number}</p>)}
                         </div>
                         <div>
@@ -440,7 +444,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 label="Street Address"
                                 disabled={readOnly}
                                 value={initialValues.address?.street}
-                                errors={state?.errors?.street }
+                                errors={state?.errors?.street}
                             />
                         </div>
                         <div>
@@ -452,7 +456,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 label="City"
                                 disabled={readOnly}
                                 value={initialValues.address?.city}
-                                errors={state?.errors?.city }
+                                errors={state?.errors?.city}
                             />
                         </div>
                         <div>
@@ -464,20 +468,22 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 label="State"
                                 disabled={readOnly}
                                 value={initialValues.address?.state}
-                                errors={state?.errors?.state }
+                                errors={state?.errors?.state}
                             />
                         </div>
                         <div>
-                            <InputBox
+                            <label htmlFor="country">Country</label>
+                            <Select placeholder="Select Country"
+                                options={countryOp} id='country'
                                 name='country'
-                                id="country"
-                                type="text"
-                                placeholder="Enter Country"
-                                label="Country"
-                                disabled={readOnly}
-                                value={initialValues.address?.country}
-                                errors={state?.errors?.country}
+                                value={countryOp.find(option => option.value === initialValues.address?.country)}
+                                isDisabled={readOnly}
+                                styles={customStyles}
+                                onChange={option => console.log(option)}
+                                menuIsOpen={readOnly ? false : undefined}
+                                required
                             />
+                            {state?.errors?.country && (<p className="mt-1 text-sm text-red-600">{state.errors.country}</p>)}
                         </div>
                         <div>
                             <InputBox
@@ -488,7 +494,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 label="Zip Code"
                                 disabled={readOnly}
                                 value={initialValues.address?.zip_code}
-                                errors={state?.errors?.zip_code }
+                                errors={state?.errors?.zip_code}
                             />
                         </div>
 
@@ -573,9 +579,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                             {state?.errors?.finincial_institution && (<p className="mt-1 text-sm text-red-600">{state.errors.finincial_institution}</p>)}
                         </div>
 
-                        {initialValues.medication && <div>
-                            {/* <label htmlFor="medication_type">Medication Type</label> */}
-                            {/* <Field name='medication_type' id="medication_type" type="text" placeholder="Medication Type" className="form-input" disabled={readOnly} required /> */}
+                        <div>
                             <InputBox
                                 name='medication_type'
                                 id="medication_type"
@@ -587,37 +591,8 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 errors={state?.errors?.medication_type}
                             />
 
-                        </div>}
-                        <div className=''>
-                            <label htmlFor="id_type">Medication</label>
-                            {/* <div className="flex gap-3">
-                                <label className="inline-flex">
-                                    <input
-                                        type="radio"
-                                        name="square_text_radio"
-                                        className="form-radio text-info rounded-none peer"
-                                        checked={initialValues.medication === true}
-                                        // onChange={() => setFieldValue('medication', true)}
-                                        onChange={() => console.log('Medication Yes')}
-                                        disabled={readOnly}
-                                        required
-                                    />
-                                    <span className="peer-checked:text-info">Yes</span>
-                                </label>
-                                <label className="inline-flex">
-                                    <input
-                                        type="radio"
-                                        name="square_text_radio"
-                                        className="form-radio text-secondary rounded-none peer"
-                                        checked={initialValues.medication === false}
-                                        onChange={() => console.log('Medication No')}
-                                        disabled={readOnly}
-                                        required
-                                    />
-                                    <span className="peer-checked:text-secondary">No</span>
-                                </label>
-                            </div> */}
                         </div>
+
 
                         {
                             !readOnly && (

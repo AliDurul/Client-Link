@@ -22,7 +22,6 @@ const authConfigFormData = async () => {
 
   return {
     Authorization: `Bearer ${accessToken}`,
-    // "Content-Type": "multipart/form-data",
   };
 }
 
@@ -127,6 +126,7 @@ export const deleteMultiKyc = async (ids: any) => {
 export const updateKyc = async (_: unknown, payload: FormData) => {
 
   const id = payload.get('_id') as string;
+  payload.delete('_id');
 
   const address = {
     street: payload.get('street') as string | null,
@@ -169,7 +169,6 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
   const result = customerSchema.safeParse(rowData);
 
 
-
   if (!result.success) {
     const errors = result.error.flatten().fieldErrors;
     return { success: false, message: 'Fix the error in the form', inputs: rowData, errors };
@@ -177,18 +176,17 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
 
   const url = id ? `${BASE_URL}customers/${id}/` : `${BASE_URL}customers/`;
   const method = id ? "PUT" : "POST";
-
+  
   try {
     const headers = await authConfigFormData();
 
     const response = await fetch(url, {
       method,
       headers,
-      body: JSON.stringify(result.data),
+      body: payload,
     });
 
     const data = await response.json();
-    // console.log(data);
 
     if (!response.ok) {
       throw new Error(data.message || "Something went wrong, Please try again!");

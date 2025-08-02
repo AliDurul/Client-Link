@@ -118,9 +118,11 @@ export function logger(): RequestHandler {
 // ===============================
 // 5. AUTH CHECK MIDDLEWARE (JWT)
 // ===============================
-declare module "express-serve-static-core" {
-    interface Request {
-        user?: string | jwt.JwtPayload;
+declare global {
+    namespace Express {
+        interface Request {
+            user?: string | jwt.JwtPayload; 
+        }
     }
 }
 
@@ -148,31 +150,33 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 // 6. QUERY PARAMS HANDLER MIDDLEWARE
 // ===============================
 
-declare module "express-serve-static-core" {
-    interface Response {
-        getModelList: <T extends Document>(
-            Model: Model<T>,
-            customFilter?: Record<string, any>,
-            populate?: string | [{ path: string; select?: string | string[] }] | null
-        ) => Promise<T[]>;
-        getModelListDetails: <T extends Document>(
-            Model: Model<T>,
-            customFilter?: Record<string, any>
-        ) => Promise<{
-            // filter: Record<string, any>;
-            // search: Record<string, any>;
-            // sort: Record<string, any>;
-            // skip: number;
-            limit: number;
-            page: number;
-            totalRecords: number;
-            pages: false | {
-                previous: number | false;
-                current: number;
-                next: number | false;
-                total: number;
-            };
-        }>;
+declare global {
+    namespace Express {
+        interface Response {
+            getModelList: <T extends Document>(
+                Model: Model<T>,
+                customFilter?: Record<string, any>,
+                populate?: string | [{ path: string; select?: string | string[] }] | null
+            ) => Promise<T[]>;
+            getModelListDetails: <T extends Document>(
+                Model: Model<T>,
+                customFilter?: Record<string, any>
+            ) => Promise<{
+                // filter: Record<string, any>;
+                // search: Record<string, any>;
+                // sort: Record<string, any>;
+                // skip: number;
+                limit: number;
+                page: number;
+                totalRecords: number;
+                pages: false | {
+                    previous: number | false;
+                    current: number;
+                    next: number | false;
+                    total: number;
+                };
+            }>;
+        }
     }
 }
 

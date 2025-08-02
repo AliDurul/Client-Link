@@ -5,7 +5,7 @@ import mongoose, { Document, Schema, Model } from "mongoose";
 const customerSchema: Schema<ICustomer> = new Schema({
     customer_id: {
         type: String,
-        // required: true,
+        default: () => `CUST-${Date.now()}`,
         trim: true,
     },
     first_name: {
@@ -54,7 +54,7 @@ const customerSchema: Schema<ICustomer> = new Schema({
     },
     id_type: {
         type: String,
-        enum: ['passport', 'national_id', 'driving_license', 'other'],
+        enum: ['passport', 'nrc', 'license'],
     },
     id_number: {
         type: String,

@@ -17,10 +17,9 @@ type TInputField = {
 };
 
 export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className = '', label }: TInputField) {
-    console.log('errors', errors);
     const [isPassVisible, setIsPassVisible] = useState(false);
     return (
-        <div >
+        <div className='flex-1'>
             <div className='relative'>
                 {label && <label htmlFor={id} className='pl-2'>{label}</label>}
 
@@ -31,7 +30,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                     defaultValue={value ?? undefined}
                     id={id}
                     disabled={disabled}
-                    className={`form-input  placeholder:text-gray-400 ${errors ? 'border-red-500' : ''} ${className}`}
+                    className={`form-input placeholder:text-gray-400 ${errors ? 'border-red-500' : ''} ${className}`}
                 />
 
                 {icon && (<i className={`fi input-icon ${icon}`} />)}

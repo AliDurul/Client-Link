@@ -163,13 +163,13 @@ export const maskConfig = {
         mask: [
             /\d/, /\d/, /\d/, /\d/, /\d/, /\d/,
             '/',
-            /\d/, /\d/, // First group of three digits
+            /\d/, /\d/,
             '/',
             /\d/
         ],
         placeholder: '______/__/_'
     },
-    'Lisense': {
+    'License': {
         mask: [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/],
         placeholder: '________'
     },
@@ -180,15 +180,15 @@ export const maskConfig = {
 };
 
 
-export const getMaskForIdType = (idType: string) => {
+export const getMaskForIdType = (idType: string | undefined) => {
     switch (idType) {
-        case 'NRC':
+        case 'nrc':
             return { mask: maskConfig.NRC.mask, placeholder: maskConfig.NRC.placeholder };
-        case 'Passport':
+        case 'passport':
             return { mask: maskConfig.Passport.mask, placeholder: maskConfig.Passport.placeholder };
-        case 'Lisense':
-            return { mask: maskConfig.Lisense.mask, placeholder: maskConfig.Lisense.placeholder };
+        case 'license':
+            return { mask: maskConfig.License.mask, placeholder: maskConfig.License.placeholder };
         default:
-            return { mask: [], placeholder: '' };
+            return { mask: maskConfig.NRC.mask, placeholder: 'Enter your NRC number' };
     }
 };

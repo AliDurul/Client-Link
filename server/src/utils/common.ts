@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import { getTransporter } from '../configs/nodemailer';
 import { ENV } from '../configs/env';
 import { IUser } from '../models/user.model';
+import multer from 'multer';
 
 // ===============================
 // 1. CUSTOM ERROR CLASS
@@ -38,9 +39,16 @@ export function passwordEncrypt(pass: string): string {
 
 
 // ===============================
-// 3. GENERATE CACHE KEY
+// 3. multer
 // ===============================
-
+export const upload = multer({
+    storage: multer.diskStorage({
+        destination: './uploads', // indicate destination
+        filename: function (req, file, cb) { 
+            cb(null, Date.now() + '_' + file.originalname)
+        }
+    })
+});
 
 
 // ===============================
