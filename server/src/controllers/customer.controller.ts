@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import Customer, { ICustomer } from "../models/customer.model";
-import { CustomError } from "../utils/common";
+import { CustomError, getImageUrl, s3 } from "../utils/common";
 import type { File as MulterFile } from 'multer';
+import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { ENV } from '../configs/env';
+import crypto from 'crypto';
+import sharp from 'sharp';
+
+
+
 
 // Extend Express Request interface to include 'file' property
 declare global {
@@ -13,7 +21,17 @@ declare global {
 }
 
 export const getCustomers = async (req: Request, res: Response): Promise<void> => {
+
     const result = await res.getModelList(Customer);
+
+    if (!result) throw new CustomError("No Customers found", 404);
+
+    // If the customer has a profile_pic, generate a signed URL for it
+    for (const customer of result) {
+        if (customer.profile_pic) {
+            customer.profile_pic = await getImageUrl(customer.profile_pic);
+        }
+    }
 
     res.send({
         success: true,
@@ -52,7 +70,24 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
     // Attach file if present
     if (req.file) {
-        data.profile_pic = req.file.filename;
+        console.log('File received:', req.file);
+
+        const randomSuffix = crypto.randomBytes(8).toString('hex');
+        const fileName = `profile_pics/${randomSuffix}_${req.file.originalname}`;
+
+        const buffer = await sharp(req.file.buffer).resize({ height: 90, width: 90, fit: 'contain' }).toBuffer();
+
+        const params = {
+            Bucket: ENV.awsBucketName,
+            Key: fileName,
+            Body: buffer,
+            ContentType: req.file.mimetype
+        };
+        const command = new PutObjectCommand(params)
+
+        await s3.send(command);
+
+        data.profile_pic = fileName
     }
 
     const result = await Customer.create(data);
@@ -70,6 +105,10 @@ export const getCustomerById = async (req: Request, res: Response): Promise<void
     console.log('get customer by id:', id);
 
     const result = await Customer.findById(id);
+
+    if (result.profile_pic) {
+        result.profile_pic = await getImageUrl(result.profile_pic);
+    }
 
     if (!result) throw new CustomError("Customer not found", 404);
 
@@ -106,9 +145,20 @@ export const updateCustomer = async (req: Request, res: Response): Promise<void>
 export const deleteCustomer = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
+    const customer = await Customer.findById(id);
+    if (!customer) throw new CustomError("Customer not found", 404);
+
     const data = await Customer.deleteOne({ _id: id });
 
     if (!data.deletedCount) throw new CustomError("Customer not found or already deleted.", 404, true);
+
+    const params = {
+        Bucket: ENV.awsBucketName,
+        Key: customer.profile_pic,
+    }
+
+    const command = new DeleteObjectCommand(params);
+    await s3.send(command);
 
     res.status(data.deletedCount ? 204 : 404).send({
         success: !!data.deletedCount,

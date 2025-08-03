@@ -6,6 +6,11 @@ import { getTransporter } from '../configs/nodemailer';
 import { ENV } from '../configs/env';
 import { IUser } from '../models/user.model';
 import multer from 'multer';
+import { S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+
 
 // ===============================
 // 1. CUSTOM ERROR CLASS
@@ -41,21 +46,32 @@ export function passwordEncrypt(pass: string): string {
 // ===============================
 // 3. multer
 // ===============================
-export const upload = multer({
-    storage: multer.diskStorage({
-        destination: './uploads', // indicate destination
-        filename: function (req, file, cb) { 
-            cb(null, Date.now() + '_' + file.originalname)
-        }
-    })
+
+const storage = multer.memoryStorage();
+export const upload = multer({ storage: storage });
+
+
+// ===============================
+// 4. S3 CLIENT
+// ===============================
+export const s3 = new S3Client({
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+    region: process.env.AWS_REGION,
 });
 
 
-// ===============================
-// 4. GET OR SET CACHE
-// ===============================
-
-
+export const getImageUrl = async (key: string): Promise<string> => {
+    const getObjectParams = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: key,
+    };
+    const command = new GetObjectCommand(getObjectParams);
+    const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+    return url;
+}
 
 // ===============================
 // 5. SET TOKEN

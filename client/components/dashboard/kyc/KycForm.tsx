@@ -1,17 +1,17 @@
 'use client';
 import { bankOp, countryOp, genderOp, getMaskForIdType, idTypeOp, maritalOp, maskConfig, nationalityOp, relationOp, religionOp } from '@/components/dashboard/kyc/KycConstraints';
 import InputBox from '@/components/shared/InputBox';
-import TopPageNavigation from '@/components/shared/TopPageNavigation';
-import { useUrlParams } from '@/hooks/useUrlParams';
-import { selectKyc } from '@/lib/features/kyc/kycSlice';
-import { useAppSelector } from '@/lib/hooks';
+import ImageUploading, { ImageListType } from 'react-images-uploading';
+
 import Image from 'next/image';
 import MaskedInput from 'react-text-mask';
 import Select from 'react-select';
-import { use, useActionState, useState } from 'react';
+import { use, useActionState, useEffect, useRef, useState } from 'react';
 import { Kyc } from '@/types';
 import { updateKyc } from '@/lib/features/kyc/kycActions';
-import { init } from 'next/dist/compiled/webpack/webpack';
+import KycImageUpload from './KycImageUpload';
+import { useRouter } from 'next/navigation';
+import { coloredToast } from '@/lib/utility/sweetAlerts';
 
 
 interface CustomStyles {
@@ -26,7 +26,6 @@ interface IinitialValues {
 const initialState: IinitialValues = {
     success: false,
     message: '',
-    // inputs: { question: '', answer: '' }
 }
 
 interface KycFormProps {
@@ -35,6 +34,8 @@ interface KycFormProps {
 }
 
 export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
+
+    const router = useRouter();
 
     let kyc: Kyc | undefined = undefined;
     let success = true;
@@ -58,13 +59,13 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
     //     );
     // };
 
-    const customStyles: CustomStyles = { control: (provided) => ({ ...provided, backgroundColor: readOnly ? 'white' : provided.backgroundColor, }) };
 
-
+    // form action
     const [state, action, isPending] = useActionState(updateKyc, initialState);
 
 
-    // If kyc is empty, use state.inputs as the source for initialValues
+    // states
+    const customStyles: CustomStyles = { control: (provided) => ({ ...provided, backgroundColor: readOnly ? 'white' : provided.backgroundColor, }) };
     const initialValues = kyc ? {
         _id: kyc._id || 0,
         customer_id: kyc.customer_id || '',
@@ -117,10 +118,19 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
             zip_code: state?.inputs?.zip_code || '',
         },
     };
-
-    console.log(state);
-
     const [idType, setIdType] = useState(initialValues.id_type || '');
+
+    // functins
+    useEffect(() => {
+        if (!state?.message) return;
+
+
+        if (state.success) {
+            router.replace('/kyc')
+            coloredToast("success", state.message, "bottom-start");
+        }
+
+    }, [state]);
 
 
     return (
@@ -133,55 +143,17 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                 <div className="mb-5">
                     <div className="flex flex-col items-center justify-center">
                         {
-                            readOnly ? (
-                                <Image
+                            readOnly
+                                ? <Image
                                     src={kyc?.profile_pic ? kyc.profile_pic : '/assets/images/profile-pic.png'}
                                     alt="profile"
                                     width={120}
                                     height={120}
                                     className="rounded-full my-5" />
-                            ) : (
-                                <div className="custom-file-container my-3 mb-8" data-upload-id="myFirstImage">
-                                    <label className="custom-file-container__custom-file h-0"></label>
-                                    <input type="file" className="custom-file-container__custom-file__custom-file-input h-0 w-full" accept="image/*" />
-                                    <input type="hidden" name="MAX_FILE_SIZE" value="10485760 " />
-                                    {/* <ImageUploading
-                                            value={images}
-                                            onChange={(imageList) => {
-                                                setImages(imageList as never[]);
-
-                                                if (imageList.length > 0) {
-                                                    setFieldValue('profile_pic', imageList[0].file);
-                                                } else {
-                                                    setFieldValue('profile_pic', '');
-                                                }
-                                            }}
-                                            maxNumber={maxNumber}>
-
-                                            {({ imageList, onImageUpload, onImageRemoveAll, onImageUpdate, onImageRemove, isDragging, dragProps }) => (
-                                                <div className="-mt-10">
-                                                    <div className='flex gap-3 justify-center items-center'>
-                                                        <div className="flex-1 inset-0 z-5 h-10 overflow-hidden rounded border border-[#f1f2f3] bg-[#f1f2f3] px-3 py-2 text-sm leading-6 text-[#333] select-none cursor-pointer" onClick={onImageUpload}>
-                                                            Choose Pic...
-                                                        </div>
-                                                        <div className="text-[#333] text-[26px]  cursor-pointer" title="Clear Image" onClick={() => { setImages([]); setFieldValue('profile_pic', ''); }}>
-                                                            ×
-                                                        </div>
-                                                    </div>
-                                                    {imageList.map((image, index) => (
-                                                        <div key={index} className="custom-file-container__image-preview relative mt-3">
-                                                            <Image width={100} height={100} src={image.dataURL || ''} alt="user profile" className="m-auto max-w-md  rounded-full  object-cover" />
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-
-                                        </ImageUploading> */}
-                                    {/* {images.length === 0 ? <Image width={100} height={100} src="/assets/images/file-preview.svg" className="m-auto  max-w-md  rounded-full object-cover mt-3" alt="user profile" /> : ''} */}
-                                </div>
-                            )
+                                : <KycImageUpload />
                         }
                     </div>
+
                     <ul className="m-auto  flex flex-col space-y-4 font-semibold text-white-dark">
                         <li >
                             <InputBox
@@ -598,7 +570,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                             !readOnly && (
                                 <div className="mt-3 sm:col-span-2">
                                     <button type="submit" className="btn btn-primary">
-                                        Save
+                                        {isPending ? 'Saving...' : 'Save'}
                                     </button>
                                 </div>
                             )

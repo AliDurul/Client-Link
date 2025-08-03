@@ -28,6 +28,7 @@ const envSchema = z.object({
     BACKEND_URL: z.string().url(), 
     // aws
     AWS_REGION: z.string().min(1),
+    AWS_BUCKET_NAME: z.string().min(1),
     AWS_ACCESS_KEY_ID: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
 });
@@ -58,6 +59,7 @@ export const ENV = {
     frontendUrl: parsed.data.FRONTEND_URL,
     backendUrl: parsed.data.BACKEND_URL,
     awsRegion: parsed.data.AWS_REGION,
+    awsBucketName: parsed.data.AWS_BUCKET_NAME,
     awsAccessKeyId: parsed.data.AWS_ACCESS_KEY_ID,
     awsSecretAccessKey: parsed.data.AWS_SECRET_ACCESS_KEY,
 };

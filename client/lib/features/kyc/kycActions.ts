@@ -166,6 +166,8 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
     profile_pic: payload.get('profile_pic') ?? null,
   }
 
+  console.log(rowData);
+
   const result = customerSchema.safeParse(rowData);
 
 
