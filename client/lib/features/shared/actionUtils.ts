@@ -1,5 +1,4 @@
 'use server';
-import { auth } from "@/auth";
 import { cachedAuth } from "@/lib/utility/functions";
 import qs from 'query-string'
 
@@ -10,23 +9,18 @@ const BASE_URL = process.env.API_BASE_URL + '/';
 export const authConfig = async () => {
 
     const session = await cachedAuth();
-    const accessToken = session?.access;
 
-    if (!accessToken) {
+    if (!session?.access) {
         throw new Error("You are not authenticated, Please login again!");
     }
 
     return {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${session?.access}`,
         "Content-Type": "application/json",
     };
 };
 
-interface GetAllDataParams extends QueryParams {
-    url: string;
-    revalidate?: number | false;
-    tags?: string[];
-}
+interface GetAllDataParams extends QueryParams { url: string; }
 
 export const getAllData = async ({ url, searchQueries, customQuery, filterQueries, sortQueries }: GetAllDataParams) => {
 
@@ -81,7 +75,7 @@ interface QueryParams {
     customQuery?: Record<string, string | number | boolean | undefined>;
 }
 
-// Utility function to clean and build query parameters
+// Utility  clean and build query parameters
 const buildQueryParams = (params: QueryParams): Record<string, string> => {
     const queryObject: Record<string, string> = {};
 
@@ -104,7 +98,7 @@ const buildQueryParams = (params: QueryParams): Record<string, string> => {
     processEntries(params.searchQueries, 'search');
     processEntries(params.filterQueries, 'filter');
     processEntries(params.sortQueries, 'sort');
-    processEntries(params.customQuery); // No prefix for custom queries
+    processEntries(params.customQuery);
 
     return queryObject;
 };

@@ -7,7 +7,7 @@ import Tippy from '@tippyjs/react';
 import { mutate } from 'swr';
 
 import Dropdown from '../../layout/Dropdown';
-import { deleteTask, updateTask } from '@/lib/features/task/taskActions';
+import { delTask, putTaskStatus } from '@/lib/features/task/taskActions';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
 import { Task } from '@/types';
 import { formatDate } from '@/lib/utility/functions';
@@ -44,12 +44,13 @@ const TaskTable = ({ tasks }: { tasks: Task[] }) => {
         if (itemIndex !== -1) {
             let updatedItem = { ...tasks[itemIndex] };
             updatedItem.status = updatedItem.status === 'Completed' ? 'In-Progress' : 'Completed';
+
             const payload = {
                 _id: updatedItem._id,
                 status: updatedItem.status
             };
 
-            const res = await updateTask(payload);
+            const res = await putTaskStatus(payload);
 
             if (res.success) {
                 tasks[itemIndex] = updatedItem;
@@ -64,7 +65,7 @@ const TaskTable = ({ tasks }: { tasks: Task[] }) => {
     };
 
     const handleDeleteTask = async (task: Task) => {
-        const res = await deleteTask(task._id);
+        const res = await delTask(task._id);
         if (res.success) {
             coloredToast('success', res.message);
             mutate('task-counts');
@@ -104,13 +105,13 @@ const TaskTable = ({ tasks }: { tasks: Task[] }) => {
                                     <td className="w-1">
                                         <span className={`badge rounded-full capitalize hover:top-0 hover:text-white 
                                                     ${task.priority === 'Medium'
-                                                    ? 'badge-outline-success  hover:bg-green-600'
-                                                    : task.priority === 'Low'
-                                                        ? 'badge-outline-warning hover:bg-warning'
-                                                        : task.priority === 'High'
-                                                            ? 'badge-outline-danger hover:bg-danger'
-                                                            : ''
-                                                }`}>
+                                                ? 'badge-outline-success  hover:bg-green-600'
+                                                : task.priority === 'Low'
+                                                    ? 'badge-outline-warning hover:bg-warning'
+                                                    : task.priority === 'High'
+                                                        ? 'badge-outline-danger hover:bg-danger'
+                                                        : ''
+                                            }`}>
                                             {task.priority}
                                         </span>
                                     </td>

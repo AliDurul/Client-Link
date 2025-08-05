@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { taskSchema } from "@/lib/utility/zod";
 import { revalidateTag } from "next/cache";
 import { success } from "zod";
+import { authConfig } from "../shared/actionUtils";
 
 const BASE_URL = process.env.API_BASE_URL + '/';
 
@@ -22,18 +23,6 @@ interface TaskData {
   priority: string;
 }
 
-const getAuthHeaders = async () => {
-  const session = await auth();
-
-  if (!session?.access) {
-    throw new Error('Authentication required');
-  }
-
-  return {
-    Authorization: `Bearer ${session.access}`,
-    "Content-Type": "application/json",
-  };
-};
 
 const handleApiResponse = async <T>(response: Response) => {
   const data = await response.json();
@@ -45,26 +34,66 @@ const handleApiResponse = async <T>(response: Response) => {
   return data;
 };
 
+export const taskCrUpAction = async (_: unknown, payload: FormData) => {
+  const id = payload.get('id') as string;
 
-export const updateTask = async (taskData: TaskData | { status: string, _id: number }) => {
+  const rowData = {
+    title: payload.get('title') as string,
+    description: payload.get('description') as string,
+    assigned_agent: payload.get('assigned_agent') as string,
+    priority: payload.get('priority') as string
+  };
+
+  const result = taskSchema.safeParse(rowData);
+
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+    return { success: false, message: 'Fix the error in the form', inputs: rowData, errors };
+  }
+
+  const url = id ? `${BASE_URL}tasks/${id}/` : `${BASE_URL}tasks/`;
+  const method = id ? "PUT" : "POST";
+
   try {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${BASE_URL}tasks/${taskData._id}/`, {
-      method: "PUT",
+    const headers = await authConfig();
+
+    const response = await fetch(url, {
+      method,
       headers,
-      body: JSON.stringify(taskData),
+      body: JSON.stringify(result.data),
     });
 
+    await handleApiResponse(response);
+
     revalidateTag('tasks');
-    return await handleApiResponse(response);
+    return {
+      message: id ? "Task updated successfully!" : "Task created successfully!",
+      success: true
+    };
+
   } catch (error: any) {
-    return { message: error.message, success: false };
+    return {
+      message: error.message || "Something went wrong, Please try again!",
+      success: false,
+      inputs: result.data
+    };
   }
 };
 
-export const deleteTask = async (id: number) => {
+export const getTask = async (id: string) => {
   try {
-    const headers = await getAuthHeaders();
+    const headers = await authConfig();
+    const response = await fetch(`${BASE_URL}task/${id}/`, { headers });
+
+    return await handleApiResponse(response);
+  } catch (error: any) {
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
+  }
+};
+
+export const delTask = async (id: number) => {
+  try {
+    const headers = await authConfig();
     const response = await fetch(`${BASE_URL}tasks/${id}/`, {
       method: "DELETE",
       headers,
@@ -75,79 +104,15 @@ export const deleteTask = async (id: number) => {
     revalidateTag('tasks');
     return { success: true, message: "Task deleted successfully" };
   } catch (error: any) {
-    return { success: false, message: error.message };
-  }
-};
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
 
-export const readTask = async (id: string) => {
-  try {
-    const headers = await getAuthHeaders();
-    const response = await fetch(`${BASE_URL}task/${id}/`, { headers });
-
-    return await handleApiResponse(response);
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
-
-export const taskCrUpAction = async (_: unknown, payload: FormData) => {
-  try {
-    const headers = await getAuthHeaders();
-    const id = payload.get('id') as string;
-
-    const rowData = {
-      title: payload.get('title') as string,
-      description: payload.get('description') as string,
-      assigned_agent: payload.get('assigned_agent') as string,
-      priority: payload.get('priority') as string
-    };
-
-    // Validate form data
-    const result = taskSchema.safeParse(rowData);
-    if (!result.success) {
-      const errors = result.error.flatten().fieldErrors;
-      return {
-        success: false,
-        message: 'Please fix the validation errors',
-        inputs: rowData,
-        errors
-      };
-    }
-
-    // Determine API endpoint and method
-    const isUpdate = Boolean(id);
-    const url = isUpdate ? `${BASE_URL}tasks/${id}/` : `${BASE_URL}tasks/`;
-    const method = isUpdate ? "PUT" : "POST";
-
-    const response = await fetch(url, {
-      method,
-      headers,
-      body: JSON.stringify(result.data),
-    });
-
-    await handleApiResponse(response);
-
-    // Revalidate cache
-    revalidateTag('tasks');
-
-    return {
-      message: isUpdate ? "Task updated successfully!" : "Task created successfully!",
-      success: true
-    };
-
-  } catch (error: any) {
-    return {
-      message: error.message,
-      success: false,
-      inputs: Object.fromEntries(payload.entries())
-    };
   }
 };
 
 
 export const getCountDetail = async () => {
   try {
-    const headers = await getAuthHeaders();
+    const headers = await authConfig();
     const response = await fetch(`${BASE_URL}tasks/count/`, {
       headers,
       next: { tags: ['task-count'] }
@@ -160,4 +125,20 @@ export const getCountDetail = async () => {
   }
 };
 
+
+export const putTaskStatus = async (taskData: TaskData | { status: string, _id: number }) => {
+  try {
+    const headers = await authConfig();
+    const response = await fetch(`${BASE_URL}tasks/${taskData._id}/`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(taskData),
+    });
+
+    revalidateTag('tasks');
+    return await handleApiResponse(response);
+  } catch (error: any) {
+    return { message: error.message, success: false };
+  }
+};
 

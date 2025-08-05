@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react'
 import AnimateHeight from 'react-animate-height'
 import useDeleteToasts from '@/hooks/useDeleteToasts';
 import { DeleteIcon, EditIcon } from '@/icons';
-import { deleteFaq } from '@/lib/features/faq/faqActions';
+import { delFaq } from '@/lib/features/faq/faqActions';
 import FaqModal from './FaqModal';
-import { fetchAllFaqAsync, selectFaqs, setFaq, setFaqModal, updateFaqs } from '@/lib/features/faq/faqSlice';
+import { setFaq, setFaqModal, updateFaqs } from '@/lib/features/faq/faqSlice';
 import { Faq } from '@/types';
 
 
@@ -17,7 +17,7 @@ export default function FaqList({ faqs }: { faqs: Faq[] }) {
 
     const deleteRow = async (id: any = null) => {
         if (id) {
-            deleteToast(id, deleteFaq, updateFaqs);
+            deleteToast(id, delFaq, updateFaqs);
         }
     };
 

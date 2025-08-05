@@ -3,18 +3,10 @@ import { auth } from "@/auth"
 import { customerSchema } from "@/lib/utility/zod";
 import { Kyc } from "@/types";
 import { revalidateTag } from "next/cache";
+import { authConfig } from "../shared/actionUtils";
 
 const BASE_URL = process.env.API_BASE_URL + '/';
 
-const authConfig = async () => {
-  const session = await auth();
-  const accessToken = session?.access;
-
-  return {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-};
 
 const authConfigFormData = async () => {
   const session = await auth();
@@ -25,116 +17,13 @@ const authConfigFormData = async () => {
   };
 }
 
-export const getAllKycs = async (type?: string, page?: string, pageSize?: string, search?: string) => {
-  const headers = await authConfig();
-  let url = `${BASE_URL}users/`;
 
-  const params = new URLSearchParams();
-  if (type) params.append("user_type", type);
-  if (page) params.append("page", page);
-  if (pageSize) params.append("page_size", pageSize);
-  if (search) params.append("search", search)
-
-  if (params.toString()) url += `?${params.toString()}`;
-
-
-  try {
-    const response = await fetch(url, {
-      headers,
-    });
-
-    const data = await response.json();
-
-
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error(data.error || "Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
-
-export const readKyc = async (id: string | null): Promise<{ result?: Kyc, success: boolean, message?: string }> => {
-
-  await new Promise(resolve => setTimeout(resolve, 2000));
-
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}customers/${id}/`, {
-      headers,
-    });
-
-    const data = await response.json();
-    console.log('read workd');
-
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error(data.error || "Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { success: false, message: error.message || "Something went wrong, Please try again!" };
-  }
-};
-
-export const deleteKyc = async (id: any) => {
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}user/${id}/`, {
-      method: "DELETE",
-      headers,
-    });
-
-    const data = await response.json();
-
-    if (response.status === 200) {
-      return { message: data.message, remainingData: data.data };
-    } else {
-      throw new Error(data.error ?? "Something went wrong, Please try again!");
-    }
-
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
-
-export const deleteMultiKyc = async (ids: any) => {
-  const headers = await authConfig();
-
-  try {
-    const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ ids }),
-    });
-
-    const data = await response.json();
-
-    if (!data.error && response.status === 202) {
-      return { message: data.message, remainingData: data.data };
-    } else {
-      throw new Error(data.error ?? "Something went wrong, Please try again!");
-    }
-
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
-
-export const updateKyc = async (_: unknown, payload: FormData) => {
+export const kycCrUpAction = async (_: unknown, payload: FormData) => {
 
   const id = payload.get('_id') as string;
   payload.delete('_id');
 
-  const address = {
-    street: payload.get('street') as string | null,
-    city: payload.get('city') as string | null,
-    state: payload.get('state') as string | null,
-    country: payload.get('country') as string | null,
-    zip_code: payload.get('zip_code') as string | null,
-  };
+  console.log('id:', !!id);
 
   const rowData = {
     first_name: payload.get('first_name') as string,
@@ -166,8 +55,6 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
     profile_pic: payload.get('profile_pic') ?? null,
   }
 
-  console.log(rowData);
-
   const result = customerSchema.safeParse(rowData);
 
 
@@ -176,9 +63,9 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
     return { success: false, message: 'Fix the error in the form', inputs: rowData, errors };
   }
 
-  const url = id ? `${BASE_URL}customers/${id}/` : `${BASE_URL}customers/`;
-  const method = id ? "PUT" : "POST";
-  
+  const url = !!id ? `${BASE_URL}customers/${id}/` : `${BASE_URL}customers/`;
+  const method = !!id ? "PUT" : "POST";
+
   try {
     const headers = await authConfigFormData();
 
@@ -194,35 +81,90 @@ export const updateKyc = async (_: unknown, payload: FormData) => {
       throw new Error(data.message || "Something went wrong, Please try again!");
     }
 
+
     revalidateTag('customers');
-    return { message: "Successfully Updated!", success: true };
+    return {
+      message: !!id ? "Task updated successfully!" : "Task created successfully!",
+      success: true
+    };
 
   } catch (error: any) {
-    return { message: error.message, success: false, inputs: result.data };
+    return {
+      message: error.message || "Something went wrong, Please try again!",
+      success: false,
+      inputs: result.data
+    };
   }
 };
 
-export const createKyc = async (kycData: any) => {
-  const headers = await authConfigFormData();
+
+export const getKyc = async (id: string | null): Promise<{ result?: Kyc, success: boolean, message?: string }> => {
+
+  // await new Promise(resolve => setTimeout(resolve, 2000));
 
   try {
+    const headers = await authConfig();
+    const response = await fetch(`${BASE_URL}customers/${id}/`, { headers });
 
-    const response = await fetch(`${BASE_URL}users/`, {
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong, Please try again!");
+    }
+
+    return data;
+  } catch (error: any) {
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
+  }
+};
+
+
+export const delKyc = async (id: number) => {
+  try {
+    const headers = await authConfig();
+    const response = await fetch(`${BASE_URL}customers/${id}/`, {
+      method: "DELETE",
+      headers,
+    });
+
+    const res = await response.json();
+    console.log('delete response:', res);
+
+    if (!res.success && response.status !== 204) {
+      throw new Error(res.message || "Something went wrong, Please try again!");
+    }
+
+    revalidateTag('customers');
+    return { success: true, message: "Customer deleted successfully" };
+
+  } catch (error: any) {
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
+  }
+};
+
+
+export const delMultiKyc = async (ids: any) => {
+
+  try {
+    const headers = await authConfig();
+    const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
       method: "POST",
       headers,
-      body: kycData,
+      body: JSON.stringify({ ids }),
     });
 
     const data = await response.json();
 
-    if (response.ok) {
-      return data
-    } else {
+    if (!data.success && response.status !== 202) {
       throw new Error(data.error || "Something went wrong, Please try again!");
     }
 
-  } catch (error: any) {
-    return { error: error.message };
-  }
+    revalidateTag('customers');
+    return { success: true, message: "Customers deleted successfully" };
 
+  } catch (error: any) {
+    return { success: false, message: error.message || "Something went wrong, Please try again!" };
+
+  }
 };
+

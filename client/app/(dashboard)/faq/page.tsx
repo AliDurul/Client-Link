@@ -3,7 +3,6 @@ import FaqList from '@/components/dashboard/faq/FaqList'
 import FaqModal from '@/components/dashboard/faq/FaqModal'
 import NoDataFound from '@/components/shared/NoDataFound'
 import TopPageNavigation from '@/components/shared/TopPageNavigation'
-import { getAllFaqs } from '@/lib/features/faq/faqActions'
 import { getAllData } from '@/lib/features/shared/actionUtils'
 import React from 'react'
 

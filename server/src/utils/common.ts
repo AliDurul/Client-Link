@@ -71,7 +71,7 @@ export const getImageUrl = async (key: string): Promise<string> => {
     const command = new GetObjectCommand(getObjectParams);
     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
     return url;
-}
+};
 
 // ===============================
 // 5. SET TOKEN

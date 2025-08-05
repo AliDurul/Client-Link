@@ -1,5 +1,4 @@
 import { createAppSlice } from "@/lib/createAppSlice";
-import { getAllKycs } from "./kycActions";
 import { ApiResponse, Kyc, Pagination } from "@/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createApiThunk, createAsyncThunkConfig, sharedInitialState } from "../shared/sliceUtils";
@@ -51,17 +50,17 @@ export const kycSlice = createAppSlice({
             state.activeUsers = action.payload;
         }),
 
-        // Async actions
-        fetchAllKycAsync: asyncThunk(
-            async (params: { type?: string, page?: string, pageSize?: string, search?: string }) => {
-                return createApiThunk(
-                    () => getAllKycs(params.type, params.page, params.pageSize, params.search),
-                    "Failed to fetch KYC data"
-                );
-            },
-            createAsyncThunkConfig('kycs')
+        // // Async actions
+        // fetchAllKycAsync: asyncThunk(
+        //     async (params: { type?: string, page?: string, pageSize?: string, search?: string }) => {
+        //         return createApiThunk(
+        //             () => getAllKycs(params.type, params.page, params.pageSize, params.search),
+        //             "Failed to fetch KYC data"
+        //         );
+        //     },
+        //     createAsyncThunkConfig('kycs')
 
-        ),
+        // ),
     }),
     selectors: {
         selectKycs: (kyc) => kyc.kycs,
@@ -75,7 +74,7 @@ export const kycSlice = createAppSlice({
 });
 
 export const {
-    fetchAllKycAsync,
+    // fetchAllKycAsync,
     updateKycs,
     setKyc,
     clearKyc,

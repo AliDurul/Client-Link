@@ -14,6 +14,7 @@ import { DataTable } from 'mantine-datatable';
 import SearchInput from '@/components/shared/SearchInput';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { setKyc } from '@/lib/features/kyc/kycSlice';
+import { delKyc } from '@/lib/features/kyc/kycActions';
 
 const PAGE_SIZES = [10, 20, 30, 50, 100]
 
@@ -27,7 +28,7 @@ interface KycMainProps {
 }
 
 export default function KycMain({ customerPromise, }: KycMainProps) {
-  const currentUser = useCurrentUser();
+  const { userInfo } = useCurrentUser();
   const { updateUrlParams, getParam } = useUrlParams();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -68,40 +69,32 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
   // Action handlers
   const handlePreview = (record: Kyc) => {
     router.push(`/kyc/action?s=r&id=${record._id}`);
-    dispatch(setKyc(record));
   }
 
-  const handleEdit = (recordId: string, record: Kyc) => {
-    if (currentUser?.userInfo?.role !== 'admin') return;
-    router.push(`/kyc/action?s=e&userId=${recordId}`);
+  const handleEdit = (recordId: number) => {
+    // if (userInfo?.role !== 'admin') return;
+    router.push(`/kyc/action?s=e&id=${recordId}`);
   }
 
-  const handleDelete = (recordId: string) => {
-    if (currentUser?.userInfo?.role !== 'admin') return;
-    console.log('Delete record:', recordId);
+  const handleDelete = async (recordId: number) => {
+    // if (userInfo?.role !== 'admin') return;
+    const res = await delKyc(recordId)
+    console.log('delete response:', res);
   };
 
 
   const renderActions: DataTableColumn<Kyc>['render'] = (record) => (
     <div className="mx-auto flex w-max items-center gap-4">
-      <button
-        className="flex hover:text-primary"
-        onClick={(e) => { e.stopPropagation(); handlePreview(record); }}
-      >
+      <button className="flex hover:text-primary" onClick={(e) => { e.stopPropagation(); handlePreview(record); }}>
         <PreviewIcon />
       </button>
       {
-        currentUser?.userInfo?.role !== 'admin' && (
+        userInfo?.role !== 'admin' && (
           <>
-            <button
-              // onClick={() => { router.push(`/kyc/action?s=e&userId=${kyc.id}`), dispatch(updateKycState(kyc)) }}
-              className="flex hover:text-info"
-            >
+            <button className="flex hover:text-info" onClick={(e) => { e.stopPropagation(); handleEdit(record._id); }}>
               <EditIcon />
             </button>
-            <button type="button" className="flex hover:text-danger"
-            // onClick={(e) => deleteRow(kyc.id)}
-            >
+            <button type="button" className="flex hover:text-danger" onClick={(e) => { e.stopPropagation(); handleDelete(record._id); }}>
               <DeleteIcon />
             </button>
           </>

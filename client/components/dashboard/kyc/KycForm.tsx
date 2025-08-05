@@ -8,7 +8,7 @@ import MaskedInput from 'react-text-mask';
 import Select from 'react-select';
 import { use, useActionState, useEffect, useRef, useState } from 'react';
 import { Kyc } from '@/types';
-import { updateKyc } from '@/lib/features/kyc/kycActions';
+import { kycCrUpAction } from '@/lib/features/kyc/kycActions';
 import KycImageUpload from './KycImageUpload';
 import { useRouter } from 'next/navigation';
 import { coloredToast } from '@/lib/utility/sweetAlerts';
@@ -31,9 +31,10 @@ const initialState: IinitialValues = {
 interface KycFormProps {
     kycPromise: Promise<{ result?: Kyc; success: boolean; message?: string }>;
     readOnly: boolean;
+    isEdit: boolean;
 }
 
-export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
+export default function KycForm({ kycPromise, isEdit, readOnly }: KycFormProps) {
 
     const router = useRouter();
 
@@ -41,7 +42,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
     let success = true;
     let message = '';
 
-    if (readOnly && kycPromise) {
+    if ((readOnly || isEdit) && kycPromise) {
         const kycResult = use(kycPromise);
         kyc = kycResult.result;
         success = kycResult.success;
@@ -61,20 +62,21 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
 
 
     // form action
-    const [state, action, isPending] = useActionState(updateKyc, initialState);
+    const [state, action, isPending] = useActionState(kycCrUpAction, initialState);
 
 
     // states
     const customStyles: CustomStyles = { control: (provided) => ({ ...provided, backgroundColor: readOnly ? 'white' : provided.backgroundColor, }) };
+
     const initialValues = kyc ? {
-        _id: kyc._id || 0,
+        _id: kyc._id || '',
         customer_id: kyc.customer_id || '',
         first_name: kyc.first_name || '',
         last_name: kyc.last_name || '',
         full_name: kyc.full_name || '',
         email: kyc.email || '',
         phone_number: kyc.phone_number || '',
-        dob: kyc.dob ? new Date(kyc.dob) : undefined,
+        dob: kyc.dob ? kyc.dob : undefined,
         nationality: kyc.nationality || '',
         gender: kyc.gender || '',
         address: {
@@ -118,7 +120,11 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
             zip_code: state?.inputs?.zip_code || '',
         },
     };
+
     const [idType, setIdType] = useState(initialValues.id_type || '');
+
+
+    // console.log('kyc data', !!initialValues._id);
 
     // functins
     useEffect(() => {
@@ -135,7 +141,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
 
     return (
         <form action={action} className="my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
-            <input type="text" hidden name='_id' />
+            <input type="text" hidden name='_id' value={initialValues._id} readOnly />
             <div className="panel">
                 <div className="flex items-center justify-between">
                     <h5 className="text-lg font-semibold dark:text-white-light">Profile</h5>
@@ -143,7 +149,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                 <div className="mb-5">
                     <div className="flex flex-col items-center justify-center">
                         {
-                            readOnly
+                            (readOnly || isEdit) && kyc?.profile_pic
                                 ? <Image
                                     src={kyc?.profile_pic ? kyc.profile_pic : '/assets/images/profile-pic.png'}
                                     alt="profile"
@@ -235,7 +241,7 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                             <InputBox
                                 name='dob'
                                 id="dob"
-                                type="date"
+                                type={readOnly ? 'text' : 'date'}
                                 placeholder="Enter DOB / yyyy-mm-dd"
                                 disabled={readOnly}
                                 value={initialValues.dob ? initialValues.dob.toString().split('T')[0] : ''}
@@ -310,8 +316,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 id='Gender'
                                 name='gender'
                                 value={genderOp.find(option => option.value === initialValues.gender)}
-                                // onChange={option => setFieldValue('gender', option ? option.value : '')}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -328,7 +332,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 id='id_type'
                                 name='id_type'
                                 value={idTypeOp.find(option => option.value === idType)}
-                                // onChange={option => setFieldValue('id_type', option ? option.value : '')}
                                 onChange={option => setIdType(option ? option.value : '')}
                                 isDisabled={readOnly}
                                 styles={customStyles}
@@ -359,8 +362,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 id='Religion'
                                 name='religion'
                                 value={religionOp.find(option => option.value === initialValues.religion)}
-                                // onChange={option => setFieldValue('religion', option ? option.value : '')}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -375,8 +376,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 id='marital_status'
                                 name='marital_status'
                                 value={maritalOp.find(option => option.value === initialValues.marital_status)}
-                                // onChange={option => setFieldValue('marital_status', option ? option.value : '')}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -451,7 +450,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 value={countryOp.find(option => option.value === initialValues.address?.country)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
-                                onChange={option => console.log(option)}
                                 menuIsOpen={readOnly ? false : undefined}
                                 required
                             />
@@ -513,8 +511,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 options={relationOp} id='witness_relation'
                                 name='witness_relation'
                                 value={relationOp.find(option => option.value === initialValues.witness_relation)}
-                                // onChange={option => setFieldValue('witness_relation', option ? option.value : '')}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -527,7 +523,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 options={nationalityOp} id='nationality'
                                 name='nationality'
                                 value={nationalityOp.find(option => option.value === initialValues.nationality)}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -542,8 +537,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 options={bankOp} id='banks'
                                 name='finincial_institution'
                                 value={bankOp.find(option => option.value === initialValues.finincial_institution)}
-                                // onChange={option => setFieldValue('finincial_institution', option ? option.value : '')}
-                                onChange={option => console.log(option)}
                                 isDisabled={readOnly}
                                 styles={customStyles}
                                 menuIsOpen={readOnly ? false : undefined}
@@ -562,7 +555,6 @@ export default function KycForm({ kycPromise, readOnly }: KycFormProps) {
                                 value={initialValues.medication_type}
                                 errors={state?.errors?.medication_type}
                             />
-
                         </div>
 
 

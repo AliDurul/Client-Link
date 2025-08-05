@@ -3,41 +3,12 @@ import { auth } from "@/auth"
 import { faqSchema } from "@/lib/utility/zod";
 import { revalidateTag } from 'next/cache'
 import { Faq } from "@/types";
+import { authConfig } from "../shared/actionUtils";
 
 const BASE_URL = process.env.API_BASE_URL + '/'
 
-const authConfig = async () => {
-  const session = await auth();
-  const accessToken = session?.access;
 
-  return {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-};
-
-export const getAllFaqs = async () => {
-  const headers = await authConfig();
-
-  try {
-    const response = await fetch(`${BASE_URL}faqs/`, {
-      headers,
-      next: { tags: ['faqs'] }
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      return data
-    } else {
-      throw new Error(data.message || "Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { error: error.message };
-  }
-};
-
-export const deleteFaq = async (id: any) => {
+export const delFaq = async (id: any) => {
   const headers = await authConfig();
   try {
     const response = await fetch(`${BASE_URL}faqs/${id}/`, {
@@ -96,31 +67,6 @@ export const faqCrUpAction = async (_: unknown, payload: FormData) => {
 
   } catch (error: any) {
     return { message: error.message, success: false, inputs: result.data };
-  }
-};
-
-export const createFaq = async (FaqData: Faq) => {
-  const headers = await authConfig();
-  try {
-    const response = await fetch(`${BASE_URL}faqs/`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(FaqData),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Revalidate cache after successful creation
-      revalidateTag('faqs');
-      return { message: "Successfully Created!" };
-    } else {
-      throw new Error(
-        data.message || "Something went wrong, Please try again!"
-      );
-    }
-  } catch (error: any) {
-    return { error: error.message };
   }
 };
 

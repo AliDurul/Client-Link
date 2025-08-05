@@ -1,7 +1,6 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import { Faq } from "@/types";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getAllFaqs } from "./faqActions";
 import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
 
 interface DefaultFaqParams {
@@ -61,16 +60,16 @@ export const faqSlice = createAppSlice({
             state.faqModal = !state.faqModal;
         }),
 
-        // Async actions
-        fetchAllFaqAsync: create.asyncThunk(
-            async () => {
-                return createApiThunk(
-                    () => getAllFaqs(),
-                    "Failed to fetch FAQs"
-                );
-            },
-            createAsyncThunkConfig('faqs')
-        ),
+        // // Async actions
+        // fetchAllFaqAsync: create.asyncThunk(
+        //     async () => {
+        //         return createApiThunk(
+        //             () => getAllFaqs(),
+        //             "Failed to fetch FAQs"
+        //         );
+        //     },
+        //     createAsyncThunkConfig('faqs')
+        // ),
     }),
     selectors: {
         selectFaqs: (faq) => faq.faqs,
@@ -83,7 +82,7 @@ export const faqSlice = createAppSlice({
 });
 
 export const { 
-    fetchAllFaqAsync, 
+    // fetchAllFaqAsync, 
     updateFaqs, 
     setFaq, 
     clearFaq,

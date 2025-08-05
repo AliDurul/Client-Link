@@ -1,9 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
-import Customer, { ICustomer } from "../models/customer.model";
+import { Request, Response} from 'express';
+import Customer from "../models/customer.model";
 import { CustomError, getImageUrl, s3 } from "../utils/common";
 import type { File as MulterFile } from 'multer';
-import { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from '../configs/env';
 import crypto from 'crypto';
 import sharp from 'sharp';
@@ -70,7 +69,6 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
     // Attach file if present
     if (req.file) {
-        console.log('File received:', req.file);
 
         const randomSuffix = crypto.randomBytes(8).toString('hex');
         const fileName = `profile_pics/${randomSuffix}_${req.file.originalname}`;
@@ -102,7 +100,6 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
 export const getCustomerById = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
-    console.log('get customer by id:', id);
 
     const result = await Customer.findById(id);
 
@@ -111,6 +108,7 @@ export const getCustomerById = async (req: Request, res: Response): Promise<void
     }
 
     if (!result) throw new CustomError("Customer not found", 404);
+
 
     res.status(200).send({
         success: true,
@@ -121,16 +119,13 @@ export const getCustomerById = async (req: Request, res: Response): Promise<void
 export const updateCustomer = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
-    // Remove sensitive fields that shouldn't be updated via this endpoint
-    const { password, verificationToken, resetPassToken, ...updateData } = req.body;
-
     const result = await Customer.findByIdAndUpdate(
         id,
-        { $set: updateData }, // Use $set to ensure new fields are added
+        { $set: req.body },
         {
             new: true,
-            runValidators: true, // Run schema validations
-            strict: false // Allow new fields to be added
+            runValidators: true, 
+            strict: false 
         }
     );
 
