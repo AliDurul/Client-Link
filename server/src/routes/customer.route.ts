@@ -1,12 +1,14 @@
 import { Router } from "express";
-import { createCustomer, deleteCustomer, getCustomerById, getCustomers, updateCustomer } from "../controllers/customer.controller";
+import { createCustomer, deleteCustomer, getCustomerById, getCustomers, multiDeleteCustomers, updateCustomer } from "../controllers/customer.controller";
 import { upload } from "../utils/common";
 
 const router = Router();
 
 router.route("/")
     .get(getCustomers)
-    .post(upload.single("profile_pic"), createCustomer);
+    .post(upload.single("profile_pic"), createCustomer)
+    .delete(multiDeleteCustomers);
+
 router.route('/:id')
     .get(getCustomerById)
     .put(upload.single("profile_pic"), updateCustomer)

@@ -6,15 +6,14 @@ import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
 import { use, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/lib/hooks';
 import { selectIsDarkMode } from '@/lib/features/theme/themeSlice';
 import { useRouter } from 'next/navigation';
 import type { DataTableColumn, DataTableProps, DataTableSortStatus } from 'mantine-datatable';
 import { DataTable } from 'mantine-datatable';
 import SearchInput from '@/components/shared/SearchInput';
 import { useUrlParams } from '@/hooks/useUrlParams';
-import { setKyc } from '@/lib/features/kyc/kycSlice';
-import { delKyc } from '@/lib/features/kyc/kycActions';
+import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions';
 
 const PAGE_SIZES = [10, 20, 30, 50, 100]
 
@@ -30,11 +29,8 @@ interface KycMainProps {
 export default function KycMain({ customerPromise, }: KycMainProps) {
   const { userInfo } = useCurrentUser();
   const { updateUrlParams, getParam } = useUrlParams();
-  const dispatch = useAppDispatch();
   const router = useRouter();
   const isDark = useAppSelector(selectIsDarkMode);
-
-
 
   const [sortStatus, setSortStatus] = useState<DataTableSortStatus>(DEFAULT_SORT_STATUS);
   const [selectedRecords, setSelectedRecords] = useState<Kyc[]>([]);
@@ -82,6 +78,17 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
     console.log('delete response:', res);
   };
 
+  const handleMultiDelete = async () => {
+    if (selectedRecords.length === 0) return;
+    const ids = selectedRecords.map(record => record._id);
+    console.log(ids);
+    const res = await delMultiKyc(ids);
+    console.log('multi delete response:', res);
+    setSelectedRecords([]);
+  }
+
+
+  // Data table 
 
   const renderActions: DataTableColumn<Kyc>['render'] = (record) => (
     <div className="mx-auto flex w-max items-center gap-4">
@@ -165,7 +172,7 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
         <div className="flex flex-wrap items-center justify-around gap-2 pl-3">
           {
             selectedRecords.length >= 1 &&
-            <button type="button" className="btn btn-danger gap-2" >
+            <button type="button" className="btn btn-danger gap-2" onClick={handleMultiDelete}>
               <DeleteIcon />
               Delete
             </button>

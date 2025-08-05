@@ -143,20 +143,22 @@ export const delKyc = async (id: number) => {
 };
 
 
-export const delMultiKyc = async (ids: any) => {
+export const delMultiKyc = async (ids: number[]) => {
+
+  if (ids.length === 0) return { success: false, message: "No customers selected for deletion" };
 
   try {
     const headers = await authConfig();
-    const response = await fetch(`${BASE_URL}/sales/multiple-delete`, {
-      method: "POST",
+    const response = await fetch(`${BASE_URL}customers`, {
+      method: "DELETE",
       headers,
       body: JSON.stringify({ ids }),
     });
 
-    const data = await response.json();
+    const res = await response.json();
 
-    if (!data.success && response.status !== 202) {
-      throw new Error(data.error || "Something went wrong, Please try again!");
+    if (!res.success && response.status !== 204) {
+      throw new Error(res.message || "Something went wrong, Please try again!");
     }
 
     revalidateTag('customers');

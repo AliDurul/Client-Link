@@ -1,4 +1,4 @@
-import { Request, Response} from 'express';
+import { Request, Response } from 'express';
 import Customer from "../models/customer.model";
 import { CustomError, getImageUrl, s3 } from "../utils/common";
 import type { File as MulterFile } from 'multer';
@@ -6,6 +6,7 @@ import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from '../configs/env';
 import crypto from 'crypto';
 import sharp from 'sharp';
+import { send } from 'process';
 
 
 
@@ -124,8 +125,8 @@ export const updateCustomer = async (req: Request, res: Response): Promise<void>
         { $set: req.body },
         {
             new: true,
-            runValidators: true, 
-            strict: false 
+            runValidators: true,
+            strict: false
         }
     );
 
@@ -143,9 +144,9 @@ export const deleteCustomer = async (req: Request, res: Response): Promise<void>
     const customer = await Customer.findById(id);
     if (!customer) throw new CustomError("Customer not found", 404);
 
-    const data = await Customer.deleteOne({ _id: id });
+    const result = await Customer.deleteOne({ _id: id });
 
-    if (!data.deletedCount) throw new CustomError("Customer not found or already deleted.", 404, true);
+    if (!result.deletedCount) throw new CustomError("Customer not found or already deleted.", 404, true);
 
     const params = {
         Bucket: ENV.awsBucketName,
@@ -155,8 +156,45 @@ export const deleteCustomer = async (req: Request, res: Response): Promise<void>
     const command = new DeleteObjectCommand(params);
     await s3.send(command);
 
-    res.status(data.deletedCount ? 204 : 404).send({
-        success: !!data.deletedCount,
-        data
+    res.status(result.deletedCount ? 204 : 404).send({
+        success: !!result.deletedCount,
+        result
+    });
+};
+
+export const multiDeleteCustomers = async (req: Request, res: Response): Promise<void> => {
+    const { ids } = req.body;
+    console.log(ids);
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+        throw new CustomError("Invalid or empty 'ids' array", 400);
+    }
+
+    const customers = await Customer.find({ _id: { $in: ids } });
+
+    if (customers.length === 0) {
+        throw new CustomError("No customers found for the provided IDs", 404);
+    }
+
+    const deletePromises = customers.map(customer => {
+        const params = {
+            Bucket: ENV.awsBucketName,
+            Key: customer.profile_pic,
+        };
+        const command = new DeleteObjectCommand(params);
+        return s3.send(command);
+    });
+
+    await Promise.all(deletePromises);
+
+    const result = await Customer.deleteMany({ _id: { $in: ids } });
+
+    if (!result) throw new CustomError("Failed to delete customers", 500);
+
+    console.log(result);
+
+    res.status(result.deletedCount ? 204 : 404).send({
+        success: true,
+        result,
     });
 };
