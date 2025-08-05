@@ -47,10 +47,6 @@ export interface Register {
 }
 
 
-
-
-
-
 /* TIKCET */
 export interface Ticket {
   ticket_id: string;
@@ -115,52 +111,85 @@ export interface StatusCounts {
 }
 
 /* INVOICE */
+
 export interface Invoice {
   _id: number;
-  staff: InvoiceCustomer;
-  customer: InvoiceCustomer;
+  creator: InvoicePerson;
+  customer: InvoicePerson;
   invoice_items: InvoiceItem[];
-  invoice_number: string;
-  status: string;
-  total_price: string;
-  discounts: string;
-  shipping_costs: string;
-  taxes: string;
-  amount_due: string;
-  payment_terms: string;
-  additional_notes: string;
-  timestamp: Date;
-  updated: Date;
+  status: 'draft' | 'sent' | 'paid' | 'overdue' | 'closed' | 'refunded';
+  shipping_cost: number;
+  discount: number;
+  tax: number;
+  due_date: Date;
+  payment_type: 'cash' | 'credit card' | 'bank transfer' | 'paypal' | 'stripe' | 'mobile' | 'debit card' | 'cheque';
+  additional_note?: string;
+  subtotal: number;
+  total_amount: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-export interface InvoiceCustomer {
+
+export interface InvoiceItem {
+  product: {
+    _id: number;
+    name: string;
+  };
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+}
+
+export interface InvoicePerson {
   _id: number;
   first_name: string;
   last_name: string;
+  full_name: string;
   email: string;
   phone_number: string | null;
   profile_pic: string | null;
 }
 
-export interface InvoiceItem {
-  _id: number;
-  product: InvoiceItemProduct;
-  quantity: number;
-  discounts: number;
-}
 
-export interface InvoiceItemProduct {
-  _id: number;
-  name: string;
-  price: number;
-}
+// export interface Invoice {
+//   _id: number;
+//   staff: InvoiceCustomer;
+//   customer: InvoiceCustomer;
+//   invoice_items: InvoiceItem[];
+//   invoice_number: string;
+//   status: string;
+//   total_price: string;
+//   discounts: string;
+//   shipping_costs: string;
+//   taxes: string;
+//   amount_due: string;
+//   payment_terms: string;
+//   additional_notes: string;
+//   timestamp: Date;
+//   updated: Date;
+// }
 
 
-export interface Category {
-  _id?: number,
-  title: string,
-  description: string,
-}
+// export interface InvoiceItem {
+//   _id: number;
+//   product: InvoiceItemProduct;
+//   quantity: number;
+//   discounts: number;
+// }
+
+// export interface InvoiceItemProduct {
+//   _id: number;
+//   name: string;
+//   price: number;
+// }
+
+
+// export interface Category {
+//   _id?: number,
+//   title: string,
+//   description: string,
+// }
 
 
 /* KYC */

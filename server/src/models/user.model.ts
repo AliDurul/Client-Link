@@ -99,16 +99,20 @@ const userSchema: Schema<IUser> = new Schema({
     type: String,
     trim: true,
   }],
+  full_name: {
+    type: String,
+    default: function () {
+      return `${this.first_name} ${this.last_name}`.trim();
+    },
+    transform: function () {
+      return `${this.first_name} ${this.last_name}`.trim();
+    },
+  },
 }, {
   collection: 'users',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
 });
 
-userSchema.virtual('full_name').get(function () {
-  return `${this.first_name} ${this.last_name}`.trim();
-});
 
 const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 export default User;

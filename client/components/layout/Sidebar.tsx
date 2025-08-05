@@ -162,7 +162,7 @@ const Sidebar = () => {
                                     </li>
 
                                     <li className="nav-item">
-                                        <Link href="/invoice" className="group">
+                                        <Link href="/invoices" className="group">
                                             <div className="flex items-center">
                                                 <InvoiceIcon />
                                                 <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light">Invoices</span>
@@ -205,7 +205,7 @@ const Sidebar = () => {
                                     </li>
 
                                     <li className="nav-item">
-                                        <Link href="/ticket" className="group">
+                                        <Link href="/tickets" className="group">
                                             <div className="flex items-center">
                                                 <TicketIcon />
                                                 <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light">Tickets</span>
@@ -240,7 +240,7 @@ const Sidebar = () => {
                                     </li>
 
                                     <li className="nav-item">
-                                        <Link href="/product" className="group">
+                                        <Link href="/products" className="group">
                                             <div className="flex items-center">
                                                 <ProductIcon />
                                                 <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light">Products</span>
@@ -281,7 +281,7 @@ const Sidebar = () => {
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link href="/faq" className="group">
+                                <Link href="/faqs" className="group">
                                     <div className="flex items-center">
                                         <FaqIcon />
                                         <span className="text-black ltr:pl-3 rtl:pr-3 dark:text-white dark:group-hover:text-primary-light">FAQ</span>

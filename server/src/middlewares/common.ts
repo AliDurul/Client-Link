@@ -121,7 +121,7 @@ export function logger(): RequestHandler {
 declare global {
     namespace Express {
         interface Request {
-            user?: string | jwt.JwtPayload; 
+            user?: string | jwt.JwtPayload;
         }
     }
 }
@@ -156,7 +156,7 @@ declare global {
             getModelList: <T extends Document>(
                 Model: Model<T>,
                 customFilter?: Record<string, any>,
-                populate?: string | [{ path: string; select?: string | string[] }] | null
+                populate?: string | Array<{ path: string; select?: string | string[] }> | null
             ) => Promise<T[]>;
             getModelListDetails: <T extends Document>(
                 Model: Model<T>,
@@ -259,7 +259,7 @@ export const queryHandler: RequestHandler = (req, res, next) => {
             // sort,
             // skip,
             limit,
-            page: page + 1, 
+            page: page + 1,
             totalRecords: count,
             pages: count <= limit
                 ? false

@@ -4,6 +4,8 @@ import authRoutes from "./auth.route";
 import faqRoutes from "./faq.route";
 import taskRoutes from "./task.route";
 import customerRoutes from "./customer.route";
+import invoiceRoutes from "./invoice.route";
+import productRoutes from "./product.route";
 
 const router = Router();
 
@@ -22,5 +24,10 @@ router.use("/faqs", faqRoutes);
 // taskRoutes
 router.use("/tasks", taskRoutes);
 
+// invoiceRoutes
+router.use("/invoices", invoiceRoutes);
+
+// productRoutes
+router.use("/products", productRoutes);
 
 export default router;

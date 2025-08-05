@@ -472,7 +472,7 @@ const seedCustomers = async () => {
 export async function initializeData() {
     try {
         // await seedUsers();
-        await seedCustomers();  
+        // await seedCustomers();
         console.log('Database seeding completed');
     } catch (error) {
         console.error('Database seeding failed:', error);

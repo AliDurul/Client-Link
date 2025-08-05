@@ -20,6 +20,26 @@ export const authConfig = async () => {
     };
 };
 
+export const getData = async ({ url, id }: { url: string, id: string | null }) => {
+
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+
+    try {
+        const headers = await authConfig();
+        const response = await fetch(`${BASE_URL}${url}/${id}/`, { headers });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Something went wrong, Please try again!");
+        }
+
+        return data;
+    } catch (error: any) {
+        return { success: false, message: error.message || "Something went wrong, Please try again!" };
+    }
+};
+
 interface GetAllDataParams extends QueryParams { url: string; }
 
 export const getAllData = async ({ url, searchQueries, customQuery, filterQueries, sortQueries }: GetAllDataParams) => {
@@ -35,7 +55,7 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
 
     const finalUrl = qs.stringifyUrl(
         {
-            url: `${BASE_URL}${url}`,
+            url: BASE_URL + url,
             query: queryObject
         },
         {
@@ -46,7 +66,7 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
         }
     );
 
-    // console.log('Final URL:', finalUrl);
+    console.log('Final URL:', finalUrl);
 
     try {
         const headers = await authConfig();

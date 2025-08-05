@@ -145,16 +145,20 @@ const customerSchema: Schema<ICustomer> = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    full_name: {
+        type: String,
+        default: function () {
+            return `${this.first_name} ${this.last_name}`.trim();
+        },
+        transform: function () {
+            return `${this.first_name} ${this.last_name}`.trim();
+        },
+    },
 }, {
     collection: 'customers',
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
 });
 
-customerSchema.virtual('full_name').get(function () {
-    return `${this.first_name} ${this.last_name}`.trim();
-});
 
 customerSchema.pre('save', function (next) {
     if (this.boys + this.girls !== this.number_of_children && this.number_of_children > 0) {
@@ -164,7 +168,7 @@ customerSchema.pre('save', function (next) {
 });
 
 
-const Customer: Model<ICustomer> = mongoose.model<ICustomer>('Customer', customerSchema);
+const Customer = mongoose.model<ICustomer>('Customer', customerSchema);
 export default Customer;
 
 

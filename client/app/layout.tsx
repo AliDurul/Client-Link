@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
+import { Toaster } from 'react-hot-toast';
 import { Nunito } from "next/font/google";
 import { StoreProvider } from "./StoreProvider";
 import { SessionToast } from "@/components/auth/SessionToast";
 import { Suspense } from "react";
-import { Toaster } from 'react-hot-toast';
 // import 'react-perfect-scrollbar/dist/css/styles.css';
 import "./globals.css";
 

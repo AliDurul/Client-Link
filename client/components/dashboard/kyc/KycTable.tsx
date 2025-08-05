@@ -27,7 +27,7 @@ interface KycMainProps {
   customerPromise: Promise<Pagination<Kyc>>;
 }
 
-export default function KycMain({ customerPromise, }: KycMainProps) {
+export default function KycTable({ customerPromise, }: KycMainProps) {
   const { userInfo } = useCurrentUser();
   const { updateUrlParams, getParam } = useUrlParams();
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
   const customers = use(customerPromise);
 
 
-  // Event handlers
+  // Paginatin and sorting
   const handleSortStatusChange = (status: DataTableSortStatus) => {
     setSortStatus(status);
     updateUrlParams({

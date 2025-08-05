@@ -7,13 +7,6 @@ import { authConfig } from "../shared/actionUtils";
 
 const BASE_URL = process.env.API_BASE_URL + '/';
 
-interface ApiResponse<T = any> {
-  success?: boolean;
-  message?: string;
-  data?: T;
-  error?: string;
-  detail?: string;
-}
 
 interface TaskData {
   _id?: string;
