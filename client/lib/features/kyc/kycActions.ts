@@ -119,7 +119,7 @@ export const getKyc = async (id: string | null): Promise<{ result?: Kyc, success
 };
 
 
-export const delKyc = async (id: number) => {
+export const delKyc = async (_: unknown, id: number) => {
   try {
     const headers = await authConfig();
     const response = await fetch(`${BASE_URL}customers/${id}/`, {
@@ -127,10 +127,9 @@ export const delKyc = async (id: number) => {
       headers,
     });
 
-    const res = await response.json();
-    console.log('delete response:', res);
 
-    if (!res.success && response.status !== 204) {
+    if (response.status !== 204) {
+      const res = await response.json();
       throw new Error(res.message || "Something went wrong, Please try again!");
     }
 
@@ -143,7 +142,7 @@ export const delKyc = async (id: number) => {
 };
 
 
-export const delMultiKyc = async (ids: number[]) => {
+export const delMultiKyc = async (_: unknown, ids: number[]) => {
 
   if (ids.length === 0) return { success: false, message: "No customers selected for deletion" };
 
@@ -155,9 +154,9 @@ export const delMultiKyc = async (ids: number[]) => {
       body: JSON.stringify({ ids }),
     });
 
-    const res = await response.json();
 
-    if (!res.success && response.status !== 204) {
+    if (response.status !== 204) {
+      const res = await response.json();
       throw new Error(res.message || "Something went wrong, Please try again!");
     }
 

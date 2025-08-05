@@ -5,7 +5,7 @@ import { LuMousePointerClick } from "react-icons/lu";
 import Image from 'next/image';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
-import { use, useState } from 'react';
+import { startTransition, use, useActionState, useEffect, useState } from 'react';
 import { useAppSelector } from '@/lib/hooks';
 import { selectIsDarkMode } from '@/lib/features/theme/themeSlice';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,7 @@ import { DataTable } from 'mantine-datatable';
 import SearchInput from '@/components/shared/SearchInput';
 import { useUrlParams } from '@/hooks/useUrlParams';
 import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions';
+import toast from 'react-hot-toast';
 
 const PAGE_SIZES = [10, 20, 30, 50, 100]
 
@@ -63,6 +64,9 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
 
 
   // Action handlers
+  const [stateSing, actionSing, isPendingSing] = useActionState(delKyc, null);
+  const [stateMulti, actionMulti, isPendingMulti] = useActionState(delMultiKyc, null);
+
   const handlePreview = (record: Kyc) => {
     router.push(`/kyc/action?s=r&id=${record._id}`);
   }
@@ -74,18 +78,34 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
 
   const handleDelete = async (recordId: number) => {
     // if (userInfo?.role !== 'admin') return;
-    const res = await delKyc(recordId)
-    console.log('delete response:', res);
+    startTransition(() => {
+      actionSing(recordId)
+    });
   };
+
+  useEffect(() => {
+    if (stateSing) {
+      toast[stateSing?.success ? 'success' : 'error'](stateSing?.message || 'Operation completed');
+    }
+  }, [stateSing]);
 
   const handleMultiDelete = async () => {
     if (selectedRecords.length === 0) return;
     const ids = selectedRecords.map(record => record._id);
-    console.log(ids);
-    const res = await delMultiKyc(ids);
-    console.log('multi delete response:', res);
-    setSelectedRecords([]);
+
+    startTransition(() => {
+      actionMulti(ids)
+    });
   }
+
+  useEffect(() => {
+    if (stateMulti) {
+      toast[stateMulti?.success ? 'success' : 'error'](stateMulti?.message || 'Operation completed');
+      if (stateMulti?.success) {
+        setSelectedRecords([]);
+      }
+    }
+  }, [stateMulti]);
 
 
   // Data table 
@@ -101,7 +121,7 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
             <button className="flex hover:text-info" onClick={(e) => { e.stopPropagation(); handleEdit(record._id); }}>
               <EditIcon />
             </button>
-            <button type="button" className="flex hover:text-danger" onClick={(e) => { e.stopPropagation(); handleDelete(record._id); }}>
+            <button type="button" className="flex hover:text-danger" disabled={isPendingSing} onClick={(e) => { e.stopPropagation(); handleDelete(record._id); }}>
               <DeleteIcon />
             </button>
           </>
@@ -168,11 +188,20 @@ export default function KycMain({ customerPromise, }: KycMainProps) {
   return (
 
     <div className="pl-1 datatables pagination-padding">
+      {/* Loading Overlay */}
+      {/* <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 flex flex-col items-center gap-4 shadow-xl">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <p className="text-gray-700 dark:text-gray-300 font-medium">Processing...</p>
+        </div>
+      </div> */}
+
+
       <div className='flex justify-between items-center md:flex-row md:items-center mb-3'>
         <div className="flex flex-wrap items-center justify-around gap-2 pl-3">
           {
             selectedRecords.length >= 1 &&
-            <button type="button" className="btn btn-danger gap-2" onClick={handleMultiDelete}>
+            <button type="button" className="btn btn-danger gap-2" onClick={handleMultiDelete} disabled={isPendingMulti} >
               <DeleteIcon />
               Delete
             </button>

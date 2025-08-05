@@ -4,7 +4,7 @@ import { LoginFormState } from '@/types/auth'
 import React, { useActionState, useEffect } from 'react'
 import InputBox from '../shared/InputBox';
 import { useRouter } from 'next/navigation';
-import { coloredToast, forgetPasswordToast, successToast } from '@/lib/utility/sweetAlerts';
+import toast from 'react-hot-toast';
 
 
 const initialState: LoginFormState = {
@@ -22,12 +22,12 @@ export default function LoginForm() {
         if (!state?.message) return;
 
         if (state.success) {
-            successToast(state.message);
             const timer = setTimeout(() => router.push('/'), 2000);
             return () => clearTimeout(timer);
-        } else {
-            coloredToast("danger", state.message);
         }
+
+        toast[state.success ? 'success' : 'error'](state.message || 'Operation completed successfully');
+
     }, [state])
 
 
@@ -60,7 +60,7 @@ export default function LoginForm() {
 
                 <div className="flex justify-end mt-2">
                     <span
-                        onClick={forgetPasswordToast}
+                        // onClick={forgetPasswordToast}
                         className="text-sm text-gray-500 font-normal cursor-pointer"
                     >
                         Forget Your password ?

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { coloredToast } from "@/lib/utility/sweetAlerts";
+import toast from "react-hot-toast";
 
 export function SessionToast() {
     const searchParams = useSearchParams();
@@ -11,7 +11,7 @@ export function SessionToast() {
     useEffect(() => {
         const sessionExpired = searchParams.get("session_expired");
         if (sessionExpired === "true") {
-            coloredToast('danger', "Session expired. Please log in again")
+            toast.error("Session expired. Please log in again");
 
             // Clean up the URL parameter
             const url = new URL(window.location.href);

@@ -5,26 +5,16 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { selectFaq, selectFaqModal, setFaqModal } from '@/lib/features/faq/faqSlice';
 import { faqCrUpAction } from '@/lib/features/faq/faqActions';
-import { coloredToast } from '@/lib/utility/sweetAlerts';
 import InputBox from '../../shared/InputBox';
 
 interface IinitialValues {
     success: boolean;
     message: string;
-    // errors?: {
-    //     question?: string[];
-    //     answer?: string[];
-    // };
-    // inputs: {
-    //     question: string;
-    //     answer: string;
-    // };
 }
 
 const initialState: IinitialValues = {
     success: false,
     message: '',
-    // inputs: { question: '', answer: '' }
 }
 export default function FaqModal() {
     const dispatch = useAppDispatch();

@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import { StoreProvider } from "./StoreProvider";
 import { SessionToast } from "@/components/auth/SessionToast";
 import { Suspense } from "react";
+import { Toaster } from 'react-hot-toast';
 // import 'react-perfect-scrollbar/dist/css/styles.css';
 import "./globals.css";
 
@@ -28,6 +29,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           {children}
           <Suspense >
             <SessionToast />
+            <Toaster />
           </Suspense>
         </body>
       </StoreProvider>

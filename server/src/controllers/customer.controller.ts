@@ -6,9 +6,6 @@ import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { ENV } from '../configs/env';
 import crypto from 'crypto';
 import sharp from 'sharp';
-import { send } from 'process';
-
-
 
 
 // Extend Express Request interface to include 'file' property
@@ -164,7 +161,6 @@ export const deleteCustomer = async (req: Request, res: Response): Promise<void>
 
 export const multiDeleteCustomers = async (req: Request, res: Response): Promise<void> => {
     const { ids } = req.body;
-    console.log(ids);
 
     if (!Array.isArray(ids) || ids.length === 0) {
         throw new CustomError("Invalid or empty 'ids' array", 400);
@@ -191,7 +187,6 @@ export const multiDeleteCustomers = async (req: Request, res: Response): Promise
 
     if (!result) throw new CustomError("Failed to delete customers", 500);
 
-    console.log(result);
 
     res.status(result.deletedCount ? 204 : 404).send({
         success: true,

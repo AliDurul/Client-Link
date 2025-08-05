@@ -8,13 +8,13 @@ import { mutate } from 'swr';
 
 import Dropdown from '../../layout/Dropdown';
 import { delTask, putTaskStatus } from '@/lib/features/task/taskActions';
-import { coloredToast } from '@/lib/utility/sweetAlerts';
 import { Task } from '@/types';
 import { formatDate } from '@/lib/utility/functions';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import SelectedTaskModal from './SelectedTaskModal';
 import TaskAddEditModal from './TaskAddEditModal';
+import toast from 'react-hot-toast';
 
 
 
@@ -55,7 +55,7 @@ const TaskTable = ({ tasks }: { tasks: Task[] }) => {
             if (res.success) {
                 tasks[itemIndex] = updatedItem;
                 dispatch(updateTasks(tasks))
-            } else coloredToast('danger', res.message)
+            } else toast.error(res.message || 'Operation failed');
         }
     };
 
@@ -66,11 +66,12 @@ const TaskTable = ({ tasks }: { tasks: Task[] }) => {
 
     const handleDeleteTask = async (task: Task) => {
         const res = await delTask(task._id);
-        if (res.success) {
-            coloredToast('success', res.message);
-            mutate('task-counts');
 
-        } else coloredToast('danger', res.message)
+        if (res.success) {
+            mutate('task-counts');
+        }
+
+        toast[res.success ? 'success' : 'error'](res.message || 'Operation completed successfully');
 
     };
 

@@ -11,7 +11,7 @@ import { Kyc } from '@/types';
 import { kycCrUpAction } from '@/lib/features/kyc/kycActions';
 import KycImageUpload from './KycImageUpload';
 import { useRouter } from 'next/navigation';
-import { coloredToast } from '@/lib/utility/sweetAlerts';
+import toast from 'react-hot-toast';
 
 
 interface CustomStyles {
@@ -124,7 +124,6 @@ export default function KycForm({ kycPromise, isEdit, readOnly }: KycFormProps) 
     const [idType, setIdType] = useState(initialValues.id_type || '');
 
 
-    // console.log('kyc data', !!initialValues._id);
 
     // functins
     useEffect(() => {
@@ -133,8 +132,10 @@ export default function KycForm({ kycPromise, isEdit, readOnly }: KycFormProps) 
 
         if (state.success) {
             router.replace('/kyc')
-            coloredToast("success", state.message, "bottom-start");
+            const timer = setTimeout(() => router.push('/kyc'), 2000);
+            return () => clearTimeout(timer);
         }
+        toast[state.success ? 'success' : 'error'](state.message || 'Operation completed successfully');
 
     }, [state]);
 
