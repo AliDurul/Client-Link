@@ -20,13 +20,13 @@ export const authConfig = async () => {
     };
 };
 
-export const getData = async ({ url, id }: { url: string, id: string | null }) => {
+export const getData = async (url: string) => {
 
-    // await wait(5000);
+    await wait(5000);
 
     try {
         const headers = await authConfig();
-        const response = await fetch(`${BASE_URL}${url}/${id}/`, { headers });
+        const response = await fetch(BASE_URL + url, { headers });
 
         const data = await response.json();
 

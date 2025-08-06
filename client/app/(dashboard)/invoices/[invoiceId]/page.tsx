@@ -10,7 +10,7 @@ export default async function page({ params }: { params: Promise<{ invoiceId: st
 
     const { invoiceId } = await params;
 
-    const invoice: { success: boolean, result: Invoice } = await getData({ url: 'invoices', id: invoiceId });
+    const invoice: { success: boolean, result: Invoice } = await getData(`invoices/${invoiceId}`);
 
     const columns = [
         {

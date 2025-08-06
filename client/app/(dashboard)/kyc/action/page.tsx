@@ -1,7 +1,7 @@
 import KycForm from '@/components/dashboard/kyc/KycForm';
 import TopPageNavigation from '@/components/shared/TopPageNavigation';
-import { getKyc } from '@/lib/features/kyc/kycActions';
-import { PageSearchParams } from '@/types';
+import { getData } from '@/lib/features/shared/actionUtils';
+import { Kyc, PageSearchParams } from '@/types';
 import { Suspense } from 'react';
 
 
@@ -14,17 +14,25 @@ export default async function page({ searchParams }: PageSearchParams) {
     const readOnly = params.s === 'r';
     const isEdit = params.s === 'e';
 
-    const kycPromise = getKyc(userId)
+    let kyc: Kyc | null = null;
+    let error = null;
+
+    if ((readOnly || isEdit)) {
+        try {
+            const data = await getData(`customers/${userId}`);
+            if (data.success) {
+                kyc = data.result;
+            } else {
+                error = data.message;
+            }
+        } catch (error) {
+            console.error('Error fetching KYC:', error);
+            error = 'Failed to fetch KYC details';
+        }
+    }
 
 
     return (
-        <>
-
-            <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
-                <KycForm kycPromise={kycPromise} readOnly={readOnly} isEdit={isEdit} />
-            </Suspense>
-
-
-        </>
+        <KycForm kyc={kyc} readOnly={readOnly} isEdit={isEdit} error={error} />
     )
 }

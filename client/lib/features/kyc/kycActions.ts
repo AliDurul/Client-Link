@@ -98,27 +98,6 @@ export const kycCrUpAction = async (_: unknown, payload: FormData) => {
 };
 
 
-export const getKyc = async (id: string | null): Promise<{ result?: Kyc, success: boolean, message?: string }> => {
-
-  // await new Promise(resolve => setTimeout(resolve, 2000));
-
-  try {
-    const headers = await authConfig();
-    const response = await fetch(`${BASE_URL}customers/${id}/`, { headers });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Something went wrong, Please try again!");
-    }
-
-    return data;
-  } catch (error: any) {
-    return { success: false, message: error.message || "Something went wrong, Please try again!" };
-  }
-};
-
-
 export const delKyc = async (_: unknown, id: number) => {
   try {
     const headers = await authConfig();

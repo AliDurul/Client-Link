@@ -29,36 +29,19 @@ const initialState: IinitialValues = {
 }
 
 interface KycFormProps {
-    kycPromise: Promise<{ result?: Kyc; success: boolean; message?: string }>;
-    readOnly: boolean;
+    kyc: Kyc | null;
     isEdit: boolean;
+    readOnly: boolean;
+    error: string | null;
 }
 
-export default function KycForm({ kycPromise, isEdit, readOnly }: KycFormProps) {
+export default function KycForm({ kyc, isEdit, readOnly, error }: KycFormProps) {
 
-    const router = useRouter();
-
-    let kyc: Kyc | undefined = undefined;
-    let success = true;
-    let message = '';
-
-    if ((readOnly || isEdit) && kycPromise) {
-        const kycResult = use(kycPromise);
-        kyc = kycResult.result;
-        success = kycResult.success;
-        message = kycResult.message || '';
+    if (error) {
+        return <div className="error">Error: {error}</div>;
     }
 
-    // if (!success) {
-    //     return (
-    //         <div className="flex h-full items-center justify-center mt-5">
-    //             <div className="text-red-500">
-    //                 <h2 className="text-2xl font-bold">Error</h2>
-    //                 <p>{message}</p>
-    //             </div>
-    //         </div>
-    //     );
-    // };
+    const router = useRouter();
 
 
     // form action

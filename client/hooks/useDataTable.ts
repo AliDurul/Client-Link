@@ -15,8 +15,6 @@ interface UseDataTableConfig<T> {
     defaultSortDirection?: 'asc' | 'desc';
     deleteAction?: (_: unknown, id: number) => Promise<any>;
     deleteMultiAction?: (_: unknown, ids: number[]) => Promise<any>;
-    // editRoute?: string;
-    // previewRoute?: string;
 }
 
 export function useDataTable<T extends { _id: number }>(config: UseDataTableConfig<T> = {}) {
@@ -25,8 +23,6 @@ export function useDataTable<T extends { _id: number }>(config: UseDataTableConf
         defaultSortDirection = 'asc',
         deleteAction,
         deleteMultiAction,
-        // editRoute,
-        // previewRoute,
     } = config;
 
     // Core hooks
@@ -79,6 +75,10 @@ export function useDataTable<T extends { _id: number }>(config: UseDataTableConf
     };
 
     // Action handlers
+    const handleCreate = (url: string) => {
+        router.push(url);
+    };
+
     const handleEdit = (url: string, e?: React.MouseEvent) => {
         e?.stopPropagation();
         router.push(url);
@@ -178,6 +178,7 @@ export function useDataTable<T extends { _id: number }>(config: UseDataTableConf
         handleSortStatusChange,
         handlePageChange,
         handlePageSizeChange,
+        handleCreate,
         handleEdit,
         handlePreview,
         handleDelete,
