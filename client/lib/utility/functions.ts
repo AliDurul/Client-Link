@@ -45,6 +45,26 @@ export const truncateText = (text: string, charLimit: number) => {
 };
 
 
+export function capitalize<T>(data: T): T {
+    if (typeof data === 'string') {
+        return (data.charAt(0).toUpperCase() + data.slice(1)) as T;
+    }
+    if (Array.isArray(data)) {
+        return data.map(item => capitalize(item)) as T;
+    }
+    if (typeof data === 'object' && data !== null) {
+        const result: any = {};
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                result[key] = capitalize((data as any)[key]);
+            }
+        }
+        return result;
+    }
+    return data;
+}
+
+
 // Query handler
 import qs from 'query-string'
 

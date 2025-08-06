@@ -4,7 +4,7 @@ import qs from 'query-string'
 
 
 const BASE_URL = process.env.API_BASE_URL + '/';
-
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const authConfig = async () => {
 
@@ -22,7 +22,7 @@ export const authConfig = async () => {
 
 export const getData = async ({ url, id }: { url: string, id: string | null }) => {
 
-    // await new Promise(resolve => setTimeout(resolve, 2000));
+    // await wait(5000);
 
     try {
         const headers = await authConfig();
@@ -45,6 +45,10 @@ interface GetAllDataParams extends QueryParams { url: string; }
 export const getAllData = async ({ url, searchQueries, customQuery, filterQueries, sortQueries }: GetAllDataParams) => {
 
     if (!url) return { success: false, error: 'URL parameter is required' };
+
+    //    await wait(5000);
+
+
 
     const queryObject = buildQueryParams({
         searchQueries,

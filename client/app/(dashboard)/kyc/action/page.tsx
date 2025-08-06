@@ -19,7 +19,6 @@ export default async function page({ searchParams }: PageSearchParams) {
 
     return (
         <>
-            <TopPageNavigation />
 
             <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
                 <KycForm kycPromise={kycPromise} readOnly={readOnly} isEdit={isEdit} />

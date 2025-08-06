@@ -1,128 +1,63 @@
 'use client';
 import SearchInput from '@/components/shared/SearchInput';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useUrlParams } from '@/hooks/useUrlParams';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
-import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions';
-import { selectIsDarkMode } from '@/lib/features/theme/themeSlice';
-import { useAppSelector } from '@/lib/hooks';
+import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions'; // TODO: Create proper invoice actions
 import { formatDate } from '@/lib/utility/functions';
 import { Invoice, Pagination } from '@/types';
-import { DataTable, type DataTableColumn, type DataTableProps, type DataTableSortStatus } from 'mantine-datatable';
-import Image from 'next/image';
+import { DataTable, type DataTableColumn, type DataTableProps } from 'mantine-datatable';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { startTransition, use, useActionState, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import { use } from 'react';
 import { LuMousePointerClick } from 'react-icons/lu';
+import { useDataTable } from '@/hooks/useDataTable';
+import Image from 'next/image';
 
-
-const PAGE_SIZES = [10, 20, 30, 50, 100]
-
-const DEFAULT_SORT_STATUS: DataTableSortStatus = {
-    columnAccessor: 'first_name',
-    direction: 'asc',
-} as const;
 
 interface InvoiceTableProps {
     invoicePromise: Promise<Pagination<Invoice>>;
 }
 
 export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
-    const { userInfo } = useCurrentUser();
-    const { updateUrlParams, getParam } = useUrlParams();
-    const router = useRouter();
-    const isDark = useAppSelector(selectIsDarkMode);
-
-    const [sortStatus, setSortStatus] = useState<DataTableSortStatus>(DEFAULT_SORT_STATUS);
-    const [selectedRecords, setSelectedRecords] = useState<Invoice[]>([]);
-    const page = getParam('p', '1');
-    const pl = getParam('pl', '20');
-
     const invoices = use(invoicePromise);
 
-
-    // Paginatin and sorting
-    const handleSortStatusChange = (status: DataTableSortStatus) => {
-        setSortStatus(status);
-        updateUrlParams({
-            p: '1',
-            sb: status.columnAccessor,
-            s: status.direction
-        });
-    }
-
-    const handlePageChange = (newPage: number) => {
-        updateUrlParams({ p: newPage.toString() });
-    }
-
-    const handlePageSizeChange = (newPageSize: number) => {
-        updateUrlParams({
-            pl: newPageSize.toString(),
-            p: '1'
-        });
-    }
-
-
-    //! Action handlers
-    const [stateSing, actionSing, isPendingSing] = useActionState(delKyc, null);
-    const [stateMulti, actionMulti, isPendingMulti] = useActionState(delMultiKyc, null);
-
-    const handlePreview = (record: Invoice) => {
-        router.push(`/invoice/action?s=r&id=${record._id}`);
-    }
-
-    const handleEdit = (recordId: number) => {
-        // if (userInfo?.role !== 'admin') return;
-        router.push(`/invoice/action?s=e&id=${recordId}`);
-    }
-
-    const handleDelete = async (recordId: number) => {
-        // if (userInfo?.role !== 'admin') return;
-        startTransition(() => {
-            actionSing(recordId)
-        });
-    };
-
-    useEffect(() => {
-        if (stateSing) {
-            toast[stateSing?.success ? 'success' : 'error'](stateSing?.message || 'Operation completed');
-        }
-    }, [stateSing]);
-
-    const handleMultiDelete = async () => {
-        if (selectedRecords.length === 0) return;
-        const ids = selectedRecords.map(record => record._id);
-
-        startTransition(() => {
-            actionMulti(ids)
-        });
-    }
-
-    useEffect(() => {
-        if (stateMulti) {
-            toast[stateMulti?.success ? 'success' : 'error'](stateMulti?.message || 'Operation completed');
-            if (stateMulti?.success) {
-                setSelectedRecords([]);
-            }
-        }
-    }, [stateMulti]);
+    const {
+        selectedRecords,
+        userInfo,
+        isPendingSingle,
+        isPendingMulti,
+        handleEdit,
+        handlePreview,
+        handleDelete,
+        handleMultiDelete,
+        getTableProps,
+        getRowExpansionProps
+    } = useDataTable<Invoice>({
+        deleteAction: delKyc, // TODO: Create proper invoice actions
+        deleteMultiAction: delMultiKyc, // TODO: Create proper invoice actions
+    });
 
 
     // Data table 
 
     const renderActions: DataTableColumn<Invoice>['render'] = (record) => (
         <div className="mx-auto flex w-max items-center gap-4">
-            <Link href={`/invoices/${record._id}`}  className="flex hover:text-primary">
+            <button
+                onClick={(e) => { handlePreview(`invoices/${record._id}`, e); }}
+
+                className="flex hover:text-primary">
                 <PreviewIcon />
-            </Link>
+            </button>
             {
                 userInfo?.role !== 'admin' && (
                     <>
-                        <button className="flex hover:text-info" onClick={(e) => { e.stopPropagation(); handleEdit(record._id); }}>
+                        <button className="flex hover:text-info"
+                            onClick={(e) => { handleEdit(`/invoices/action/?s=e&id=${record._id}`, e); }}>
                             <EditIcon />
                         </button>
-                        <button type="button" className="flex hover:text-danger" disabled={isPendingSing} onClick={(e) => { e.stopPropagation(); handleDelete(record._id); }}>
+                        <button
+                            type="button"
+                            className="flex hover:text-danger"
+                            disabled={isPendingSingle}
+                            onClick={(e) => { handleDelete(record._id, e); }}>
                             <DeleteIcon />
                         </button>
                     </>
@@ -131,36 +66,34 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
         </div>
     );
 
-    // const rowExpansion: DataTableProps<Invoice>['rowExpansion'] = {
-    //     allowMultiple: true,
-    //     content: ({ record: { full_name, assigned_agent, address, profile_pic, phone_number } }) => (
-    //         <div className='flex items-center gap-4'>
-    //             <Image
-    //                 width={32}
-    //                 height={32}
-    //                 className="h-8 w-8 rounded-full object-cover"
-    //                 src={profile_pic ? profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
-    //             <p >
-    //                 {full_name}, phone number is {phone_number} and assigned agent is {assigned_agent}.
-    //                 <br />
-    //                 His office address is {address?.street}, {address?.city}, {address?.state}.
-    //             </p>
-    //         </div>
-    //     ),
-    // };
+    const rowExpansion: DataTableProps<Invoice>['rowExpansion'] = {
+        ...getRowExpansionProps(),
+        content: ({ record: { customer: { first_name, last_name, email, profile_pic } } }) => (
+            <div className='flex items-center gap-4 pl-12'>
+                <Image
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 rounded-full object-cover"
+                    src={profile_pic ? profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
+                <p >
+                    {first_name} {last_name}, email is {email}.
+                </p>
+            </div>
+        ),
+    };
 
     const columns: DataTableProps<Invoice>['columns'] = [
         {
             accessor: 'creator.first_name',
             title: 'Staff Name',
             sortable: true,
-            render: ({ creator }) => `${creator.full_name}`,
+            render: ({ creator }) => `${creator?.full_name}`,
         },
         {
             accessor: 'customer.first_name',
             title: 'Customer Name',
             sortable: true,
-            render: ({ customer }) => `${customer.full_name}`,
+            render: ({ customer }) => `${customer?.full_name}`,
         },
         {
             accessor: 'createdAt',
@@ -209,9 +142,7 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
             <div className="mb-4.5 flex flex-col justify-between gap-5 md:flex-row md:items-center">
                 <div className="ml-3 flex flex-wrap items-center gap-2">
                     {
-                        selectedRecords.length >= 1 && <button type="button" className="btn btn-danger  gap-2"
-                        // onClick={() => deleteRow()}
-                        >
+                        selectedRecords.length >= 1 && <button type="button" className="btn btn-danger gap-2" onClick={handleMultiDelete} disabled={isPendingMulti}>
                             <DeleteIcon />
                             Delete
                         </button>
@@ -233,25 +164,12 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
 
             <div className="datatables pagination-padding">
                 <DataTable
-                    className={`${isDark} table-hover whitespace-nowrap`}
-                    // rowExpansion={rowExpansion}
-                    minHeight={400}
+                    {...getTableProps()}
+                    rowExpansion={rowExpansion}
                     records={invoices?.result || []}
-                    withBorder={false}
                     columns={columns}
-                    highlightOnHover
                     totalRecords={invoices?.details.totalRecords || 0}
-                    recordsPerPage={pl ? parseInt(pl, 10) : 20}
-                    page={page ? parseInt(page, 10) : 1}
-                    fontSize="sm"
-                    onPageChange={handlePageChange}
-                    onRecordsPerPageChange={handlePageSizeChange}
-                    recordsPerPageOptions={PAGE_SIZES}
-                    sortStatus={sortStatus}
-                    onSortStatusChange={handleSortStatusChange}
-                    selectedRecords={selectedRecords}
-                    onSelectedRecordsChange={setSelectedRecords}
-                    paginationText={({ from, to, totalRecords }) => `Showing  ${from} to ${to} of ${totalRecords} entries`}
+                    idAccessor="_id"
                 />
             </div>
 

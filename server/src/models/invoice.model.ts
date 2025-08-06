@@ -21,13 +21,14 @@ const invoiceItemSchema: Schema<IInvoiceItem> = new Schema({
     total_price: {
         type: Number,
         min: [0, 'Total price cannot be negative'],
-    }
+    },
+    discount: {
+        type: Number,
+        default: 0,
+        min: [0, 'Discount cannot be negative'],
+    },
 }, { _id: false, });
 
-invoiceItemSchema.pre('save', function (next) {
-    this.total_price = this.quantity * this.unit_price;
-    next();
-});
 
 const invoiceSchema: Schema<IInvoice> = new Schema({
     creator: {
@@ -58,8 +59,9 @@ const invoiceSchema: Schema<IInvoice> = new Schema({
     },
     tax: {
         type: Number,
-        default: 0,
+        default: 16,
         min: [0, 'Tax cannot be negative'],
+        max: [100, 'Tax cannot exceed 100%'],
     },
     due_date: {
         type: Date,
@@ -90,23 +92,6 @@ const invoiceSchema: Schema<IInvoice> = new Schema({
     collection: 'invoices',
 })
 
-invoiceSchema.pre('save', function (next) {
-    // Calculate subtotal
-    this.subtotal = this.invoice_items.reduce((sum: number, item: IInvoiceItem) => {
-        return sum + (item.quantity * item.unit_price);
-    }, 0);
-    
-    // Calculate total
-    this.total_amount = this.subtotal + this.shipping_cost - this.discount + this.tax;
-
-    // Update each item's total_price
-    this.invoice_items.forEach((item: any) => {
-        item.total_price = item.quantity * item.unit_price;
-    });
-
-    next();
-});
-
 const Invoice = mongoose.model<IInvoice>('Invoice', invoiceSchema);
 export default Invoice;
 
@@ -134,4 +119,5 @@ export interface IInvoiceItem {
     quantity: number;
     unit_price: number;
     total_price: number;
+    discount: number;
 }

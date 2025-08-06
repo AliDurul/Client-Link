@@ -22,8 +22,6 @@ export default async function page({ searchParams }: PageSearchParams) {
 
     return (
         <>
-            <TopPageNavigation />
-
 
             <div className="panel mt-5 border-white-light px-0 dark:border-[#1b2e4b]">
 

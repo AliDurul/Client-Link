@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import Invoice, { IInvoice } from "../models/invoice.model";
+import { Request, Response } from 'express';
+import Invoice, { IInvoice, IInvoiceItem } from "../models/invoice.model";
 
-import { CustomError } from "../utils/common";
+import { CustomError, validateFutureDate } from "../utils/common";
 import Product from '../models/product.model';
 
 
@@ -30,6 +30,8 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
         throw new CustomError("Invoice items are required", 400);
     }
 
+    validateFutureDate(req.body.due_date, "Due date");
+
     const productIds = req.body.invoice_items.map((item: any) => item.product);
     const products = await Product.find({
         _id: { $in: productIds },
@@ -49,16 +51,44 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
             throw new CustomError(`Product ${item.product} not found`, 404);
         }
 
+        const quantity = item.quantity || 1;
+        const discount = item.discount || 0;
+        const unit_price = product.price;
+        const total_price = (quantity * unit_price) - discount;
+
+        if (total_price < 0) {
+            throw new CustomError(`Total price cannot be negative for product ${item.product}`, 400);
+        }
+
         return {
             product: item.product,
-            quantity: item.quantity,
-            unit_price: product.price
+            quantity,
+            unit_price,
+            total_price,
+            discount
         };
     });
 
-    req.body.invoice_items = processedItems;
+    // Calculate invoice totals
+    const subtotal = processedItems.reduce((sum: number, item: IInvoiceItem) => sum + item.total_price, 0);
+    const tax_percentage = req.body.tax || 16;
+    const tax_amount = subtotal * (tax_percentage / 100);
+    const shipping_cost = req.body.shipping_cost || 0;
+    const invoice_discount = req.body.discount || 0;
+    const total_amount = subtotal + shipping_cost - invoice_discount + tax_amount;
 
-    const result = await Invoice.create(req.body);
+    const invoiceData = {
+        ...req.body,
+        invoice_items: processedItems,
+        subtotal,
+        tax_percentage,
+        tax_amount,
+        shipping_cost,
+        discount: invoice_discount,
+        total_amount
+    };
+
+    const result = await Invoice.create(invoiceData);
 
     if (!result) throw new CustomError("Failed to create Invoice", 500);
 
@@ -88,6 +118,63 @@ export const getInvoiceById = async (req: Request, res: Response): Promise<void>
 export const updateInvoice = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params;
 
+    // If invoice_items are being updated, recalculate everything
+    if (req.body.invoice_items?.length) {
+        const productIds = req.body.invoice_items.map((item: any) => item.product);
+        const products = await Product.find({
+            _id: { $in: productIds },
+            is_active: true
+        }).select('_id price').lean();
+
+        if (products.length !== productIds.length) {
+            throw new CustomError("One or more products not found", 404);
+        }
+
+        const productMap = new Map(products.map(p => [p._id.toString(), p]));
+
+        const processedItems = req.body.invoice_items.map((item: any) => {
+            const product = productMap.get(item.product.toString());
+
+            if (!product) {
+                throw new CustomError(`Product ${item.product} not found`, 404);
+            }
+
+            const quantity = item.quantity || 1;
+            const discount = item.discount || 0;
+            const unit_price = product.price;
+            const total_price = (quantity * unit_price) - discount;
+
+            return {
+                product: item.product,
+                quantity,
+                unit_price,
+                total_price,
+                discount
+            };
+        });
+
+        // Recalculate totals
+        const subtotal = processedItems.reduce((sum: number, item: IInvoiceItem) => sum + item.total_price, 0);
+        const tax_percentage = req.body.tax_percentage || 16;
+        const tax_amount = subtotal * (tax_percentage / 100);
+        const shipping_cost = req.body.shipping_cost || 0;
+        const invoice_discount = req.body.discount || 0;
+        const total_amount = subtotal + shipping_cost - invoice_discount + tax_amount;
+
+        req.body = {
+            ...req.body,
+            invoice_items: processedItems,
+            subtotal,
+            tax_percentage,
+            tax_amount,
+            total_amount
+        };
+    }
+
+    if (req.body.due_date) {
+        validateFutureDate(req.body.due_date, "Due date");
+    }
+
     const result = await Invoice.findByIdAndUpdate<IInvoice>(id, req.body, { new: true });
 
     if (!result) throw new CustomError("Invoice not found", 404);
@@ -96,7 +183,6 @@ export const updateInvoice = async (req: Request, res: Response): Promise<void> 
         success: true,
         result
     });
-
 };
 
 export const deleteInvoice = async (req: Request, res: Response): Promise<void> => {

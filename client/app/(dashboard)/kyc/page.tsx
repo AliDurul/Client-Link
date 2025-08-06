@@ -29,7 +29,7 @@ export default async function page({ searchParams }: PageSearchParams) {
 
     return (
         <>
-            <TopPageNavigation />
+            {/* <TopPageNavigation /> */}
 
             <div className="flex justify-end mt-3">
                 <div className="flex gap-3">

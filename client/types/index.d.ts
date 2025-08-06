@@ -137,6 +137,7 @@ export interface InvoiceItem {
     name: string;
   };
   quantity: number;
+  discount: number;
   unit_price: number;
   total_price: number;
 }

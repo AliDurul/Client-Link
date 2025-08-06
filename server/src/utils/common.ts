@@ -157,3 +157,23 @@ export function shouldCompress(req: Request, res: Response): boolean {
     }
     return compression.filter(req, res);
 }
+
+// ===============================
+// 8. VALIDATE FUTURE DATE
+// ===============================
+
+export const validateFutureDate = (dateString: string, fieldName: string = 'Date'): void => {
+    if (!dateString) return;
+
+    const inputDate = new Date(dateString);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (isNaN(inputDate.getTime())) {
+        throw new CustomError(`${fieldName} is not a valid date`, 400);
+    }
+
+    if (inputDate < today) {
+        throw new CustomError(`${fieldName} cannot be in the past`, 400);
+    }
+};
