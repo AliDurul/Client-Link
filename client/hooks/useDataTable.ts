@@ -13,11 +13,11 @@ export const PAGE_SIZES = [10, 20, 30, 50, 100];
 interface UseDataTableConfig<T> {
     defaultSortAccessor?: string;
     defaultSortDirection?: 'asc' | 'desc';
-    deleteAction?: (_: unknown, id: number) => Promise<any>;
-    deleteMultiAction?: (_: unknown, ids: number[]) => Promise<any>;
+    deleteAction?: (_: unknown, id: string) => Promise<any>;
+    deleteMultiAction?: (_: unknown, ids: string[]) => Promise<any>;
 }
 
-export function useDataTable<T extends { _id: number }>(config: UseDataTableConfig<T> = {}) {
+export function useDataTable<T extends { _id: string }>(config: UseDataTableConfig<T> = {}) {
     const {
         defaultSortAccessor = 'first_name',
         defaultSortDirection = 'asc',
@@ -89,7 +89,7 @@ export function useDataTable<T extends { _id: number }>(config: UseDataTableConf
         router.push(url);
     };
 
-    const handleDelete = async (recordId: number, e?: React.MouseEvent) => {
+    const handleDelete = async (recordId: string, e?: React.MouseEvent) => {
         e?.stopPropagation();
         if (!deleteAction) return;
         startTransition(() => {

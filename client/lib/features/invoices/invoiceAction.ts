@@ -1,66 +1,59 @@
 "use server";
 import { auth } from "@/auth";
+import { Invoice, Kyc } from "@/types";
+import { authConfig } from "../shared/actionUtils";
+import { revalidateTag } from "next/cache";
+import { invoiceSchema } from "@/lib/utility/zod";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APIBASE_URL + '/'
+const BASE_URL = process.env.API_BASE_URL + '/'
 
-const authConfig = async () => {
-  const session = await auth();
-  const accessToken = session?.accessToken;
 
-  return {
-    Authorization: `Bearer ${accessToken}`,
-    "Content-Type": "application/json",
-  };
-};
 
-export const getAllInvoices = async (page?: string, pageSize?: string, search?: string) => {
-  const headers = await authConfig();
+export const InvoiceCrUpAction = async (_: unknown, payload: any) => {
 
-  let url = `${BASE_URL}invoices/`;
+  const id = payload._id;
+  delete payload._id;
+    console.log('payload:', payload);
 
-  const params = new URLSearchParams();
-  if (page) params.append("page", page);
-  if (pageSize) params.append("page_size", pageSize);
-  if (search) params.append("search", search)
+  const result = invoiceSchema.safeParse(payload);
 
-  if (params.toString()) url += `?${params.toString()}`;
 
-  try {
-    const response = await fetch(url, {
-      // cache: "force-cache",
-      // next: { revalidate: 900 },
-      headers,
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error(data.message || "Something went wrong, Please try again!");
-    }
-  } catch (error: any) {
-    return { error: error.message };
+  if (!result.success) {
+    const errors = result.error.flatten().fieldErrors;
+    return { success: false, message: 'Fix the error in the form', inputs: payload, errors };
   }
-};
 
-export const updateInvoice = async (saleData: any) => {
-  const headers = await authConfig();
+  const url = !!id ? `${BASE_URL}invoices/${id}/` : `${BASE_URL}invoices/`;
+  const method = !!id ? "PUT" : "POST";
+
   try {
-    const response = await fetch(`${BASE_URL}invoice/${saleData.id}/`, {
-      method: "PUT",
+    const headers = await authConfig();
+
+    const response = await fetch(url, {
+      method,
       headers,
-      body: JSON.stringify(saleData),
+      body: JSON.stringify(payload),
     });
 
     const data = await response.json();
 
-    if (response.ok) {
-      return { message: "Successfully Updated!" };
-    } else {
+    if (!response.ok) {
       throw new Error(data.message || "Something went wrong, Please try again!");
     }
+
+    console.log(response);
+    revalidateTag('invoices');
+    return {
+      message: !!id ? "Invoice updated successfully!" : "Invoice created successfully!",
+      success: true
+    };
+
   } catch (error: any) {
-    return { error: error.message };
+    return {
+      message: error.message || "Something went wrong, Please try again!",
+      success: false,
+      inputs: result.data
+    };
   }
 };
 

@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+/* -------------------- Credential Schema -------------------- */
+
 export const credentialsSchema = z.object({
     fullname: z.string().min(3, "Full name is required").optional(),
     email: z.string().email("Invalid email address"),
@@ -10,11 +12,14 @@ export const credentialsSchema = z.object({
         .refine((val) => /[a-z]/.test(val), "Password must include at least one lowercase letter")
 });
 
+/* -------------------- Faq Schema -------------------- */
 
 export const faqSchema = z.object({
     question: z.string().min(10, "Question is required and must be at least 10 characters long"),
     answer: z.string().min(15, "Answer is required and must be at least 15 characters long"),
 })
+
+/* -------------------- Task Schema -------------------- */
 
 export const taskSchema = z.object({
     title: z.string().min(3, "Title is required").max(100, "Title must be no more than 100 characters long"),
@@ -22,6 +27,8 @@ export const taskSchema = z.object({
     assigned_agent: z.string().min(1, "Assign agent is required"),
     priority: z.enum(['Low', 'Medium', 'High']).optional(),
 });
+
+/* -------------------- Customer Schema -------------------- */
 
 
 export const customerSchema = z.object({
@@ -52,4 +59,27 @@ export const customerSchema = z.object({
     medication: z.boolean(),
     medication_type: z.string().optional().nullable(),
     profile_pic: z.any().optional(), // file/image, adjust as needed
+});
+
+/* -------------------- Invoice Schema -------------------- */
+export const invoiceItemSchema = z.object({
+    product: z.object({
+        _id: z.string().min(1, "Product ID is required"),
+    }),
+    quantity: z.number().min(1, "Quantity must be at least 1"),
+    discount: z.number().min(0, "Discount must be at least 0").optional(),
+    unit_price: z.number().min(0, "Unit price must be at least 0"),
+    total_price: z.number().min(0, "Total must be at least 0").optional(),
+});
+
+export const invoiceSchema = z.object({
+    tax: z.number().min(0, "Tax must be at least 0"),
+    customer: z.string().min(1, "Customer is required"),
+    due_date: z.string().min(1, "Due date is required"),
+    status: z.enum(['draft', 'paid', 'unpaid', 'cancelled']).default('draft'),
+    additional_note: z.string().optional(),
+    shipping_cost: z.number().min(0, "Shipping cost must be at least 0"),
+    discount: z.number().min(0, "Discount must be at least 0"),
+    payment_type: z.enum(['cash', 'card', 'bank', 'other']).default('cash'),
+    invoice_items: z.array(invoiceItemSchema).min(1, "At least one invoice item is required"),
 });

@@ -32,23 +32,25 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
 
     validateFutureDate(req.body.due_date, "Due date");
 
-    const productIds = req.body.invoice_items.map((item: any) => item.product);
+    const productIds = req.body.invoice_items.map((item: any) => item.product._id);
+    console.log('productIds:', productIds);
     const products = await Product.find({
         _id: { $in: productIds },
         is_active: true
     }).select('_id price').lean();
 
+    console.log('products:', products);
     if (products.length !== productIds.length) {
         throw new CustomError("One or more products not found", 404);
     }
 
     const productMap = new Map(products.map(p => [p._id.toString(), p]));
-
+    console.log('productMap:', productMap);
     const processedItems = req.body.invoice_items.map((item: any) => {
-        const product = productMap.get(item.product.toString());
+        const product = productMap.get(item.product._id.toString());
 
         if (!product) {
-            throw new CustomError(`Product ${item.product} not found`, 404);
+            throw new CustomError(`Product ${item.product._id} not found`, 404, true);
         }
 
         const quantity = item.quantity || 1;
@@ -57,7 +59,7 @@ export const createInvoice = async (req: Request, res: Response): Promise<void> 
         const total_price = (quantity * unit_price) - discount;
 
         if (total_price < 0) {
-            throw new CustomError(`Total price cannot be negative for product ${item.product}`, 400);
+            throw new CustomError(`Total price cannot be negative for product ${item.product._id}`, 400);
         }
 
         return {

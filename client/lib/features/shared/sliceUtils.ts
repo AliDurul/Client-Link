@@ -52,5 +52,5 @@ export const sharedInitialState: Pagination<any> = {
             total: 0
         }
     },
-    results: []
+    result: []
 }

@@ -1,8 +1,7 @@
 import { createAppSlice } from "@/lib/createAppSlice";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { getAllInvoices } from "./invoiceAPI";
 import { ApiResponse, Invoice, Pagination } from "@/types";
-import { createApiThunk, createAsyncThunkConfig } from "../shared/sliceUtils";
+import { createApiThunk, createAsyncThunkConfig, sharedInitialState } from "../shared/sliceUtils";
 
 export interface InvoiceSliceState {
     invoices: Pagination<Invoice>;
@@ -12,12 +11,7 @@ export interface InvoiceSliceState {
 }
 
 const initialState: InvoiceSliceState = {
-    invoices: {
-        count: 0,
-        next: null,
-        previous: null,
-        results: []
-    },
+    invoices: sharedInitialState,
     status: "idle",
     error: null,
     invoice: null
@@ -39,19 +33,9 @@ export const invoiceSlice = createAppSlice({
         // Collection management
         updateInvoices: create.reducer((state, action: PayloadAction<Invoice[]>) => {
             state.status = 'idle';
-            state.invoices.results = action.payload;
+            state.invoices.result = action.payload;
         }),
 
-        // Async actions
-        fetchAllInvoicesAsync: create.asyncThunk(
-            async (params: { page?: string, pageSize?: string, search?: string }) => {
-                return createApiThunk(
-                    () => getAllInvoices(params.page, params.pageSize, params.search),
-                    "Failed to fetch invoices"
-                );
-            },
-            createAsyncThunkConfig('invoices')
-        ),
     }),
     selectors: {
         selectInvoices: (invoice) => invoice.invoices,
@@ -62,16 +46,15 @@ export const invoiceSlice = createAppSlice({
     }
 });
 
-export const { 
-    fetchAllInvoicesAsync, 
-    setInvoice, 
+export const {
+    setInvoice,
     clearInvoice,
-    updateInvoices 
+    updateInvoices
 } = invoiceSlice.actions;
 
-export const { 
+export const {
     selectInvoices,
-    selectInvoice, 
+    selectInvoice,
     selectInvoiceStates,
     selectInvoiceStatus,
     selectInvoiceError

@@ -4,8 +4,8 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import React, { useState } from 'react'
 
 type TInputField = {
-    name: string;
-    type: 'text' | 'email' | 'password' | 'date' | 'number' | 'tel';
+    name?: string;
+    type: 'text' | 'email' | 'password' | 'date' | 'number' | 'tel' | 'textarea';
     placeholder: string;
     id?: string;
     value?: string | null | undefined | number;
@@ -14,13 +14,23 @@ type TInputField = {
     disabled?: boolean;
     className?: string;
     label?: string;
+    min?: string | number | undefined;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
-export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className = '', label }: TInputField) {
+export default function InputBox({ name, type, id, value, placeholder, icon, errors, disabled = false, className = '', label, onChange, min }: TInputField) {
     const [isPassVisible, setIsPassVisible] = useState(false);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if (onChange) {
+            onChange(e);
+        }
+    };
+
     return (
         <div className='flex-1'>
             <div className='relative'>
+                
                 {label && <label htmlFor={id} className='pl-2'>{label}</label>}
 
                 <input
@@ -31,6 +41,14 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                     id={id}
                     disabled={disabled}
                     className={`form-input placeholder:text-gray-400 ${errors ? 'border-red-500' : ''} ${className}`}
+                    onChange={handleChange}
+                    min={
+                        type === 'number'
+                            ? min ? min : 0
+                            : type === 'date'
+                                ? (typeof value === 'string' && value ? value : new Date().toISOString().split('T')[0])
+                                : undefined
+                    }
                 />
 
                 {icon && (<i className={`fi input-icon ${icon}`} />)}

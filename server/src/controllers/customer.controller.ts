@@ -67,7 +67,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
     // Attach file if present
     if (req.file) {
-
+        console.log(req.file);
         const randomSuffix = crypto.randomBytes(8).toString('hex');
         const fileName = `profile_pics/${randomSuffix}_${req.file.originalname}`;
 
@@ -88,7 +88,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
 
     const result = await Customer.create(data);
 
-    if (!result) throw new CustomError("Failed to create Customer", 500);
+    if (!result) throw new CustomError("Failed to create Customer", 500, true);
 
     res.send({
         success: true,
@@ -123,7 +123,7 @@ export const updateCustomer = async (req: Request, res: Response): Promise<void>
         {
             new: true,
             runValidators: true,
-            strict: false
+            // strict: false
         }
     );
 

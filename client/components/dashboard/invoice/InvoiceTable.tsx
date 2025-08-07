@@ -69,18 +69,22 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
 
     const rowExpansion: DataTableProps<Invoice>['rowExpansion'] = {
         ...getRowExpansionProps(),
-        content: ({ record: { customer: { first_name, last_name, email, profile_pic } } }) => (
-            <div className='flex items-center gap-4 pl-12'>
-                <Image
-                    width={32}
-                    height={32}
-                    className="h-8 w-8 rounded-full object-cover"
-                    src={profile_pic ? profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
-                <p >
-                    {first_name} {last_name}, email is {email}.
-                </p>
-            </div>
-        ),
+        content: ({ record }) => {
+            const customer = typeof record.customer === 'object' ? record.customer : {};
+            const { first_name, last_name, email, profile_pic } = customer as any;
+            return (
+                <div className='flex items-center gap-4 pl-12'>
+                    <Image
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 rounded-full object-cover"
+                        src={profile_pic ? profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
+                    <p >
+                        {first_name} {last_name}, email is {email}.
+                    </p>
+                </div>
+            );
+        },
     };
 
     const columns: DataTableProps<Invoice>['columns'] = [
@@ -94,7 +98,7 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
             accessor: 'customer.first_name',
             title: 'Customer Name',
             sortable: true,
-            render: ({ customer }) => `${customer?.full_name}`,
+            render: ({ customer }) => `${typeof customer === 'object' ? customer?.full_name : ''}`,
         },
         {
             accessor: 'createdAt',

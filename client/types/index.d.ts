@@ -113,7 +113,7 @@ export interface StatusCounts {
 /* INVOICE */
 
 export interface Invoice {
-  _id: number;
+  _id: string;
   creator: InvoicePerson;
   customer: InvoicePerson;
   invoice_items: InvoiceItem[];
@@ -121,7 +121,7 @@ export interface Invoice {
   shipping_cost: number;
   discount: number;
   tax: number;
-  due_date: Date;
+  due_date: string;
   payment_type: 'cash' | 'credit card' | 'bank transfer' | 'paypal' | 'stripe' | 'mobile' | 'debit card' | 'cheque';
   additional_note?: string;
   subtotal: number;
@@ -133,7 +133,7 @@ export interface Invoice {
 
 export interface InvoiceItem {
   product: {
-    _id: number;
+    _id: number | string;
     name: string;
   };
   quantity: number;
@@ -153,44 +153,6 @@ export interface InvoicePerson {
 }
 
 
-// export interface Invoice {
-//   _id: number;
-//   staff: InvoiceCustomer;
-//   customer: InvoiceCustomer;
-//   invoice_items: InvoiceItem[];
-//   invoice_number: string;
-//   status: string;
-//   total_price: string;
-//   discounts: string;
-//   shipping_costs: string;
-//   taxes: string;
-//   amount_due: string;
-//   payment_terms: string;
-//   additional_notes: string;
-//   timestamp: Date;
-//   updated: Date;
-// }
-
-
-// export interface InvoiceItem {
-//   _id: number;
-//   product: InvoiceItemProduct;
-//   quantity: number;
-//   discounts: number;
-// }
-
-// export interface InvoiceItemProduct {
-//   _id: number;
-//   name: string;
-//   price: number;
-// }
-
-
-// export interface Category {
-//   _id?: number,
-//   title: string,
-//   description: string,
-// }
 
 
 /* KYC */
@@ -254,18 +216,15 @@ export interface Coparate {
 
 /* PRODUCT */
 export interface Product {
-  _id: number;
-  thumb: string;
+  _id: string;
   name: string;
   description: string;
-  color: null;
-  size: null;
-  img: null | string;
-  author: null | Author
-  price: string;
-  discount: string;
-  is_pub: boolean;
-  category: ProductCategory;
+  price: number;
+  stock_quantity: number;
+  category: string;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductCategory {

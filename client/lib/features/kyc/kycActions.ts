@@ -98,7 +98,7 @@ export const kycCrUpAction = async (_: unknown, payload: FormData) => {
 };
 
 
-export const delKyc = async (_: unknown, id: number) => {
+export const delKyc = async (_: unknown, id: string) => {
   try {
     const headers = await authConfig();
     const response = await fetch(`${BASE_URL}customers/${id}/`, {
@@ -121,7 +121,7 @@ export const delKyc = async (_: unknown, id: number) => {
 };
 
 
-export const delMultiKyc = async (_: unknown, ids: number[]) => {
+export const delMultiKyc = async (_: unknown, ids: string[]) => {
 
   if (ids.length === 0) return { success: false, message: "No customers selected for deletion" };
 
