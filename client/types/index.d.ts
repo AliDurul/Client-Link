@@ -133,7 +133,7 @@ export interface Invoice {
 
 export interface InvoiceItem {
   product: {
-    _id: number | string;
+    _id: string;
     name: string;
   };
   quantity: number;
@@ -143,7 +143,7 @@ export interface InvoiceItem {
 }
 
 export interface InvoicePerson {
-  _id: number;
+  _id: string;
   first_name: string;
   last_name: string;
   full_name: string;
@@ -157,7 +157,7 @@ export interface InvoicePerson {
 
 /* KYC */
 export interface Kyc {
-  _id: number;
+  _id: string;
   customer_id: string;
   first_name: string;
   last_name: string;

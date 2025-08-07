@@ -13,8 +13,8 @@ export const PAGE_SIZES = [10, 20, 30, 50, 100];
 interface UseDataTableConfig<T> {
     defaultSortAccessor?: string;
     defaultSortDirection?: 'asc' | 'desc';
-    deleteAction?: (_: unknown, id: string) => Promise<any>;
-    deleteMultiAction?: (_: unknown, ids: string[]) => Promise<any>;
+    deleteAction?: (_: unknown, { url, id }: { url: string; id: string }) => Promise<any>;
+    deleteMultiAction?: (_: unknown, { url, ids }: { url: string; ids: string[] }) => Promise<any>;
 }
 
 export function useDataTable<T extends { _id: string }>(config: UseDataTableConfig<T> = {}) {
@@ -45,11 +45,11 @@ export function useDataTable<T extends { _id: string }>(config: UseDataTableConf
 
     // Action states (only if actions are provided)
     const [stateSingle, actionSingle, isPendingSingle] = useActionState(
-        deleteAction || (async (_: unknown, __: any) => Promise.resolve(null)),
+        deleteAction || (async (_: unknown, { __ }: any) => Promise.resolve(null)),
         null
     );
     const [stateMulti, actionMulti, isPendingMulti] = useActionState(
-        deleteMultiAction || (async (_: unknown, __: any) => Promise.resolve(null)),
+        deleteMultiAction || (async (_: unknown, { }: any) => Promise.resolve(null)),
         null
     );
 
@@ -89,20 +89,20 @@ export function useDataTable<T extends { _id: string }>(config: UseDataTableConf
         router.push(url);
     };
 
-    const handleDelete = async (recordId: string, e?: React.MouseEvent) => {
+    const handleDelete = async ({ url, id }: { url: string; id: string }, e?: React.MouseEvent) => {
         e?.stopPropagation();
         if (!deleteAction) return;
         startTransition(() => {
-            actionSingle(recordId);
+            actionSingle({ url, id });
         });
     };
 
-    const handleMultiDelete = async () => {
+    const handleMultiDelete = async (url: string) => {
         if (selectedRecords.length === 0 || !deleteMultiAction) return;
         const ids = selectedRecords.map(record => record._id);
 
         startTransition(() => {
-            actionMulti(ids);
+            actionMulti({ url, ids });
         });
     };
 

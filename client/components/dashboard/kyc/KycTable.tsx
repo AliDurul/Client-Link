@@ -8,8 +8,9 @@ import { use } from 'react';
 import type { DataTableColumn, DataTableProps } from 'mantine-datatable';
 import { DataTable } from 'mantine-datatable';
 import SearchInput from '@/components/shared/SearchInput';
-import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions';
+import { delMultiKyc } from '@/lib/features/kyc/kycActions';
 import { useDataTable } from '@/hooks/useDataTable';
+import { delData, delMultiData } from '@/lib/features/shared/actionUtils';
 
 interface KycMainProps {
   customerPromise: Promise<Pagination<Kyc>>;
@@ -30,8 +31,8 @@ export default function KycTable({ customerPromise, }: KycMainProps) {
     getTableProps,
     getRowExpansionProps,
   } = useDataTable<Kyc>({
-    deleteAction: delKyc,
-    deleteMultiAction: delMultiKyc,
+    deleteAction: delData,
+    deleteMultiAction: delMultiData,
   });
 
 
@@ -58,7 +59,7 @@ export default function KycTable({ customerPromise, }: KycMainProps) {
               type="button"
               className="flex hover:text-danger"
               disabled={isPendingSingle}
-              onClick={(e) => { handleDelete(record._id, e); }}>
+              onClick={(e) => { handleDelete({ url: 'customers', id: record._id }, e); }}>
               <DeleteIcon />
             </button>
           </>
@@ -141,7 +142,7 @@ export default function KycTable({ customerPromise, }: KycMainProps) {
             <button
               type="button"
               className="btn btn-danger gap-2"
-              onClick={handleMultiDelete} disabled={isPendingMulti}
+              onClick={() => handleMultiDelete('customers')} disabled={isPendingMulti}
             >
               <DeleteIcon />
               Delete

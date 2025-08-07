@@ -76,10 +76,10 @@ export const invoiceSchema = z.object({
     tax: z.number().min(0, "Tax must be at least 0"),
     customer: z.string().min(1, "Customer is required"),
     due_date: z.string().min(1, "Due date is required"),
-    status: z.enum(['draft', 'paid', 'unpaid', 'cancelled']).default('draft'),
+    status: z.enum(['draft', 'sent', 'paid', 'overdue', 'closed', 'refunded']).default('draft'),
     additional_note: z.string().optional(),
     shipping_cost: z.number().min(0, "Shipping cost must be at least 0"),
     discount: z.number().min(0, "Discount must be at least 0"),
-    payment_type: z.enum(['cash', 'card', 'bank', 'other']).default('cash'),
+    payment_type: z.enum(['cash', 'credit card', 'bank transfer', 'paypal', 'stripe', 'mobile', 'debit card', 'cheque']).default('cash'),
     invoice_items: z.array(invoiceItemSchema).min(1, "At least one invoice item is required"),
 });

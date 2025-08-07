@@ -98,29 +98,6 @@ export const kycCrUpAction = async (_: unknown, payload: FormData) => {
 };
 
 
-export const delKyc = async (_: unknown, id: string) => {
-  try {
-    const headers = await authConfig();
-    const response = await fetch(`${BASE_URL}customers/${id}/`, {
-      method: "DELETE",
-      headers,
-    });
-
-
-    if (response.status !== 204) {
-      const res = await response.json();
-      throw new Error(res.message || "Something went wrong, Please try again!");
-    }
-
-    revalidateTag('customers');
-    return { success: true, message: "Customer deleted successfully" };
-
-  } catch (error: any) {
-    return { success: false, message: error.message || "Something went wrong, Please try again!" };
-  }
-};
-
-
 export const delMultiKyc = async (_: unknown, ids: string[]) => {
 
   if (ids.length === 0) return { success: false, message: "No customers selected for deletion" };

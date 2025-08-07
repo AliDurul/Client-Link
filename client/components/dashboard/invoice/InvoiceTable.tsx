@@ -1,7 +1,7 @@
 'use client';
 import SearchInput from '@/components/shared/SearchInput';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
-import { delKyc, delMultiKyc } from '@/lib/features/kyc/kycActions'; // TODO: Create proper invoice actions
+import { delMultiKyc } from '@/lib/features/kyc/kycActions'; // TODO: Create proper invoice actions
 import { formatDate } from '@/lib/utility/functions';
 import { Invoice, Pagination } from '@/types';
 import { DataTable, type DataTableColumn, type DataTableProps } from 'mantine-datatable';
@@ -10,6 +10,7 @@ import { use } from 'react';
 import { LuMousePointerClick } from 'react-icons/lu';
 import { useDataTable } from '@/hooks/useDataTable';
 import Image from 'next/image';
+import { delData, delMultiData } from '@/lib/features/shared/actionUtils';
 
 
 interface InvoiceTableProps {
@@ -32,8 +33,8 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
         getTableProps,
         getRowExpansionProps
     } = useDataTable<Invoice>({
-        deleteAction: delKyc, // TODO: Create proper invoice actions
-        deleteMultiAction: delMultiKyc, // TODO: Create proper invoice actions
+        deleteAction: delData, // TODO: Create proper invoice actions
+        deleteMultiAction: delMultiData, // TODO: Create proper invoice actions
     });
 
 
@@ -58,7 +59,7 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
                             type="button"
                             className="flex hover:text-danger"
                             disabled={isPendingSingle}
-                            onClick={(e) => { handleDelete(record._id, e); }}>
+                            onClick={(e) => { handleDelete({ url: 'invoices', id: record._id }, e); }}>
                             <DeleteIcon />
                         </button>
                     </>
@@ -147,10 +148,13 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
             <div className="mb-4.5 flex flex-col justify-between gap-5 md:flex-row md:items-center">
                 <div className="ml-3 flex flex-wrap items-center gap-2">
                     {
-                        selectedRecords.length >= 1 && <button type="button" className="btn btn-danger gap-2" onClick={handleMultiDelete} disabled={isPendingMulti}>
-                            <DeleteIcon />
-                            Delete
-                        </button>
+                        selectedRecords.length >= 1 && (
+                            <button type="button" className="btn btn-danger gap-2"
+                                onClick={() => handleMultiDelete('invoices')} disabled={isPendingMulti}>
+                                <DeleteIcon />
+                                Delete
+                            </button>
+                        )
                     }
                     <button
                         onClick={() => handleCreate('/invoices/action/?s=c')}

@@ -9,8 +9,8 @@ export const statusOp = [
 export const paymentOp = [
     { label: 'Cash', value: 'cash' },
     { label: 'Cheque', value: 'cheque' },
-    { label: 'Credit Card', value: 'credit Card' },
-    { label: 'Debit Card', value: 'debit Card' },
+    { label: 'Credit Card', value: 'credit card' },
+    { label: 'Debit Card', value: 'debit card' },
     { label: 'Paypal', value: 'paypal' },
     { label: 'Stripe', value: 'stripe' },
     { label: 'Mobile', value: 'mobile' },

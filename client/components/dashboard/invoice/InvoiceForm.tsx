@@ -2,7 +2,7 @@
 import InputBox from '@/components/shared/InputBox';
 import { Invoice, InvoiceItem, Kyc, Product } from '@/types';
 import Image from 'next/image';
-import React, { startTransition, useActionState, useEffect, useMemo, useState, useTransition } from 'react'
+import React, { startTransition, useActionState, useCallback, useEffect, useMemo, useState, useTransition } from 'react'
 import Select from 'react-select';
 import { paymentOp, statusOp } from './InvoiceConstraint';
 import { ListItem } from '@mantine/core/lib/List/ListItem/ListItem';
@@ -10,6 +10,7 @@ import { InvoiceCrUpAction } from '@/lib/features/invoices/invoiceAction';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import InvoiceItemsTable from './form/InvoiceItemsTable';
+import InvoiceSummary from './form/InvoiceSummary';
 
 
 
@@ -31,7 +32,7 @@ interface InvoiceFormProps {
 }
 export default function InvoiceForm({ invoice, customers, products, isEdit, error }: InvoiceFormProps) {
 
-
+    console.log(invoice);
     if (error) {
         return <div className="error">Error: {error}</div>;
     }
@@ -67,7 +68,7 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
         invoice_items: invoice?.invoice_items || [initialInvoiceItem],
     });
 
-    const [selectedCustomer, setSelectedCustomer] = useState<Kyc | null>(null);
+    const [selectedCustomer, setSelectedCustomer] = useState<Kyc | undefined>(customers?.find(customer => customer._id === invoice?.customer._id));
 
 
     // Utility functions
@@ -77,9 +78,9 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
         if (!state) return;
 
         if (state?.success) {
-            router.replace('/invoices')
+            // router.replace('/invoices')
             toast.success(state?.message || 'Operation completed successfully');
-            const timer = setTimeout(() => router.push('/kyc'), 2000);
+            const timer = setTimeout(() => router.replace('/invoices'), 500);
             return () => clearTimeout(timer);
         } else {
 
@@ -101,14 +102,11 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
         }));
     }
 
-    const handleInvoiceItemChange = (index: number, field: string, value: any) => {
+    const handleInvoiceItemChange = useCallback((index: number, field: string, value: any) => {
         setInitialValues(prev => {
             const updatedItems = [...prev.invoice_items];
-
-            // Handle nested object updates
             if (field.includes('.')) {
                 const [parentField, childField] = field.split('.');
-
                 updatedItems[index] = {
                     ...updatedItems[index],
                     [parentField]: {
@@ -117,18 +115,11 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                     }
                 };
             } else {
-                updatedItems[index] = {
-                    ...updatedItems[index],
-                    [field]: value
-                };
+                updatedItems[index] = { ...updatedItems[index], [field]: value };
             }
-
-            return {
-                ...prev,
-                invoice_items: updatedItems
-            };
+            return { ...prev, invoice_items: updatedItems };
         });
-    }
+    }, []);
 
     const getTotalDiscounts = (invoiceItems: InvoiceItem[]) => {
         return invoiceItems.reduce((acc, item) => acc + item.discount, 0) + Number(initialValues.discount)
@@ -138,13 +129,31 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
         return invoiceItems.reduce((total, item) => total + item.total_price, 0) + Number(initialValues.shipping_cost) - Number(initialValues.discount);
     };
 
-    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     startTransition(() => action(initialValues))
-    // }s
+    const addItem = () => {
+        setInitialValues(prev => ({
+            ...prev,
+            invoice_items: [...prev.invoice_items, { ...initialInvoiceItem }]
+        }));
+    };
+
+    const removeItem = (index: number) => {
+        setInitialValues(prev => ({
+            ...prev,
+            invoice_items: prev.invoice_items.filter((_, i) => i !== index)
+        }));
+    };
+    const handleFormSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+
+        const formData = { ...initialValues };
+
+        startTransition(() => {
+            action(formData);
+        });
+    };
 
     return (
-        <form action={() => action(initialValues)} className='flex flex-col gap-2.5 xl:flex-row mt-5'>
+        <form onSubmit={handleFormSubmit} className='flex flex-col gap-2.5 xl:flex-row mt-5'>
 
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
 
@@ -176,7 +185,7 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                                 type="date"
                                 placeholder="Select Due Date"
                                 className='w-2/3 lg:w-[250px]'
-                                value={initialValues.due_date.toString()}
+                                value={initialValues.due_date ? new Date(initialValues.due_date).toISOString().split('T')[0] : ''}
                                 onChange={(e) => handleValueChange('due_date', e.target.value)}
                             />
                         </div>
@@ -200,15 +209,15 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                                 options={customerOp}
                                 className='flex-1'
                                 required
-                                // @ts-expect-error
-                                value={customerOp.find(option => option.value === initialValues.customer?._id)}
-                                onChange={option => { setSelectedCustomer(option ? option : null); handleValueChange('customer', option ? option.value : ''); }}
+                                value={customerOp.find(option => option.value === initialValues.customer)}
+                                onChange={option => { setSelectedCustomer(option ? option : undefined); handleValueChange('customer', option ? option.value : ''); }}
                             />
                         </div>
                         <div className='flex items-center'>
                             <label htmlFor="customer_name-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Name
                             </label>
+
                             <InputBox
                                 id="customer_name"
                                 type='text'
@@ -262,15 +271,20 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                             <label htmlFor="status" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Status
                             </label>
-                            <Select
+                            <select
+                                className='form-select flex-1'
                                 id='status'
-                                name='status'
-                                placeholder="Select The Status"
-                                options={statusOp}
-                                value={statusOp.find(option => option.value === initialValues.status)}
-                                onChange={option => handleValueChange('status', option ? option.value : 'draft')}
-                                className='flex-1'
-                            />
+                                value={initialValues.status}
+                                onChange={e => handleValueChange('status', e.target.value)}
+                            >
+                                {
+                                    statusOp.map(option => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))
+                                }
+                            </select>
                         </div>
 
                         <div className="flex items-center">
@@ -306,7 +320,7 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                     </div>
                 </div>
 
-                {/* <div className="mt-8">
+                <div className="mt-8">
                     <table>
                         <thead>
                             <tr>
@@ -411,10 +425,7 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                                         <td>
                                             <button
                                                 type="button"
-                                                onClick={() => setInitialValues(prev => ({
-                                                    ...prev,
-                                                    invoice_items: prev.invoice_items.filter((_, i) => i !== index)
-                                                }))}
+                                                onClick={() => removeItem(index)}
                                             >
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -443,25 +454,12 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                             <button
                                 type="button"
                                 className="btn btn-primary"
-                                onClick={() => {
-                                    setInitialValues(prev => ({
-                                        ...prev,
-                                        invoice_items: [...prev.invoice_items, { ...initialInvoiceItem }]
-                                    }));
-                                }}>
+                                onClick={addItem}>
                                 Add Item
                             </button>
                         </div>
                     </div>
-                </div> */}
-
-                <InvoiceItemsTable 
-                    items={initialValues.invoice_items}
-                    productOp={productOp}
-                    onItemChange={handleInvoiceItemChange}
-                    onAddItem={addItem}
-                    onRemoveItem={removeItem}
-                />
+                </div>
 
                 <div className="mt-8 px-4">
                     <InputBox
@@ -504,14 +502,20 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                     />
                     <div className="mt-4">
                         <label htmlFor="payment-method">Accept Payment Via</label>
-                        <Select
-                            placeholder="Select The Payment"
-                            options={paymentOp}
-                            value={paymentOp.find(option => option.value === initialValues.payment_type)}
-                            onChange={option => { handleValueChange('payment_type', option ? option.value : ''); }}
-                            className='flex-1'
-                            required
-                        />
+                        <select
+                            id='payment-method'
+                            className='form-select flex-1'
+                            onChange={e => handleValueChange('payment_type', e.target.value)}
+                            value={initialValues.payment_type}
+                        >
+                            {
+                                paymentOp.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
                 <div className="panel">
