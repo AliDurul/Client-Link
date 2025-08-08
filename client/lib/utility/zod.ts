@@ -75,7 +75,19 @@ export const invoiceItemSchema = z.object({
 export const invoiceSchema = z.object({
     tax: z.number().min(0, "Tax must be at least 0"),
     customer: z.string().min(1, "Customer is required"),
-    due_date: z.string().min(1, "Due date is required"),
+    due_date: z.string()
+        .min(1, "Due date is required")
+        .refine(
+            (dateStr) => {
+                const dueDate = new Date(dateStr);
+                const today = new Date();
+                // Remove time part for comparison
+                dueDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+                return dueDate >= today;
+            },
+            { message: "Due date cannot be in the past" }
+        ),
     status: z.enum(['draft', 'sent', 'paid', 'overdue', 'closed', 'refunded']).default('draft'),
     additional_note: z.string().optional(),
     shipping_cost: z.number().min(0, "Shipping cost must be at least 0"),

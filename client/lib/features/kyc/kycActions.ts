@@ -23,8 +23,6 @@ export const kycCrUpAction = async (_: unknown, payload: FormData) => {
   const id = payload.get('_id') as string;
   payload.delete('_id');
 
-  console.log('id:', !!id);
-
   const rowData = {
     first_name: payload.get('first_name') as string,
     last_name: payload.get('last_name') as string,
@@ -84,7 +82,7 @@ export const kycCrUpAction = async (_: unknown, payload: FormData) => {
 
     revalidateTag('customers');
     return {
-      message: !!id ? "Task updated successfully!" : "Task created successfully!",
+      message: !!id ? "Kyc updated successfully!" : "Kyc created successfully!",
       success: true
     };
 

@@ -66,8 +66,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
     if (data.medication) data.medication = data.medication === "true" || data.medication === true;
 
     // Attach file if present
-    if (req.file) {
-        console.log(req.file);
+    if (req.file && req.file.size > 0 && req.file.buffer) {
         const randomSuffix = crypto.randomBytes(8).toString('hex');
         const fileName = `profile_pics/${randomSuffix}_${req.file.originalname}`;
 
@@ -123,7 +122,6 @@ export const updateCustomer = async (req: Request, res: Response): Promise<void>
         {
             new: true,
             runValidators: true,
-            // strict: false
         }
     );
 

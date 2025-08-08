@@ -29,7 +29,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
     };
 
 
-    const inputValue = value !== null && value !== undefined ? String(value) : '';
+    const defaultValue = value !== null && value !== undefined ? String(value) : '';
 
     return (
         <div className='flex-1'>
@@ -41,7 +41,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                     <textarea
                         name={name}
                         placeholder={placeholder}
-                        value={inputValue}
+                        defaultValue={defaultValue}
                         id={id}
                         disabled={disabled}
                         // readOnly={readOnly}
@@ -53,7 +53,7 @@ export default function InputBox({ name, type, id, value, placeholder, icon, err
                         name={name}
                         type={isPassVisible ? 'text' : type}
                         placeholder={placeholder}
-                        value={inputValue}
+                        defaultValue={defaultValue}
                         id={id}
                         disabled={disabled}
                         readOnly={readOnly}

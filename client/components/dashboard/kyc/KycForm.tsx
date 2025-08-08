@@ -113,15 +113,13 @@ export default function KycForm({ kyc, isEdit, readOnly, error }: KycFormProps) 
         if (!state?.message) return;
 
 
+        toast[state.success ? 'success' : 'error'](state.message || 'Operation completed successfully');
         if (state.success) {
-            router.replace('/kyc')
-            const timer = setTimeout(() => router.push('/kyc'), 2000);
+            const timer = setTimeout(() => router.replace('/kyc'), 2000);
             return () => clearTimeout(timer);
         }
-        toast[state.success ? 'success' : 'error'](state.message || 'Operation completed successfully');
 
     }, [state]);
-
 
     return (
         <form action={action} className="my-5 grid grid-cols-1 gap-5 lg:grid-cols-3 xl:grid-cols-4">
@@ -133,7 +131,7 @@ export default function KycForm({ kyc, isEdit, readOnly, error }: KycFormProps) 
                 <div className="mb-5">
                     <div className="flex flex-col items-center justify-center">
                         {
-                            (readOnly || isEdit) && kyc?.profile_pic
+                            (readOnly || isEdit)
                                 ? <Image
                                     src={kyc?.profile_pic ? kyc.profile_pic : '/assets/images/profile-pic.png'}
                                     alt="profile"

@@ -32,7 +32,6 @@ interface InvoiceFormProps {
 }
 export default function InvoiceForm({ invoice, customers, products, isEdit, error }: InvoiceFormProps) {
 
-    console.log(invoice);
     if (error) {
         return <div className="error">Error: {error}</div>;
     }
@@ -214,16 +213,14 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                             />
                         </div>
                         <div className='flex items-center'>
-                            <label htmlFor="customer_name-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                            <label htmlFor="customer_name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Name
                             </label>
 
-                            <InputBox
-                                id="customer_name"
-                                type='text'
-                                placeholder="Enter Name"
-                                value={selectedCustomer?.full_name}
-                            />
+                            <div>
+                                <input type="text" id='customer_name' className='form-input' placeholder='Enter Name' value={selectedCustomer?.full_name} readOnly />
+                            </div>
+
                         </div>
 
 
@@ -231,36 +228,27 @@ export default function InvoiceForm({ invoice, customers, products, isEdit, erro
                             <label htmlFor="customer_email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Email
                             </label>
-                            <InputBox
-                                id="customer_email"
-                                type='text'
-                                placeholder="Enter Email"
-                                value={selectedCustomer?.email}
-                            />
+                            <div>
+                                <input type="text" id='customer_email' className='form-input' placeholder='Enter Email' value={selectedCustomer?.email} readOnly />
+                            </div>
                         </div>
 
                         <div className='flex items-center'>
                             <label htmlFor="customer_address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Address
                             </label>
-                            <InputBox
-                                id="customer_address"
-                                type='text'
-                                placeholder="Enter Address"
-                                value={selectedCustomer ? selectedCustomer?.address?.street + ', ' + selectedCustomer?.address?.city + ', ' + selectedCustomer?.address?.state + ', ' + selectedCustomer?.address?.country : ''}
-                            />
+                            <div>
+                                <input type="text" id='customer_address' className='form-input' placeholder='Enter Address' value={selectedCustomer ? selectedCustomer?.address?.street + ', ' + selectedCustomer?.address?.city + ', ' + selectedCustomer?.address?.state + ', ' + selectedCustomer?.address?.country : ''} readOnly />
+                            </div>
                         </div>
 
                         <div className='flex items-center'>
                             <label htmlFor="customer_phone" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                 Phone Number
                             </label>
-                            <InputBox
-                                id="customer_phone"
-                                type='text'
-                                placeholder="Enter Phone Number"
-                                value={selectedCustomer?.phone_number}
-                            />
+                            <div>
+                                <input type="text" id='customer_phone' className='form-input' placeholder='Enter Phone Number' value={selectedCustomer?.phone_number} readOnly />
+                            </div>
                         </div>
 
                     </div>

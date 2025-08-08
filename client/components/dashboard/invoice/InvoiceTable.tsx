@@ -71,17 +71,15 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
     const rowExpansion: DataTableProps<Invoice>['rowExpansion'] = {
         ...getRowExpansionProps(),
         content: ({ record }) => {
-            const customer = typeof record.customer === 'object' ? record.customer : {};
-            const { first_name, last_name, email, profile_pic } = customer as any;
             return (
                 <div className='flex items-center gap-4 pl-12'>
                     <Image
                         width={32}
                         height={32}
                         className="h-8 w-8 rounded-full object-cover"
-                        src={profile_pic ? profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
+                        src={record?.customer?.profile_pic ? record.customer.profile_pic : '/assets/images/profile-pic.png'} alt="profile picture" />
                     <p >
-                        {first_name} {last_name}, email is {email}.
+                        {record?.customer?.first_name} {record?.customer?.last_name}, email is {record?.customer?.email}.
                     </p>
                 </div>
             );
