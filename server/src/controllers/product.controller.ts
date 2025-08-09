@@ -7,8 +7,8 @@ import { CustomError } from "../utils/common";
 
 export const getProducts = async (req: Request, res: Response): Promise<void> => {
 
-    const result = await res.getModelList(Product)
-
+    const result = await res.getModelList(Product);
+    
     res.send({
         success: true,
         details: await res.getModelListDetails(Product),

@@ -31,7 +31,6 @@ export const delFaq = async (id: any) => {
 
 
 export const faqCrUpAction = async (_: unknown, payload: FormData) => {
-  const headers = await authConfig();
   const id = payload.get('id') as string;
 
   const rowData = {
@@ -50,6 +49,8 @@ export const faqCrUpAction = async (_: unknown, payload: FormData) => {
   const method = id ? "PUT" : "POST";
 
   try {
+    const headers = await authConfig();
+
     const response = await fetch(url, {
       method,
       headers,

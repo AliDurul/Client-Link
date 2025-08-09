@@ -18,6 +18,17 @@ export const faqSchema = z.object({
     question: z.string().min(10, "Question is required and must be at least 10 characters long"),
     answer: z.string().min(15, "Answer is required and must be at least 15 characters long"),
 })
+/* -------------------- Product Schema -------------------- */
+
+export const productSchema = z.object({
+    // _id: z.string().min(1, "Product ID is required"),
+    name: z.string().min(1, "Product name is required"),
+    price: z.number().min(0, "Price must be at least 0"),
+    description: z.string().min(1, "Description is required"),
+    // category: z.string().min(1, "Category is required"),
+    // stock_quantity: z.number().min(0, "Stock quantity must be at least 0"),
+});
+
 
 /* -------------------- Task Schema -------------------- */
 

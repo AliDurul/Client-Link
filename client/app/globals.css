@@ -597,6 +597,7 @@
         @apply border-b-0;
     }
 
+
     /* code hightlight */
     pre {
         direction: ltr;
@@ -729,36 +730,3 @@ pre.hljs {
     @apply mr-0 ml-2.5;
 }
 
-/* swal2 */
-.swal2-container .swal2-close {
-    @apply text-white hover:text-dark-light focus:shadow-none;
-}
-
-.swal2-container .swal2-popup.swal2-toast {
-    @apply bg-dark py-2.5 px-5;
-}
-
-.swal2-popup.swal2-toast .swal2-title,
-.swal2-container .swal2-popup.swal2-toast .swal2-html-container {
-    @apply text-white;
-}
-.swal2-container .swal2-popup.swal2-toast.color-primary {
-    @apply bg-primary;
-}
-
-.swal2-container .swal2-popup.swal2-toast.color-secondary {
-    @apply bg-secondary;
-}
-
-.swal2-container .swal2-popup.swal2-toast.color-warning {
-    @apply bg-warning;
-}
-.swal2-container .swal2-popup.swal2-toast.color-info {
-    @apply bg-info;
-}
-.swal2-container .swal2-popup.swal2-toast.color-danger {
-    @apply bg-danger;
-}
-.swal2-container .swal2-popup.swal2-toast.color-success {
-    @apply bg-success;
-}

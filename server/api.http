@@ -1,0 +1,46 @@
+### LOGIN
+POST http://localhost:8000/api/auth/login
+content-type: application/json
+
+{
+    "email": "john.doe@company.com",
+    "password": "aA?12345"
+}
+
+### CUSTOMERS
+GET http://localhost:8000/api/customers
+content-type: application/json
+
+
+### PRODUCTS
+GET http://localhost:8000/api/products
+content-type: application/json
+
+### TicketCategory
+GET http://localhost:8000/api/tickets/categories
+content-type: application/json
+
+{
+    "name": "category - 7",
+    "description": "desc - 7"
+}
+
+
+### TICKETS
+POST http://localhost:8000/api/tickets
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTI1ZDVkNTA4ZTNmNGM4Nzg1ODQ1NSIsImVtYWlsIjoiam9obi5kb2VAY29tcGFueS5jb20iLCJwaG9uZSI6IisxLTU1NS0wMTAxIiwiZmlyc3RfbmFtZSI6IkpvaG4iLCJsYXN0X25hbWUiOiJEb2UiLCJwcm9maWxlX3BpYyI6Imh0dHBzOi8vdDMuZnRjZG4ubmV0L2pwZy8wNy8yNC81OS83Ni8zNjBfRl83MjQ1OTc2MDhfcG1vNUJzVnVtRmNGeUhKS2xBU0cyWTJLcGtrZmlZVVUuanBnIiwidXNlcl90eXBlIjoiYWRtaW4iLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NTQ3MzU0NTYsImV4cCI6MTc1NDgyMTg1Nn0.rrM2YNgoPEFF5Q4CjtR2gm-LdbdEjV98bujdV5WTi0w
+
+{
+    "customer": "6895c952fd8cdca80163a316",
+    "caller_details": {
+        "first_name": "test",
+        "last_name": "testing",
+        "email": "test@test.com",
+        "phone_number": "+1-555-0101"
+    },
+    "title": "Test Ticket 2",
+    "description": "This is a test 2 ticket",
+    "category": "68972a25718db8f4eaa70141"
+
+}

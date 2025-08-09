@@ -98,8 +98,6 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
 
     //    await wait(5000);
 
-
-
     const queryObject = buildQueryParams({
         searchQueries,
         filterQueries,

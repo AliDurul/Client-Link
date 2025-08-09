@@ -14,7 +14,7 @@ export default function SearchInput({ className = '' }: { className?: string }) 
     useEffect(() => {
         const urlQuery = searchParams.get('q') || '';
         setQuery(urlQuery);
-    }, []); // Only run on mount
+    }, []);
 
 
 
@@ -52,7 +52,7 @@ export default function SearchInput({ className = '' }: { className?: string }) 
 
         return () => clearTimeout(delayBounceFn);
 
-    }, [query]); // Only depend on query changes, not searchParams
+    }, [query]); 
 
 
 

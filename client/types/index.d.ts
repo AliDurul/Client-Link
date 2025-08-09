@@ -223,8 +223,8 @@ export interface Product {
   stock_quantity: number;
   category: string;
   is_active: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ProductCategory {
