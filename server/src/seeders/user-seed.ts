@@ -3,20 +3,18 @@ import User from '../models/user.model';
 
 
 const userSeedData = [
-    {
-        email: 'john.doe@company.com',
-        password: 'aA?12345',
-        first_name: 'John',
-        last_name: 'Doe',
-        phone_number: '+1-555-0101',
-        role: 'admin',
-        department: 'IT',
-        employee_id: 'EMP001',
-        status: 'active',
-        is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['users.read', 'users.write', 'users.delete', 'dashboard.read']
-    },
+    // {
+    //     email: 'lee.dev@gmail.com',
+    //     password: 'aA?12345',
+    //     first_name: 'Lee',
+    //     last_name: 'Dev',
+    //     phone_number: '+1-555-0101',
+    //     role: 'admin',
+    //     department: 'IT',
+    //     status: 'active',
+    //     is_verified: true,
+    //     profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+    // },
     {
         email: 'jane.smith@company.com',
         password: 'aA?12345',
@@ -28,8 +26,7 @@ const userSeedData = [
         employee_id: 'EMP002',
         status: 'active',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['users.read', 'reports.read', 'dashboard.read']
+        profile_pic: 'profile_pics/profile-2.jpeg',
     },
     {
         email: 'mike.johnson@company.com',
@@ -42,8 +39,7 @@ const userSeedData = [
         employee_id: 'EMP003',
         status: 'active',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['dashboard.read']
+        profile_pic: 'profile_pics/',
     },
     {
         email: 'sarah.wilson@company.com',
@@ -56,8 +52,7 @@ const userSeedData = [
         employee_id: 'EMP004',
         status: 'active',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['content.moderate', 'dashboard.read']
+        profile_pic: 'profile_pics/profile-3.jpeg',
     },
     {
         email: 'david.brown@company.com',
@@ -70,8 +65,7 @@ const userSeedData = [
         employee_id: 'EMP005',
         status: 'active',
         is_verified: false,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['tickets.read', 'tickets.write']
+        profile_pic: 'profile_pics/profile-4.jpeg',
     },
     {
         email: 'lisa.garcia@company.com',
@@ -84,8 +78,7 @@ const userSeedData = [
         employee_id: 'EMP006',
         status: 'inactive',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['hr.read']
+        profile_pic: 'profile_pics/profile-5.jpeg',
     },
     {
         email: 'robert.miller@company.com',
@@ -98,8 +91,7 @@ const userSeedData = [
         employee_id: 'EMP007',
         status: 'active',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['finance.read', 'reports.read', 'dashboard.read']
+        profile_pic: 'profile_pics/profile-6.jpeg',
     },
     {
         email: 'emily.davis@company.com',
@@ -112,8 +104,7 @@ const userSeedData = [
         employee_id: 'EMP008',
         status: 'active',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['support.read', 'support.write']
+        profile_pic: 'profile_pics/profile-7.jpeg',
     },
     {
         email: 'alex.martinez@company.com',
@@ -126,8 +117,7 @@ const userSeedData = [
         employee_id: 'EMP009',
         status: 'suspended',
         is_verified: true,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['operations.read']
+        profile_pic: 'profile_pics/profile-8.jpeg',
     },
     {
         email: 'amanda.taylor@company.com',
@@ -140,8 +130,7 @@ const userSeedData = [
         employee_id: 'EMP010',
         status: 'active',
         is_verified: false,
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
-        permissions: ['content.read', 'content.moderate']
+        profile_pic: 'profile_pics/profile-9.jpeg',
     }
 ];
 
@@ -177,7 +166,7 @@ const customerSeedData = [
         boys: 1,
         girls: 1,
         finincial_institution: 'Chase Bank',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-10.jpeg',
         status: 'active',
         notes: 'Premium customer with excellent payment history'
     },
@@ -212,7 +201,7 @@ const customerSeedData = [
         boys: 0,
         girls: 0,
         finincial_institution: 'Bank of America',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-11.jpeg',
         status: 'active',
         notes: 'Creative professional, prefers digital communication'
     },
@@ -246,7 +235,7 @@ const customerSeedData = [
         boys: 1,
         girls: 0,
         finincial_institution: 'Wells Fargo',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-12.jpeg',
         status: 'inactive',
         notes: 'Inactive since June, requires follow-up'
     },
@@ -280,7 +269,7 @@ const customerSeedData = [
         boys: 2,
         girls: 1,
         finincial_institution: 'SunTrust Bank',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-13.jpeg',
         status: 'active',
         notes: 'High-value customer, frequent purchaser'
     },
@@ -315,7 +304,7 @@ const customerSeedData = [
         boys: 2,
         girls: 2,
         finincial_institution: 'Chase Bank',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-14.jpeg',
         status: 'active',
         notes: 'Industry professional, reliable client'
     },
@@ -349,7 +338,7 @@ const customerSeedData = [
         boys: 0,
         girls: 0,
         finincial_institution: 'US Bank',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-15.jpeg',
         status: 'active',
         notes: 'Education professional, very organized'
     },
@@ -383,7 +372,7 @@ const customerSeedData = [
         boys: 1,
         girls: 1,
         finincial_institution: 'Credit Union',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-16.jpeg',
         status: 'active',
         notes: 'Tech industry veteran, premium service level'
     },
@@ -418,7 +407,7 @@ const customerSeedData = [
         boys: 0,
         girls: 1,
         finincial_institution: 'First National Bank',
-        profile_pic: 'https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg',
+        profile_pic: 'profile_pics/profile-17.jpeg',
         status: 'active',
         notes: 'Healthcare professional, requires flexible scheduling'
     }
@@ -471,8 +460,8 @@ const seedCustomers = async () => {
 
 export async function initializeData() {
     try {
-        // await seedUsers();
-        // await seedCustomers();
+        await seedUsers();
+        await seedCustomers();
         console.log('Database seeding completed');
     } catch (error) {
         console.error('Database seeding failed:', error);

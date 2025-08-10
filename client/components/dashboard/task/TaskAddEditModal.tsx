@@ -47,7 +47,7 @@ const TaskAddEditModal = () => {
         description: task?.description || '',
     });
 
-    const { data: usersData, isLoading: usersLoading } = useSWR('users', () => getAllData({ url: 'users/', filterQueries: { role: 'agent' } }), {
+    const { data: usersData, isLoading: usersLoading } = useSWR('users', () => getAllData({ url: 'users/'}), {
         revalidateOnFocus: false,
         revalidateOnReconnect: false,
         onSuccess: (data) => {

@@ -3,7 +3,7 @@ import Customer from "../models/customer.model";
 import { CustomError, getImageUrl, s3 } from "../utils/common";
 import type { File as MulterFile } from 'multer';
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { ENV } from '../configs/env';
+import env from '../configs/env';
 import crypto from 'crypto';
 import sharp from 'sharp';
 
@@ -23,7 +23,6 @@ export const getCustomers = async (req: Request, res: Response): Promise<void> =
 
     if (!result) throw new CustomError("No Customers found", 404);
 
-    // If the customer has a profile_pic, generate a signed URL for it
     for (const customer of result) {
         if (customer.profile_pic) {
             customer.profile_pic = await getImageUrl(customer.profile_pic);
@@ -73,7 +72,7 @@ export const createCustomer = async (req: Request, res: Response): Promise<void>
         const buffer = await sharp(req.file.buffer).resize({ height: 90, width: 90, fit: 'contain' }).toBuffer();
 
         const params = {
-            Bucket: ENV.awsBucketName,
+            Bucket: env.AWS_BUCKET_NAME,
             Key: fileName,
             Body: buffer,
             ContentType: req.file.mimetype
@@ -144,7 +143,7 @@ export const deleteCustomer = async (req: Request, res: Response): Promise<void>
     if (!result.deletedCount) throw new CustomError("Customer not found or already deleted.", 404, true);
 
     const params = {
-        Bucket: ENV.awsBucketName,
+        Bucket: env.AWS_BUCKET_NAME,
         Key: customer.profile_pic,
     }
 
@@ -172,7 +171,7 @@ export const multiDeleteCustomers = async (req: Request, res: Response): Promise
 
     const deletePromises = customers.map(customer => {
         const params = {
-            Bucket: ENV.awsBucketName,
+            Bucket: env.AWS_BUCKET_NAME,
             Key: customer.profile_pic,
         };
         const command = new DeleteObjectCommand(params);

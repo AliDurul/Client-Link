@@ -53,8 +53,7 @@ const userSchema: Schema<IUser> = new Schema({
   },
   employee_id: {
     type: String,
-    required: true,
-    unique: true,
+    default: `EMP-${Math.floor(1000 + Math.random() * 9000)}-${Date.now()}`,
     trim: true,
   },
   status: {
@@ -95,10 +94,6 @@ const userSchema: Schema<IUser> = new Schema({
     type: Date,
     default: Date.now,
   },
-  permissions: [{
-    type: String,
-    trim: true,
-  }],
   full_name: {
     type: String,
     default: function () {

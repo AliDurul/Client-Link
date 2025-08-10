@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Task, { ITask } from "../models/task.model";
 
-import { CustomError } from "../utils/common";
+import { CustomError, getImageUrl } from "../utils/common";
 
 
 export const getCountDetail = async (req: Request, res: Response): Promise<void> => {
@@ -98,6 +98,12 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
         path: 'assigned_agent',
         select: 'name email profile_pic first_name last_name phone_number'
     }])
+
+    for (const task of result) {
+        if (task.assigned_agent?.profile_pic) {
+            task.assigned_agent.profile_pic = await getImageUrl(task.assigned_agent.profile_pic);
+        }
+    }
 
     res.send({
         success: true,

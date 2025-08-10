@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import compression from 'compression';
 import { Request, Response } from 'express';
 import { getTransporter } from '../configs/nodemailer';
-import { ENV } from '../configs/env';
+import env from '../configs/env';
 import { IUser } from '../models/user.model';
 import multer from 'multer';
 import { S3Client } from '@aws-sdk/client-s3';
@@ -34,7 +34,7 @@ export class CustomError extends Error {
 // ===============================
 export function passwordEncrypt(pass: string): string {
 
-    const keyCode = ENV.secretKey;
+    const keyCode = env.SECRET_KEY;
     const loopCount = 10000;
     const charCount = 32;
     const encType = 'sha512';
@@ -97,8 +97,8 @@ export function setToken(user: IUser, isRefresh: boolean = false): TokenResult {
 
     return {
         success: true,
-        access: jwt.sign(accessData, ENV.jwtSecret, { expiresIn: ENV.jwtExpiresIn as jwt.SignOptions['expiresIn'] }),
-        refresh: isRefresh ? null : jwt.sign({ id: user._id }, ENV.jwtRefreshSecret, { expiresIn: ENV.jwtRefreshExpiresIn as jwt.SignOptions['expiresIn'] })
+        access: jwt.sign(accessData, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as jwt.SignOptions['expiresIn'] }),
+        refresh: isRefresh ? null : jwt.sign({ id: user._id }, env.JWT_REFRESH_SECRET, { expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions['expiresIn'] })
     }
 };
 
@@ -131,7 +131,7 @@ export const sendMail = async ({
     const transporter = getTransporter();
 
     const mailOptions = {
-        from: from || { name: 'Your App', address: ENV.emailUser },
+        from: from || { name: 'Your App', address: env.EMAIL_USER },
         to,
         subject,
         html: data ? tempFn(data) : tempFn(),

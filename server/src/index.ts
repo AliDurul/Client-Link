@@ -1,5 +1,5 @@
 import express from "express";
-import { ENV } from "./configs/env";
+import env from "./configs/env";
 import { authenticate, errorHandler, logger, notFound, queryHandler } from "./middlewares/common";
 import { connectDB, disconnectDB } from "./configs/db";
 import { rateLimit } from 'express-rate-limit'
@@ -20,7 +20,7 @@ app.set('query parser', 'extended');
 app.use(queryHandler);
 app.use(helmet());
 app.use(cors());
-app.use(logger());
+// app.use(logger());
 app.use(authenticate);
 app.use('/api/v1', rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes in milliseconds
@@ -35,7 +35,7 @@ app.use(compression({
 ));
 
 
-const PORT = ENV.port;
+const PORT = env.PORT
 /* ------------------------------------- */
 //* Routes
 

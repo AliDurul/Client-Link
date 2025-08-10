@@ -4,6 +4,7 @@ export interface AsignAgent {
     id: string;
     name: string;
     email?: string;
+    profile_pic?: string;
 }
 
 const taskSchema: Schema<ITask> = new Schema({

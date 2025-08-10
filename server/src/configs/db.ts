@@ -1,5 +1,5 @@
 import mongoose, { ConnectOptions } from "mongoose";
-import { ENV } from "./env";
+import env  from "./env";
 // import "../models/user.model"; // Import all models here
 
 mongoose.Promise = global.Promise; // Use ES6 promises
@@ -13,7 +13,7 @@ export async function connectDB(): Promise<void> {
   }
 
   try {
-    await mongoose.connect(ENV.mongoDbUri, {
+    await mongoose.connect(env.MONGODB_URI, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
     } as ConnectOptions);

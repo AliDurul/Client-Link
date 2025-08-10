@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { ENV } from '../configs/env';
+import env from '../configs/env';
 import User, { IUser } from '../models/user.model';
 import { CustomError, passwordEncrypt, sendMail, setToken } from '../utils/common';
 import { passResetReqTemp, passResetSuccessTemp, verificationEmailTemp, welcomeEmailTemp } from '../utils/emailTemplates';
@@ -14,16 +14,16 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
     const exists = await User.exists({ email });
 
-    if (exists) throw new CustomError('User already exists', 409);
+    if (exists) throw new CustomError('User already exists', 409, true);
 
     const user = await User.create(req.body);
 
-    await sendMail({
-        to: user.email,
-        subject: 'Verify your email',
-        tempFn: verificationEmailTemp,
-        data: { verificationCode: user.verification_token }
-    });
+    // await sendMail({
+    //     to: user.email,
+    //     subject: 'Verify your email',
+    //     tempFn: verificationEmailTemp,
+    //     data: { verificationCode: user.verification_token }
+    // });
 
     res.status(201).send({
         success: true,
@@ -52,7 +52,7 @@ export const refresh = async (req: Request, res: Response): Promise<void> => {
 
     if (!refreshToken) throw new CustomError('Please enter token.refresh', 401, true);
 
-    const decoded = jwt.verify(refreshToken, ENV.jwtRefreshSecret) as { id: string };
+    const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET) as { id: string };
 
     if (!decoded?.id) throw new CustomError('Invalid token: missing id.', 403, true);
 
@@ -111,7 +111,7 @@ export const forgetPassword = async (req: Request, res: Response): Promise<void>
         to: user.email,
         subject: 'Reset your password',
         tempFn: passResetReqTemp,
-        data: { resetURL: ENV.frontendUrl + '/reset-password/' + user.reset_pass_token }
+        data: { resetURL: env.FRONTEND_URL + '/reset-password/' + user.reset_pass_token }
     });
 
     res.status(200).send({

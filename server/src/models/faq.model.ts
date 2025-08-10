@@ -12,7 +12,7 @@ const faqSchema: Schema<IFaq> = new Schema({
     }
 
 }, {
-    collection: 'Faqs',
+    collection: 'faqs',
     timestamps: true
 });
 

@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import { ENV } from './env';
+import env from './env';
 
 let transporter: Transporter | null = null;
 
@@ -8,8 +8,8 @@ export function getTransporter(): Transporter {
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: ENV.emailUser,
-                pass: ENV.emailPass,
+                user: env.EMAIL_USER,
+                pass: env.EMAIL_PASS,
             },
         });
     }

@@ -1,11 +1,32 @@
+### REGISTER
+POST http://localhost:8000/api/auth/register
+content-type: application/json
+
+{
+    "email": "lee.dev@gmail.com",
+    "password": "aA?12345",
+    "first_name": "Lee",
+    "last_name": "Dev",
+    "phone_number": "+1-555-0101",
+    "role": "admin",
+    "department": "IT",
+    "status": "active",
+    "is_verified": true,
+    "profile_pic": "https://t3.ftcdn.net/jpg/07/24/59/76/360_F_724597608_pmo5BsVumFcFyHJKlASG2Y2KpkkfiYUU.jpg"
+}
+
 ### LOGIN
 POST http://localhost:8000/api/auth/login
 content-type: application/json
 
 {
-    "email": "john.doe@company.com",
+    "email": "lee.dev@gmail.com",
     "password": "aA?12345"
 }
+
+### TASKS
+GET http://localhost:8000/api/tasks
+content-type: application/json
 
 ### CUSTOMERS
 GET http://localhost:8000/api/customers
@@ -29,7 +50,7 @@ content-type: application/json
 ### TICKETS
 GET http://localhost:8000/api/tickets
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OTI1ZDVkNTA4ZTNmNGM4Nzg1ODQ1NSIsImVtYWlsIjoiam9obi5kb2VAY29tcGFueS5jb20iLCJwaG9uZSI6IisxLTU1NS0wMTAxIiwiZmlyc3RfbmFtZSI6IkpvaG4iLCJsYXN0X25hbWUiOiJEb2UiLCJwcm9maWxlX3BpYyI6Imh0dHBzOi8vdDMuZnRjZG4ubmV0L2pwZy8wNy8yNC81OS83Ni8zNjBfRl83MjQ1OTc2MDhfcG1vNUJzVnVtRmNGeUhKS2xBU0cyWTJLcGtrZmlZVVUuanBnIiwidXNlcl90eXBlIjoiYWRtaW4iLCJpc1ZlcmlmaWVkIjp0cnVlLCJpYXQiOjE3NTQ4MzUzNDIsImV4cCI6MTc1NDkyMTc0Mn0.T1GQeIbYvLH_gQ8ayq_WBTf22z9PmHvf6qWwCdXnTJE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4OThkOTc5NDNiM2ZiYTMxZjM0ZDY4ZCIsImVtYWlsIjoibGVlLmRldkBnbWFpbC5jb20iLCJwaG9uZSI6IisxLTU1NS0wMTAxIiwiZmlyc3RfbmFtZSI6IkxlZSIsImxhc3RfbmFtZSI6IkRldiIsInByb2ZpbGVfcGljIjoiaHR0cHM6Ly90My5mdGNkbi5uZXQvanBnLzA3LzI0LzU5Lzc2LzM2MF9GXzcyNDU5NzYwOF9wbW81QnNWdW1GY0Z5SEpLbEFTRzJZMktwa2tmaVlVVS5qcGciLCJ1c2VyX3R5cGUiOiJhZG1pbiIsImlzVmVyaWZpZWQiOnRydWUsImlhdCI6MTc1NDg0NzcyNywiZXhwIjoxNzU0OTM0MTI3fQ.T0bH09vy0DVYo1WSjjgopC5sBIPAZEzfvtLLrlvvNRg
 
 {
     "customer": "6895c952fd8cdca80163a316",

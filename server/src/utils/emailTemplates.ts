@@ -1,4 +1,4 @@
-import { ENV } from '../configs/env';
+import env from '../configs/env';
 
 export const verificationEmailTemp = ({ verificationCode }) => {
   return `
@@ -16,7 +16,7 @@ export const verificationEmailTemp = ({ verificationCode }) => {
 
   <!-- Header with Logo -->
   <div style="text-align: center; padding: 30px 0; background-color: #4CAF50;">
-    <!-- <img src="${ENV.backendUrl}/uploads/logo.png" alt="Your App Logo" style="width: 120px; height: auto; margin-bottom: 10px;" />  -->
+    <!-- <img src="${env.BACKEND_URL}/uploads/logo.png" alt="Your App Logo" style="width: 120px; height: auto; margin-bottom: 10px;" />  -->
     <h1 style="margin: 0; color: #ffffff;">Verify Your Email</h1>
   </div>
 
@@ -27,7 +27,7 @@ export const verificationEmailTemp = ({ verificationCode }) => {
     <p>Thank you for signing up! Please verify your email by clicking the button below:</p>
 
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${ENV.frontendUrl}/auth/verify-email?verification-code=${verificationCode}"
+      <a href="${env.FRONTEND_URL}/auth/verify-email?verification-code=${verificationCode}"
         style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
         Verify Email
       </a>
@@ -195,7 +195,7 @@ export const welcomeEmailTemp = ({ name }) => {
 
   <!-- Header with Logo -->
   <div style="text-align: center; padding: 30px 0; background-color: #4CAF50;">
-    <!-- <img src="${ENV.backendUrl}/uploads/logo.png" alt="Blogly Logo" style="width: 120px; height: auto; margin-bottom: 10px;" /> -->
+    <!-- <img src="${env.BACKEND_URL}/uploads/logo.png" alt="Blogly Logo" style="width: 120px; height: auto; margin-bottom: 10px;" /> -->
     <h1 style="margin: 0; color: #ffffff;">Welcome ${name} to Blogly!</h1>
   </div>
 
@@ -209,12 +209,12 @@ export const welcomeEmailTemp = ({ name }) => {
 
     <p>Need inspiration? Here are a couple of trending blogs you might like:</p>
     <ul>
-      <li><a href="${ENV.frontendUrl}/blog/frontend-developer-roadmap-202511" target="_blank">Frontend Developer Roadmap 2025</a></li>
-      <li><a href="${ENV.frontendUrl}/blog/backend-developer-roadmap-2025vh" target="_blank">Backend Developer Roadmap 2025</a></li>
+      <li><a href="${env.FRONTEND_URL}/blog/frontend-developer-roadmap-202511" target="_blank">Frontend Developer Roadmap 2025</a></li>
+      <li><a href="${env.FRONTEND_URL}/blog/backend-developer-roadmap-2025vh" target="_blank">Backend Developer Roadmap 2025</a></li>
     </ul>
 
     <div style="text-align: center; margin: 30px 0;">
-      <a href="${ENV.frontendUrl}/editor"
+      <a href="${env.FRONTEND_URL}/editor"
         style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
         Create Your First Post
       </a>

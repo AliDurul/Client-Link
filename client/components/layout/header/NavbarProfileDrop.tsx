@@ -13,8 +13,6 @@ import { signOut } from "next-auth/react";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 
-const IMG_URL = process.env.NEXT_PUBLIC_IMG_APIBASE_URL
-
 const NavbarProfileDrop = () => {
   const { userInfo } = useCurrentUser();
 

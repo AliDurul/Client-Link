@@ -97,10 +97,10 @@ const customerSchema: Schema<ICustomer> = new Schema({
         type: String,
         trim: true,
     },
-    medication: {//
-        type: Boolean,
-        default: false,
-    },
+    // medication: {//
+    //     type: Boolean,
+    //     default: false,
+    // },
     medication_type: {
         type: String,
         trim: true,
@@ -124,24 +124,24 @@ const customerSchema: Schema<ICustomer> = new Schema({
         type: String,
         trim: true,
     },
-    documents: [{//
+    documents: [{
         type: String,
         trim: true,
     }],
-    profile_pic: {//
+    profile_pic: {
         type: String,
         trim: true,
     },
-    status: {//
+    status: {
         type: String,
         enum: ['active', 'inactive', 'blacklisted'],
         default: 'active',
     },
-    notes: {//
+    notes: {
         type: String,
         trim: true,
     },
-    assigned_agent: { //
+    assigned_agent: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },

@@ -7,7 +7,7 @@ import morgan from "morgan";
 import fs from "node:fs";
 import path from "node:path";
 import jwt from "jsonwebtoken";
-import { ENV } from "../configs/env";
+import env from "../configs/env";
 
 
 // ===============================
@@ -134,7 +134,7 @@ export const authenticate: RequestHandler = async (req, res, next) => {
 
     if (tokenParts[0] === "Bearer" && tokenParts[1]) {
 
-        jwt.verify(tokenParts[1], ENV.jwtSecret, (err: jwt.VerifyErrors | null, userData: jwt.JwtPayload | undefined) => {
+        jwt.verify(tokenParts[1], env.JWT_SECRET, (err: jwt.VerifyErrors | null, userData: jwt.JwtPayload | undefined) => {
             if (err) {
                 return next(new CustomError("Invalid or expired token", 401, true));
             }

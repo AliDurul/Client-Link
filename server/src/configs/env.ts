@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { z } from 'zod'
-import { CustomError } from '../utils/common';
+
 
 const envSchema = z.object({
     PORT: z.string().regex(/^\d+$/),
@@ -33,33 +33,6 @@ const envSchema = z.object({
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
 });
 
-const parsed = envSchema.safeParse(process.env);
+const env = envSchema.parse(process.env);
 
-if (!parsed.success) {
-    console.error(parsed.error.flatten().fieldErrors);
-    throw new CustomError('❌ Invalid environment variables');
-}
-
-export const ENV = {
-    port: Number(parsed.data.PORT),
-    nodeEnv: parsed.data.NODE_ENV,
-    secretKey: parsed.data.SECRET_KEY,
-    mongoDbUri: parsed.data.MONGODB_URI,
-    // redisUrI: parsed.data.REDIS_URI,
-    // redisUsername: parsed.data.REDIS_USERNAME,
-    // redisPassword: parsed.data.REDIS_PASSWORD,
-    // redisHost: parsed.data.REDIS_HOST,
-    // redisPort: Number(parsed.data.REDIS_PORT),
-    jwtSecret: parsed.data.JWT_SECRET,
-    jwtExpiresIn: parsed.data.JWT_EXPIRES_IN,
-    jwtRefreshSecret: parsed.data.JWT_REFRESH_SECRET,
-    jwtRefreshExpiresIn: parsed.data.JWT_REFRESH_EXPIRES_IN,
-    emailPass: parsed.data.EMAIL_PASS,
-    emailUser: parsed.data.EMAIL_USER,
-    frontendUrl: parsed.data.FRONTEND_URL,
-    backendUrl: parsed.data.BACKEND_URL,
-    awsRegion: parsed.data.AWS_REGION,
-    awsBucketName: parsed.data.AWS_BUCKET_NAME,
-    awsAccessKeyId: parsed.data.AWS_ACCESS_KEY_ID,
-    awsSecretAccessKey: parsed.data.AWS_SECRET_ACCESS_KEY,
-};
+export default env;

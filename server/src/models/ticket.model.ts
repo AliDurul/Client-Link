@@ -155,7 +155,7 @@ const categorySchema: Schema<ITicCat> = new Schema({
     }
 
 }, {
-    collection: 'ticket-categories',
+    collection: 'tic-cats',
     timestamps: true
 });
 
