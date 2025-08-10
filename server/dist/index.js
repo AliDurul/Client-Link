@@ -22,11 +22,7 @@ app.set('query parser', 'extended');
 app.use(common_1.queryHandler);
 app.use((0, helmet_1.default)());
 app.use((0, cors_1.default)());
-<<<<<<< HEAD
 // app.use(logger());
-=======
-app.use((0, common_1.logger)());
->>>>>>> 643cf86cc5e0f48fac80b2a9558658ff6a728f70
 app.use(common_1.authenticate);
 app.use('/api/v1', (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000, // 15 minutes in milliseconds
