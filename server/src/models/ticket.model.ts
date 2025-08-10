@@ -22,11 +22,20 @@ const ticketSchema: Schema<ITicket> = new Schema({
         ref: 'User',
         required: true,
     },
+
     customer: {
         type: Schema.Types.ObjectId,
         ref: 'Customer',
         required: true,
     },
+
+
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'TicCat',
+        required: true,
+    },
+
     caller_details: {
         first_name: {
             type: String,
@@ -82,12 +91,6 @@ const ticketSchema: Schema<ITicket> = new Schema({
         type: String,
         default: 'moderate',
         enum: ['important', 'moderate', 'least important', 'prank'],
-    },
-
-    category: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true,
     },
 
     escalation: {

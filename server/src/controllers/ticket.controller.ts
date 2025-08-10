@@ -6,7 +6,12 @@ import { CustomError } from "../utils/common";
 
 export const getTickets = async (req: Request, res: Response): Promise<void> => {
 
-    const result = await res.getModelList(Ticket)
+    const result = await res.getModelList(Ticket, {}, [
+        { path: 'customer', select: 'full_name first_name last_name email phone_number profile_pic' },
+        { path: 'assigned_agent', select: 'full_name first_name last_name email phone_number profile_pic' },
+        { path: 'category', select: 'name' },
+        { path: 'escalation.raised_by', select: 'full_name first_name last_name email phone_number profile_pic' }
+    ])
 
     res.send({
         success: true,

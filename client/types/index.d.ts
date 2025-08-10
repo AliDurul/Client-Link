@@ -49,31 +49,46 @@ export interface Register {
 
 /* TIKCET */
 export interface Ticket {
-  ticket_id: string;
+  _id: string;
+  caller_details: CallerDetails | null;
+  assigned_agent: PersonInfo;
+  customer: PersonInfo;
   title: string;
   description: string;
-  status: string;
-  client_phonenumber: number | TicketClientPhoneNumber | null;
-  caller_email: string | TicketClientPhoneNumber | null;
-  caller_phonenumber: string | null;
   email_id: string | null;
-  priority: string;
-  flag: string;
-  cat: number | { _id: number; title: string; };
-  assigned_agent: { _id: string; first_name: string; last_name: string; email: string, phone_number: string, profile_pic: string };
-  escalation: null | EscalationForm;
-  timestamp: string;
-  last_updated: string | null;
+  status: 'pending' | 'active' | 'resolved' | 'cancelled' | 'escalated';
+  priority: 'high' | 'medium' | 'low' | 'critical';
+  flag: 'important' | 'moderate' | 'least important' | 'prank';
+  category: { _id: number; name: string };
+  escalation: Escalation | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface EscalationForm {
-  _id: number;
-  escalated_at: Date;
-  raised_by: number | { _id: number; first_name: string; last_name: string; email: string; phone_number: string };
+export interface CallerDetails {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+}
+
+export interface Escalation {
+  raised_by: PersonInfo;
   reason: string;
+  updatedAt: Date;
+  createdAt: Date;
 }
 
-export interface TicketClientPhoneNumber { first_name: string, last_name: string, _id: number, phone_number: string }
+export interface PersonInfo {
+  _id: number;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  profile_pic: string | null;
+};
+
 
 export interface TicketComments {
   _id: string;
