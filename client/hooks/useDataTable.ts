@@ -130,6 +130,7 @@ export function useDataTable<T extends { _id: string }>(config: UseDataTableConf
     const getTableProps = () => ({
         className: `${isDark} table-hover whitespace-nowrap`,
         minHeight: 400,
+        height: 850,
         withBorder: false,
         highlightOnHover: true,
         recordsPerPage: pageLimit ? parseInt(pageLimit, 10) : 20,

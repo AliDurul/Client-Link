@@ -83,7 +83,6 @@ interface TokenResult {
 }
 export function setToken(user: IUser, isRefresh: boolean = false): TokenResult {
 
-    // const { password, verificationToken, resetPassToken, ...accessData } = user
     const accessData = {
         id: user._id,
         email: user.email,

@@ -1,5 +1,4 @@
 import InvoiceTable from '@/components/dashboard/invoice/InvoiceTable';
-import TopPageNavigation from '@/components/shared/TopPageNavigation';
 import { getAllData } from '@/lib/features/shared/actionUtils';
 import { PageSearchParams } from '@/types'
 import React, { Suspense } from 'react'

@@ -95,7 +95,7 @@ const ticketSchema: Schema<ITicket> = new Schema({
 
     escalation: {
         type: escalationSchema,
-        default: null,  // Added default null
+        default: null,
     },
 
 }, {

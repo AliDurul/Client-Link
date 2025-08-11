@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import env from '../configs/env';
 import User, { IUser } from '../models/user.model';
-import { CustomError, passwordEncrypt, sendMail, setToken } from '../utils/common';
+import { CustomError, getImageUrl, passwordEncrypt, sendMail, setToken } from '../utils/common';
 import { passResetReqTemp, passResetSuccessTemp, verificationEmailTemp, welcomeEmailTemp } from '../utils/emailTemplates';
 import crypto from 'node:crypto';
 import { TForgetPass, TLoginUser, TRegisterUser, TResetPass, TVerifyEmail } from '../utils/validationSchemas';
@@ -42,6 +42,10 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     user.last_login = new Date();
     await user.save();
+
+    if (user.profile_pic) {
+        user.profile_pic = await getImageUrl(user.profile_pic);
+    }
 
     res.status(200).send(setToken(user));
 };

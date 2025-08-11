@@ -7,7 +7,7 @@ export const cachedAuth = cache(auth);
 // Better implementation with proper date handling
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const;
 
-export const formatDate = (date: Date | string | number | null, showTime: boolean = false): string => {
+export const formatDate = (date: Date | string | number | null | undefined, showTime: boolean = false): string => {
     if (!date) return '';
 
     try {

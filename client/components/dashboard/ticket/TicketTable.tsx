@@ -2,8 +2,8 @@
 import SearchInput from '@/components/shared/SearchInput';
 import { DeleteIcon, EditIcon, PreviewIcon } from '@/icons';
 import { delMultiKyc } from '@/lib/features/kyc/kycActions'; // TODO: Create proper invoice actions
-import { formatDate } from '@/lib/utility/functions';
-import { Invoice, Pagination } from '@/types';
+import { formatDate, truncateText } from '@/lib/utility/functions';
+import { Ticket, Pagination } from '@/types';
 import { DataTable, type DataTableColumn, type DataTableProps } from 'mantine-datatable';
 import Link from 'next/link';
 import { use } from 'react';
@@ -13,12 +13,11 @@ import Image from 'next/image';
 import { delData, delMultiData } from '@/lib/features/shared/actionUtils';
 
 
-interface InvoiceTableProps {
-    invoicePromise: Promise<Pagination<Invoice>>;
+interface TicketTableProps {
+    tickets: Pagination<Ticket>
 }
 
-export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
-    const invoices = use(invoicePromise);
+export default function TicketTable({ tickets }: TicketTableProps) {
 
     const {
         selectedRecords,
@@ -32,18 +31,18 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
         handleMultiDelete,
         getTableProps,
         getRowExpansionProps
-    } = useDataTable<Invoice>({
-        deleteAction: delData, 
-        deleteMultiAction: delMultiData, 
+    } = useDataTable<Ticket>({
+        deleteAction: delData,
+        deleteMultiAction: delMultiData,
     });
 
 
     // Data table 
 
-    const renderActions: DataTableColumn<Invoice>['render'] = (record) => (
+    const renderActions: DataTableColumn<Ticket>['render'] = (record) => (
         <div className="mx-auto flex w-max items-center gap-4">
             <button
-                onClick={(e) => { handlePreview(`invoices/${record._id}`, e); }}
+                onClick={(e) => { handlePreview(`tickets/${record._id}`, e); }}
 
                 className="flex hover:text-primary">
                 <PreviewIcon />
@@ -52,14 +51,14 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
                 userInfo?.role !== 'admin' && (
                     <>
                         <button className="flex hover:text-info"
-                            onClick={(e) => { handleEdit(`/invoices/action/?s=e&id=${record._id}`, e); }}>
+                            onClick={(e) => { handleEdit(`/tickets/action/?s=e&id=${record._id}`, e); }}>
                             <EditIcon />
                         </button>
                         <button
                             type="button"
                             className="flex hover:text-danger"
                             disabled={isPendingSingle}
-                            onClick={(e) => { handleDelete({ url: 'invoices', id: record._id }, e); }}>
+                            onClick={(e) => { handleDelete({ url: 'tickets', id: record._id }, e); }}>
                             <DeleteIcon />
                         </button>
                     </>
@@ -68,7 +67,7 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
         </div>
     );
 
-    const rowExpansion: DataTableProps<Invoice>['rowExpansion'] = {
+    const rowExpansion: DataTableProps<Ticket>['rowExpansion'] = {
         ...getRowExpansionProps(),
         content: ({ record }) => {
             return (
@@ -86,46 +85,55 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
         },
     };
 
-    const columns: DataTableProps<Invoice>['columns'] = [
+    const columns: DataTableProps<Ticket>['columns'] = [
         {
-            accessor: 'creator.first_name',
-            title: 'Staff Name',
+            accessor: 'assigned_agent.full_name',
+            title: 'Assigned Agent',
             sortable: true,
-            render: ({ creator }) => `${creator?.full_name}`,
+            render: ({ assigned_agent }) => `${assigned_agent?.full_name}`,
         },
         {
             accessor: 'customer.first_name',
             title: 'Customer Name',
             sortable: true,
-            render: ({ customer }) => `${typeof customer === 'object' ? customer?.full_name : ''}`,
+            render: ({ customer }) => `${customer?.full_name}`,
+        },
+        {
+            accessor: 'title',
+            sortable: true,
+        },
+        {
+            accessor: 'description',
+            sortable: true,
+            render: ({ description }) => `${truncateText(description, 70)}`,
+        },
+        {
+            accessor: 'category',
+            sortable: true,
+            render: ({ category }) => `${category?.name}`,
         },
         {
             accessor: 'createdAt',
-            title: 'Created At',
             sortable: true,
             render: ({ createdAt }) => <span>{formatDate(createdAt ?? null)}</span>,
-        },
-        {
-            accessor: 'due_date',
-            sortable: true,
-            render: ({ due_date }) => <span>{formatDate(due_date ?? null)}</span>,
         },
 
         {
             accessor: 'status',
-            title: 'Status',
             sortable: true,
-            render: ({ status }) => {
-                return (
-                    <span className={`badge badge-outline-${status === 'draft'
-                        ? 'primary' : status === 'sent'
-                            ? 'secondary' : status === 'paid'
-                                ? 'success' : status === 'overdue'
-                                    ? 'danger' : status === 'closed'
-                                        ? 'danger' : status === 'refunded'
-                                            ? 'danger' : ''}`}>{status}</span>
-                )
-            },
+            render: ({ status }) => <span className={`badge badge-outline-${status === 'pending' ? 'dark'
+                : status === 'active' ? 'secondary'
+                    : status === 'resolved' ? 'success'
+                        : status === 'cancelled' ? 'warning'
+                            : status === 'escalated' ? 'danger' : ''}`}>{status}</span>,
+        },
+        {
+            accessor: 'priority',
+            sortable: true,
+            render: ({ priority }) => <span className={`badge badge-outline-${priority === 'critical' ? 'danger'
+                : priority === 'high' ? 'warning'
+                : priority === 'medium' ? 'secondary'
+                    : priority === 'low' ? 'dark' : ''}`}>{priority}</span>,
         },
         {
             accessor: 'actions',
@@ -148,14 +156,14 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
                     {
                         selectedRecords.length >= 1 && (
                             <button type="button" className="btn btn-danger gap-2"
-                                onClick={() => handleMultiDelete('invoices')} disabled={isPendingMulti}>
+                                onClick={() => handleMultiDelete('tickets')} disabled={isPendingMulti}>
                                 <DeleteIcon />
                                 Delete
                             </button>
                         )
                     }
                     <button
-                        onClick={() => handleCreate('/invoices/action/?s=c')}
+                        onClick={() => handleCreate('/tickets/action/?s=c')}
                         className="btn btn-primary btn-sm  gap-2">
                         <svg className="h-5 w-5" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -173,9 +181,9 @@ export default function InvoiceTable({ invoicePromise }: InvoiceTableProps) {
                 <DataTable
                     {...getTableProps()}
                     rowExpansion={rowExpansion}
-                    records={invoices?.result || []}
+                    records={tickets?.result || []}
                     columns={columns}
-                    totalRecords={invoices?.details.totalRecords || 0}
+                    totalRecords={tickets?.details.totalRecords || 0}
                     idAccessor="_id"
                 />
             </div>
