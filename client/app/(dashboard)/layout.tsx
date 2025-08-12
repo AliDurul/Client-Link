@@ -9,10 +9,9 @@ interface Props {
 }
 
 export default async function layout({ children }: Props) {
-  const session = await auth();
 
   return (
-    <SessionProvider session={session} >
+    <SessionProvider>
       {/* <ContextProvider> */}
       <DefaultLayout>{children}</DefaultLayout>
       {/* </ContextProvider> */}

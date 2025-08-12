@@ -24,7 +24,7 @@ export default async function page() {
             </div>
 
             {
-                faqs?.result.length > 0 ? (<FaqList faqs={faqs.result} />) : (<NoDataFound msg={'No FAQs found.'} />)
+                faqs?.result?.length > 0 ? (<FaqList faqs={faqs.result} />) : (<NoDataFound msg={'No FAQs found.'} />)
             }
             <FaqModal />
 
