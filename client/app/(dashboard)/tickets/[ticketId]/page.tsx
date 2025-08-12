@@ -1,8 +1,16 @@
 import TicketReview from '@/components/dashboard/ticket/TicketReview';
-import { getData } from '@/lib/features/shared/actionUtils';
+import { getAllData, getData } from '@/lib/features/shared/actionUtils';
 import { Ticket } from '@/types';
 import Link from 'next/link';
 import React from 'react'
+
+
+export async function generateStaticParams() {
+    const tickets = await getAllData({ url: 'tickets', customQuery: { limit: 1000 } });
+    return tickets.result.map((ticket: Ticket) => ({
+        ticketId: ticket._id
+    }));
+};
 
 export default async function page({ params }: { params: Promise<{ ticketId: string }> }) {
 

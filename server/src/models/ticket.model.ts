@@ -123,10 +123,18 @@ export interface ICallerDetails {
     phone_number: string;
 }
 
+interface PersonInfo {
+    _id: mongoose.Schema.Types.ObjectId;
+    full_name: string;
+    email: string;
+    phone_number: string;
+    profile_pic?: string;
+}
+
 // Main ticket interface
 export interface ITicket extends Document {
     assigned_agent: mongoose.Schema.Types.ObjectId;
-    customer: mongoose.Schema.Types.ObjectId;
+    customer: PersonInfo;
     caller_details: ICallerDetails;
     title: string;
     description: string;
@@ -139,6 +147,8 @@ export interface ITicket extends Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+
 
 // --------------------------------------------------------------
 

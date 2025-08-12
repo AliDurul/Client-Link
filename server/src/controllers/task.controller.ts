@@ -99,11 +99,12 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
         select: 'name email profile_pic first_name last_name phone_number'
     }])
 
-    for (const task of result) {
+    await Promise.all(result.map(async (task: ITask) => {
         if (task.assigned_agent?.profile_pic) {
             task.assigned_agent.profile_pic = await getImageUrl(task.assigned_agent.profile_pic);
         }
-    }
+    }));
+
 
     res.send({
         success: true,

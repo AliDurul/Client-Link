@@ -1,4 +1,4 @@
-'use server';
+'use server'
 import { cachedAuth } from "@/lib/utility/functions";
 import { revalidateTag } from "next/cache";
 import qs from 'query-string'
@@ -26,8 +26,13 @@ export const getData = async (url: string) => {
     // await wait(5000);
 
     try {
-        const headers = await authConfig();
-        const response = await fetch(BASE_URL + url, { headers });
+        // const headers = await authConfig();
+        const response = await fetch(BASE_URL + url, {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            next: { tags: [url] }
+        });
 
         const data = await response.json();
 
@@ -121,10 +126,12 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
     console.log('Final URL:', finalUrl);
 
     try {
-        const headers = await authConfig();
+        // const headers = await authConfig();
 
         const response = await fetch(finalUrl, {
-            headers,
+            headers: {
+                "Content-Type": "application/json"
+            },
             next: { tags: [url] }
         });
 
@@ -135,8 +142,7 @@ export const getAllData = async ({ url, searchQueries, customQuery, filterQuerie
         return data
 
     } catch (error: any) {
-        // throw new Error(error.message || "Something went wrong, Please try again!");
-        return { error: error.message };
+        return { message: error.message, success: false };
     }
 };
 

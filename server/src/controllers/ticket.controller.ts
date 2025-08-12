@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Ticket, { TicCat } from "../models/ticket.model";
 
-import { CustomError } from "../utils/common";
+import { CustomError, getImageUrl } from "../utils/common";
 
 
 export const getTickets = async (req: Request, res: Response): Promise<void> => {
@@ -12,6 +12,12 @@ export const getTickets = async (req: Request, res: Response): Promise<void> => 
         { path: 'category', select: 'name' },
         { path: 'escalation.raised_by', select: 'full_name first_name last_name email phone_number profile_pic' }
     ])
+
+    await Promise.all(result.map(async (ticket: any) => {
+        if (ticket.customer?.profile_pic) {
+            ticket.customer.profile_pic = await getImageUrl(ticket.customer.profile_pic);
+        }
+    }));
 
     res.send({
         success: true,

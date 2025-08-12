@@ -16,21 +16,17 @@ export const getInvoices = async (req: Request, res: Response): Promise<void> =>
 
     if (!result) throw new CustomError("No Invoices found", 404, true);
 
-    // If the customer has a profile_pic, generate a signed URL for it
-    for (const invoice of result) {
-        // @ts-expect-error
+
+    await Promise.all(result.map(async (invoice: any) => {
         if (invoice.customer?.profile_pic) {
-            // @ts-expect-error
             invoice.customer.profile_pic = await getImageUrl(invoice.customer.profile_pic);
         }
-
-        // @ts-expect-error
         if (invoice.creator?.profile_pic) {
-            // @ts-expect-error
             invoice.creator.profile_pic = await getImageUrl(invoice.creator.profile_pic);
         }
-    }
-    console.log(result);
+    }));
+    
+
     res.send({
         success: true,
         details: await res.getModelListDetails(Invoice),

@@ -58,7 +58,7 @@ export const faqCrUpAction = async (_: unknown, payload: FormData) => {
     });
 
     const data = await response.json();
-    console.log(data);
+
     if (!response.ok) {
       throw new Error(data.message || "Something went wrong, Please try again!");
     }

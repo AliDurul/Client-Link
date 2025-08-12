@@ -38,7 +38,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     if (!user) throw new CustomError('Invalid email or password', 401, true);
 
-    // if (!user.isVerified) throw new CustomError('Email not verified', 403, true);
+    if (!user.is_verified) throw new CustomError('Email not verified', 403, true);
 
     user.last_login = new Date();
     await user.save();
